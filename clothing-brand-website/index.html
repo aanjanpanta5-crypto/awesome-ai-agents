@@ -467,7 +467,7 @@ footer.site a { text-decoration: none; opacity: .9; }
     e.preventDefault();
     var v = $('email').value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { $('form-msg').textContent = 'Enter an email address like name@example.com.'; $('email').focus(); return; }
-    $('form-msg').textContent = 'Saved. You’ll hear from us when Run 08 is cut.';
+    $('form-msg').textContent = 'Looks good. This form is a demo: connect an email service (for example Mailchimp or Klaviyo) to collect sign-ups.';
     this.reset();
   });
 
