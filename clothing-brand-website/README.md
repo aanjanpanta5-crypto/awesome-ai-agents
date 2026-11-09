@@ -1,6 +1,6 @@
-# Hollin Workshop: clothing brand website
+# Acpanta: clothing brand website
 
-A single-file storefront for a small-batch workwear brand. "Hollin Workshop" is a placeholder name; change it in `index.html`.
+A single-file storefront for a small-batch workwear brand. The brand name appears in `index.html`; search for "Acpanta" to change it.
 
 Open `index.html` in a browser. It needs no build step or server.
 

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Hollin Workshop</title>
+<title>Acpanta</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Hollin Workshop: garment-dyed workwear cut in small numbered runs.">
+<meta name="description" content="Acpanta: garment-dyed workwear cut in small numbered runs.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -179,7 +179,7 @@ footer.site a { text-decoration: none; opacity: .9; }
 
 <header class="site">
   <div class="wrap">
-    <a class="logo" href="#top" id="top">Hollin</a>
+    <a class="logo" href="#top" id="top">Acpanta</a>
     <nav class="main" aria-label="Main">
       <a href="#shop">Shop</a>
       <a href="#mill">How it's made</a>
@@ -203,7 +203,7 @@ footer.site a { text-decoration: none; opacity: .9; }
         </div>
       </div>
       <aside class="hero-tag" aria-label="Garment tag example">
-        <span class="mono" style="color:var(--muted)">Hollin Workshop · Chore Coat</span>
+        <span class="mono" style="color:var(--muted)">Acpanta · Chore Coat</span>
         <div class="run">No. 07 / 300</div>
         <dl>
           <dt>Cloth</dt><dd>12 oz cotton duck</dd>
@@ -297,12 +297,12 @@ footer.site a { text-decoration: none; opacity: .9; }
 
 <footer class="site">
   <div class="wrap">
-    <div><a class="logo" href="#top">Hollin</a><p style="opacity:.75;max-width:30ch">Garment-dyed workwear, cut in numbered runs of 300.</p></div>
+    <div><a class="logo" href="#top">Acpanta</a><p style="opacity:.75;max-width:30ch">Garment-dyed workwear, cut in numbered runs of 300.</p></div>
     <div><h4>Shop</h4><ul><li><a href="#shop">Tops</a></li><li><a href="#shop">Outerwear</a></li><li><a href="#shop">Trousers</a></li></ul></div>
     <div><h4>Help</h4><ul><li><a href="#sizes">Size guide</a></li><li><a href="#mill">Free repairs</a></li><li><a href="#mill">Shipping &amp; returns</a></li></ul></div>
     <div><h4>Workshop</h4><ul><li><a href="#mill">How it's made</a></li><li><a href="#journal">Wearers</a></li><li><a href="#join">Run alerts</a></li></ul></div>
   </div>
-  <div class="wrap legal mono">© 2026 Hollin Workshop</div>
+  <div class="wrap legal mono">© 2026 Acpanta · acpanta.com</div>
 </footer>
 
 <div class="scrim" id="scrim" hidden></div>
@@ -401,8 +401,8 @@ footer.site a { text-decoration: none; opacity: .9; }
 
   // Bag
   var bag = [];
-  try { bag = JSON.parse(localStorage.getItem('hollin-bag') || '[]').filter(function (l) { return byId[l.id]; }); } catch (err) { bag = []; }
-  function save() { try { localStorage.setItem('hollin-bag', JSON.stringify(bag)); } catch (err) {} }
+  try { bag = JSON.parse(localStorage.getItem('acpanta-bag') || '[]').filter(function (l) { return byId[l.id]; }); } catch (err) { bag = []; }
+  function save() { try { localStorage.setItem('acpanta-bag', JSON.stringify(bag)); } catch (err) {} }
   function addToBag(p, color, size) {
     var hit = bag.find(function (l) { return l.id === p.id && l.color === color && l.size === size; });
     if (hit) hit.qty++; else bag.push({ id: p.id, color: color, size: size, qty: 1 });
