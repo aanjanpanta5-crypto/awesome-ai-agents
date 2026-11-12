@@ -14,7 +14,7 @@ The website for Acpanta (acpanta.com): a clothing storefront with T-shirts, tops
 
 Shared files:
 
-- `styles.css`: all styling, including colours (the `:root` block at the top) and the dark theme
+- `styles.css`: all styling, including the red and white colours (the `:root` block at the top)
 - `app.js`: products, shopping bag, filters, size chart and sign-up form
 - `logo.svg`: the Acpanta logo as a vector (sharp at any size); `logo.png` is a fallback
 
