@@ -469,3 +469,20 @@ footer.site .logo-mark { box-shadow: 0 0 0 2px transparent; background: linear-g
 }
 @media (max-width: 420px) { .hero-seal { width: 78px; } }
 @media (prefers-reduced-motion: reduce) { .btn-holo span, .hero-seal { animation: none; } }
+
+/* Holographic logo in the header: the logo shape filled with moving foil */
+.logo-mark.logo-holo {
+  height: 44px; width: auto; aspect-ratio: 542.5 / 302.5; padding: 0; border-radius: 0;
+  background: url(logo.svg) center / contain no-repeat;
+}
+@supports ((-webkit-mask-image: url(x.svg)) or (mask-image: url(x.svg))) {
+  .logo-mark.logo-holo {
+    background: linear-gradient(100deg, #c2187a, #2b59d9, #7a2fd0, #0d8a70, #e0102e, #2b59d9, #c2187a);
+    background-size: 300% 100%;
+    -webkit-mask: url(logo.svg) center / contain no-repeat; mask: url(logo.svg) center / contain no-repeat;
+    animation: holo-shift 8s linear infinite;
+    filter: drop-shadow(1px 1px 0 rgba(0,0,0,.18));
+  }
+}
+@media (max-width: 640px) { .logo-mark.logo-holo { height: 36px; } }
+@media (prefers-reduced-motion: reduce) { .logo-mark.logo-holo { animation: none; } }
