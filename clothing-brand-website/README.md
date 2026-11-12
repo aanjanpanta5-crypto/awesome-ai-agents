@@ -1,6 +1,6 @@
 # Acpanta website
 
-The website for Acpanta (acpanta.com): a clothing storefront with T-shirts, tops, outerwear, trousers and accessories. It's plain HTML, CSS and JavaScript, with no build step.
+The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, outerwear, trousers and accessories. Customers fill a bag and pay with Stripe. It's plain HTML, CSS and JavaScript, plus one small server function for checkout.
 
 ## Pages
 
@@ -14,37 +14,54 @@ The website for Acpanta (acpanta.com): a clothing storefront with T-shirts, tops
 | `returns.html` | Shipping and returns policy (14 days to cancel) |
 | `privacy.html` | Privacy policy |
 | `terms.html` | Terms and conditions |
+| `thank-you.html` | Shown after a successful payment; empties the bag |
 
-The policy pages are a starting draft for a UK shop. Fill in every highlighted `[...]` detail and have them checked before taking orders.
+The policy pages are a starting draft for a UK sole trader. Fill in any highlighted `[...]` detail and have them checked before taking orders.
 
 Shared files:
 
+- `products.js`: **the product list and prices.** Both the website and the checkout use it, so a customer always pays the price in this file.
+- `app.js`: shopping bag, filters, size chart, sign-up form and checkout button
 - `styles.css`: all styling, including the red and white colours (the `:root` block at the top)
-- `app.js`: products, shopping bag, filters, size chart and sign-up form
-- `logo.svg`: the Acpanta logo as a vector (sharp at any size); `logo.png` is a fallback
+- `logo.svg`: the Acpanta logo as a vector; `logo.png` is a fallback
+- `netlify/functions/create-checkout.js`: creates the Stripe payment page for the bag
 
 The header, footer and bag panel are repeated in each HTML page. If you change one, change it in every page.
 
 ## Editing products
 
-Products live in the `PRODUCTS` list near the top of `app.js`: name, category, price, colours (name and hex), sizes and an optional badge such as "New". The home page's featured products are set by `data-featured` on the grid in `index.html`.
+Edit `products.js`: name, category, price in pounds, colours (name and hex), sizes and an optional badge such as "New". The home page's featured products are set by `data-featured` on the grid in `index.html`.
+
+## How checkout works
+
+1. The customer presses **Checkout** in the bag.
+2. The browser sends the bag (product, colour, size, quantity) to `/.netlify/functions/create-checkout`.
+3. The function checks every item against `products.js`, takes the prices from there, and asks Stripe for a Checkout page in GBP with free UK delivery and UK addresses only.
+4. The customer pays on Stripe's secure page, then lands on `thank-you.html`.
+
+You'll see each order, with the customer's delivery address and phone number, in the Stripe Dashboard under **Payments**.
+
+## Going live on Netlify
+
+The site is hosted on Netlify (free plan) because checkout needs a server function. `netlify.toml` in the repository root holds the settings.
+
+1. Sign up at netlify.com with your GitHub account.
+2. **Add new site > Import an existing project > GitHub**, and pick `awesome-ai-agents`. Netlify reads `netlify.toml`, so leave the build settings as they are. Set the branch to deploy (for example `main`, after merging).
+3. Add your Stripe key: **Site configuration > Environment variables > Add a variable**. Name: `STRIPE_SECRET_KEY`. Value: your secret key from Stripe (**Developers > API keys**). Never put this key in the code or share it in chat.
+   - Start with your **test** key (`sk_test_...`) and pay with Stripe's test card `4242 4242 4242 4242`, any future date and any CVC.
+   - When everything works, replace it with your **live** key (`sk_live_...`) and redeploy.
+   - Safer option: create a **restricted key** in Stripe with write access to Checkout Sessions only, and use that instead.
+4. In Stripe, turn on receipts: **Settings > Customer emails > Successful payments**.
+5. To use acpanta.com: **Domain management > Add a domain** in Netlify, then follow its DNS instructions at the company you bought the domain from.
+
+Until `STRIPE_SECRET_KEY` is set, the Checkout button tells customers that payments aren't switched on yet and to message you on WhatsApp.
 
 ## Preview locally
 
-Open `index.html` in a browser, or run `python3 -m http.server` in this folder and visit http://localhost:8000.
-
-## Publishing on GitHub Pages
-
-The workflow `.github/workflows/deploy-acpanta-site.yml` publishes this folder whenever it changes on `main`.
-
-1. In the repository, go to **Settings > Pages** and set **Source** to **GitHub Actions** (one time only).
-2. Merge this folder into `main`. The site goes live at `https://aanjanpanta5-crypto.github.io/awesome-ai-agents/`.
-3. To use acpanta.com, buy the domain, then in **Settings > Pages > Custom domain** enter `acpanta.com` and save. At your domain provider, add these DNS records:
-   - Four `A` records for `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - One `CNAME` record for `www`: `aanjanpanta5-crypto.github.io`
-
-   When the domain check passes, tick **Enforce HTTPS**.
+Run `python3 -m http.server` in this folder and visit http://localhost:8000. Checkout needs Netlify; to test it locally, install the Netlify CLI and run `netlify dev` from the repository root.
 
 ## Before taking real orders
 
-Checkout and the sign-up form are front-end demos. To take payments, connect a commerce platform such as Shopify or Stripe Checkout. To collect sign-ups, connect an email service. Replace the drawn garments with product photos, and the example reviews with real ones.
+- Replace the example products and prices in `products.js` with your real ones, and the drawn garments with product photos.
+- Replace the example reviews with real ones.
+- The run alerts sign-up form is a front-end demo. Connect an email service to collect sign-ups.

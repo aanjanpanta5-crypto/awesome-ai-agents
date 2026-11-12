@@ -1,0 +1,16 @@
+# Netlify hosting for the Acpanta website (clothing-brand-website/).
+# Set STRIPE_SECRET_KEY in Netlify: Site configuration > Environment variables.
+[build]
+  base = "clothing-brand-website"
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Keep the checkout function's source out of the public site
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404"
+  status = 404
+  force = true
