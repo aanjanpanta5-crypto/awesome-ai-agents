@@ -361,3 +361,43 @@ html.no-scroll, html.no-scroll body { overflow: hidden; }
   .zoom-btn { width: 36px; height: 36px; right: 8px; bottom: 8px; }
   .zoom-nav { width: 40px; height: 40px; font-size: 1.7rem; background: rgba(255,255,255,.85); }
 }
+
+/* Hologram: foil shine on product pictures, foil badges and the cAP seal */
+.card .art { --mx: 50%; --my: 50%; --rx: 0deg; --ry: 0deg; transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .25s ease; }
+.card .art::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease;
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.6), rgba(255,255,255,0) 38%),
+    linear-gradient(115deg, rgba(255,255,255,0) 18%, rgba(255,64,178,.45) 30%, rgba(120,255,214,.42) 42%, rgba(80,190,255,.45) 54%, rgba(178,110,255,.45) 66%, rgba(255,120,200,.4) 78%, rgba(255,255,255,0) 90%);
+  background-size: 100% 100%, 240% 240%;
+  background-position: center, var(--mx) var(--my);
+  mix-blend-mode: color-dodge;
+}
+.card .art.holo-on::after { opacity: .7; }
+.card .art .badge, .card .art .zoom-btn { z-index: 2; }
+
+.badge.holo {
+  color: #141414; font-weight: 500;
+  background: linear-gradient(110deg, #ffc9ec, #c4f4ff, #dccbff, #c6ffe6, #ffd6f2, #c4f4ff);
+  background-size: 300% 100%;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7), 0 1px 3px rgba(0,0,0,.15);
+  animation: holo-shift 7s linear infinite;
+}
+@keyframes holo-shift { to { background-position: 300% 0; } }
+
+.holo-seal {
+  position: absolute; top: -18px; right: 18px; width: 68px; height: 68px; border-radius: 50%;
+  display: grid; place-items: center; transform: rotate(12deg);
+  font: italic 700 1.15rem/1 Georgia, serif; color: rgba(20,20,20,.75);
+  background: conic-gradient(from 0deg, #ffc9ec, #c4f4ff, #dccbff, #c6ffe6, #ffe0f4, #c4f4ff, #ffc9ec);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.8), inset 0 0 14px rgba(255,255,255,.7), 0 4px 12px rgba(0,0,0,.25);
+  animation: holo-spin 9s linear infinite;
+}
+.holo-seal::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,.75), rgba(255,255,255,0) 45%); }
+@keyframes holo-spin { to { filter: hue-rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .card .art { transform: none; transition: none; }
+  .badge.holo, .holo-seal { animation: none; }
+}
+@media (hover: none) { .card .art { transition: transform .4s ease; } }

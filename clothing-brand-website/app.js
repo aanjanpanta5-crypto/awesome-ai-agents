@@ -93,7 +93,7 @@
   function card(p) {
     var c = p.colors[p.sel];
     return '<article class="card" data-id="' + p.id + '">' +
-      '<div class="art' + (c[2] ? ' has-photo' : '') + '" data-zoom>' + (badgeFor(p) ? '<span class="badge mono">' + badgeFor(p) + '</span>' : '') + artFor(p, p.sel) +
+      '<div class="art' + (c[2] ? ' has-photo' : '') + '" data-zoom>' + (badgeFor(p) ? '<span class="badge mono' + (/^Only/.test(badgeFor(p)) ? '' : ' holo') + '">' + badgeFor(p) + '</span>' : '') + artFor(p, p.sel) +
       '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div>' +
       '<div class="card-top"><h3>' + p.name + '</h3><span class="price">' + money(p.price) + '</span></div>' +
       '<p class="spec mono">' + p.spec + '</p>' +
@@ -140,6 +140,27 @@
       addToBag(p, p.sel, sel.value);
     }
   });
+  // Hologram shine and tilt on product pictures, following the mouse or finger
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (grid && !calm) {
+    grid.addEventListener('pointermove', function (e) {
+      var a = e.target.closest('.art'); if (!a) return;
+      var r = a.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      a.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+      a.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+      a.style.setProperty('--ry', ((x - 0.5) * 10).toFixed(2) + 'deg');
+      a.style.setProperty('--rx', ((0.5 - y) * 10).toFixed(2) + 'deg');
+      a.classList.add('holo-on');
+    });
+    var holoOff = function (e) {
+      var a = e.target.closest && e.target.closest('.art');
+      if (!a || (e.relatedTarget && a.contains(e.relatedTarget))) return;
+      a.classList.remove('holo-on'); a.style.removeProperty('--rx'); a.style.removeProperty('--ry');
+    };
+    grid.addEventListener('pointerout', holoOff);
+    grid.addEventListener('pointercancel', holoOff);
+  }
+
   // Shop page search box
   function setQuery(q) {
     query = q;
