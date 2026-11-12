@@ -6,11 +6,28 @@
     jacket: '<path d="M62 34 L88 26 L100 42 L112 26 L138 34 L166 60 L176 152 L156 154 L146 82 L146 178 L54 178 L54 82 L44 154 L24 152 L34 60 Z"/><path d="M100 42 L100 178" fill="none" class="st"/><rect x="62" y="118" width="26" height="28" fill="none" class="st"/><rect x="112" y="118" width="26" height="28" fill="none" class="st"/>',
     shirt: '<path d="M64 34 L88 28 L100 40 L112 28 L136 34 L162 62 L170 150 L152 152 L144 84 L144 176 L56 176 L56 84 L48 152 L30 150 L38 62 Z"/><path d="M100 40 L100 176" fill="none" class="st"/><rect x="66" y="66" width="22" height="22" fill="none" class="st"/>',
     pant: '<path d="M66 24 L134 24 L144 178 L108 178 L100 78 L92 178 L56 178 Z"/><path d="M66 36 L134 36" fill="none" class="st"/><path d="M100 36 L100 78" fill="none" class="st"/>',
-    cap: '<path d="M44 120 Q46 64 100 60 Q154 64 156 120 Z"/><path d="M40 120 L178 120 Q170 138 120 134 L40 128 Z"/><circle cx="100" cy="60" r="5"/>'
+    cap: '<path d="M44 120 Q46 64 100 60 Q154 64 156 120 Z"/><path d="M40 120 L178 120 Q170 138 120 134 L40 128 Z"/><circle cx="100" cy="60" r="5"/>',
+    sweat: '<path d="M60 40 L82 32 Q100 44 118 32 L140 40 L168 72 L174 160 L156 162 L142 92 L142 176 L58 176 L58 92 L44 162 L26 160 L32 72 Z"/><path d="M82 32 Q100 44 118 32" fill="none" class="st"/><path d="M58 166 L142 166" fill="none" class="st"/>',
+    zip: '<path d="M60 44 L80 34 Q78 14 100 12 Q122 14 120 34 L140 44 L168 74 L172 160 L154 162 L140 90 L140 176 L60 176 L60 90 L46 162 L28 160 L32 74 Z"/><path d="M80 34 Q100 58 120 34" fill="none" class="st"/><path d="M100 46 L100 176" fill="none" class="st"/><path d="M68 128 L88 128 L92 154" fill="none" class="st"/><path d="M132 128 L112 128 L108 154" fill="none" class="st"/>',
+    boxy: '<path d="M54 46 L78 34 Q76 12 100 10 Q124 12 122 34 L146 46 L176 78 L180 156 L160 158 L148 96 L148 168 L52 168 L52 96 L40 158 L20 156 L24 78 Z"/><path d="M78 34 Q100 60 122 34" fill="none" class="st"/><rect x="74" y="120" width="52" height="28" fill="none" class="st"/>'
   };
-  function art(shape, color) {
+  var LOGO_AT = { tee: [100, 72], hood: [100, 86], boxy: [100, 88], zip: [124, 82], sweat: [100, 74] };
+  function printMark(shape, print) {
+    var at = LOGO_AT[shape] || [100, 80];
+    var txt = function (x, y, size, fill) { return '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="' + size + '" fill="' + fill + '" stroke="none">cAP</text>'; };
+    if (print === 'logo') return txt(at[0], at[1], shape === 'zip' ? 11 : 15, '#e0102e');
+    if (print === 'graphic') return '<rect x="74" y="68" width="52" height="50" fill="#e0102e" stroke="none"/>' + txt(100, 99, 16, '#ffffff');
+    return '';
+  }
+  function art(shape, color, print) {
+    var dark = /^#[0-3]/.test(color);
     return '<svg viewBox="0 0 200 200" aria-hidden="true"><g fill="' + color + '" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round">' +
-      SHAPES[shape].replace(/class="st"/g, 'stroke="#a3262d" stroke-width="2" stroke-dasharray="4 3"') + '</g></svg>';
+      SHAPES[shape].replace(/class="st"/g, 'stroke="' + (dark ? '#8a8a8a' : '#b9b9b9') + '" stroke-width="2" stroke-dasharray="4 3"') + printMark(shape, print) + '</g></svg>';
+  }
+  function badgeFor(p) {
+    if (typeof p.stock === 'number' && p.stock <= 5) return 'Only ' + p.stock + ' left';
+    if (typeof p.stock === 'number' && p.stock <= 20) return 'Limited \u00b7 ' + p.stock + ' pieces';
+    return p.badge || '';
   }
 
   var PRODUCTS = window.ACPANTA_PRODUCTS || [];
@@ -21,12 +38,10 @@
   // Search: matches names, categories, fabrics, colours and everyday words
   var CAT_WORDS = {
     'T-shirts': 'tshirt tshirts tee tees top',
-    'Tops': 'top',
-    'Outerwear': 'jacket coat outerwear',
-    'Trousers': 'trousers pants bottoms',
-    'Accessories': 'accessory accessories'
+    'Hoodies': 'hoodie hoodies hoody hood top',
+    'Sweatshirts': 'sweatshirt sweatshirts jumper sweater crew top'
   };
-  var PRODUCT_WORDS = { hood: 'hoodie hoody sweatshirt jumper sweater', denim: 'jeans', fatigue: 'chinos', cap: 'hat', over: 'shirt jacket', chore: 'jacket workwear', shirt: 'button' };
+  var PRODUCT_WORDS = { 'zip-hoodie': 'zipper zipped zip up jacket', 'boxy-hoodie': 'oversized loose', 'printed-tee': 'graphic print', 'logo-tee': 'basic plain', 'logo-hoodie': 'heavy thick' };
   function norm(t) { return String(t).toLowerCase().replace(/\bt[\s-]+shirt/g, 'tshirt').replace(/[-‐–]/g, '').replace(/[^a-z0-9£ ]+/g, ' '); }
   PRODUCTS.forEach(function (p) {
     p.words = norm([p.name, p.cat, p.spec, p.badge || '', p.colors.map(function (c) { return c[0]; }).join(' '), CAT_WORDS[p.cat] || '', PRODUCT_WORDS[p.id] || ''].join(' ')).split(/\s+/).filter(Boolean);
@@ -69,7 +84,7 @@
   function card(p) {
     var c = p.colors[p.sel];
     return '<article class="card" data-id="' + p.id + '">' +
-      '<div class="art">' + (p.badge ? '<span class="badge mono">' + p.badge + '</span>' : '') + art(p.shape, c[1]) + '</div>' +
+      '<div class="art">' + (badgeFor(p) ? '<span class="badge mono">' + badgeFor(p) + '</span>' : '') + art(p.shape, c[1], p.print) + '</div>' +
       '<div class="card-top"><h3>' + p.name + '</h3><span class="price">' + money(p.price) + '</span></div>' +
       '<p class="spec mono">' + p.spec + '</p>' +
       '<div class="swatches" role="group" aria-label="Colour: ' + c[0] + '">' + p.colors.map(function (col, i) {
@@ -150,7 +165,7 @@
     '<div class="search-results" id="search-results" aria-live="polite"></div></div>';
   document.body.appendChild(sScrim); document.body.appendChild(panel);
   var sInput = $('search-input'), sResults = $('search-results');
-  var SUGGEST = ['T-shirts', 'Hoodie', 'Jacket', 'Trousers', 'Black', 'Heavyweight'];
+  var SUGGEST = ['T-shirts', 'Hoodies', 'Zip hoodie', 'Sweatshirt', 'Black', 'White'];
   function shopLink(q) { return 'shop.html?q=' + encodeURIComponent(q); }
   function renderResults() {
     var q = sInput.value.trim();
@@ -166,8 +181,8 @@
     }
     sResults.innerHTML = '<p class="mono search-label">' + found.length + (found.length === 1 ? ' item' : ' items') + '</p><ul class="result-list">' +
       found.slice(0, 6).map(function (p) {
-        return '<li><a href="' + shopLink(p.name) + '"><span class="thumb">' + art(p.shape, p.colors[0][1]) + '</span>' +
-          '<span class="r-meta"><b>' + esc(p.name) + '</b><span class="mono">' + esc(p.cat) + ' · ' + p.colors.length + ' colours</span></span>' +
+        return '<li><a href="' + shopLink(p.name) + '"><span class="thumb">' + art(p.shape, p.colors[0][1], p.print) + '</span>' +
+          '<span class="r-meta"><b>' + esc(p.name) + '</b><span class="mono">' + esc(p.cat) + ' · ' + p.colors.map(function (c) { return c[0]; }).join(' / ') + '</span></span>' +
           '<span class="price">' + money(p.price) + '</span></a></li>';
       }).join('') + '</ul>' +
       (found.length > 1 ? '<a class="btn btn-accent see-all" href="' + shopLink(q) + '">See all ' + found.length + ' results</a>' : '');
@@ -209,7 +224,7 @@
     $('bag-count').textContent = count;
     $('lines').innerHTML = bag.length ? bag.map(function (l, i) {
       var p = byId[l.id], c = p.colors[l.color];
-      return '<div class="line"><div class="thumb">' + art(p.shape, c[1]) + '</div><div class="meta"><b>' + p.name + '</b>' +
+      return '<div class="line"><div class="thumb">' + art(p.shape, c[1], p.print) + '</div><div class="meta"><b>' + p.name + '</b>' +
         '<span class="mono" style="color:var(--muted)">' + c[0] + ' · ' + l.size + '</span>' +
         '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
@@ -259,14 +274,20 @@
   renderBag();
 
   // Size guide
-  if ($('size-body')) {
-  var SIZES = [['S', 56, 70, 62, 76, 81], ['M', 59, 72, 64, 81, 81], ['L', 62, 74, 66, 86, 82], ['XL', 65, 76, 68, 91, 82], ['XXL', 68, 78, 70, 97, 83]];
+  if ($('size-body-tee')) {
+  var SIZE_TABLES = {
+    'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23], ['XL', 62, 75, 24]],
+    'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64], ['XL', 66, 74, 66]]
+  };
   function renderSizes(unit) {
-    $('size-body').innerHTML = SIZES.map(function (r) {
-      return '<tr><td>' + r[0] + '</td>' + r.slice(1).map(function (v) {
-        return '<td>' + (unit === 'in' ? (v / 2.54).toFixed(1) + '″' : v + ' cm') + '</td>';
-      }).join('') + '</tr>';
-    }).join('');
+    Object.keys(SIZE_TABLES).forEach(function (id) {
+      if (!$(id)) return;
+      $(id).innerHTML = SIZE_TABLES[id].map(function (r) {
+        return '<tr><td>' + r[0] + '</td>' + r.slice(1).map(function (v) {
+          return '<td>' + (unit === 'in' ? (v / 2.54).toFixed(1) + '\u2033' : v + ' cm') + '</td>';
+        }).join('') + '</tr>';
+      }).join('');
+    });
     $('unit-cm').setAttribute('aria-pressed', unit === 'cm');
     $('unit-in').setAttribute('aria-pressed', unit === 'in');
   }

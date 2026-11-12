@@ -6,9 +6,9 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 
 | File | Page |
 |---|---|
-| `index.html` | Home: hero, new and bestsellers, T-shirt range, reviews, run alerts sign-up |
+| `index.html` | Home: hero, new in, choose your weight, new stock alerts sign-up |
 | `shop.html` | Every product, with category filters. `shop.html#t-shirts` opens on T-shirts |
-| `about.html` | Our story: how the clothes are made, and reviews |
+| `about.html` | Our story |
 | `size-guide.html` | Size chart in centimetres and inches |
 | `contact.html` | Instagram, WhatsApp and email, plus the sign-up form |
 | `returns.html` | Shipping and returns policy (14 days to cancel) |
@@ -30,7 +30,9 @@ The header, footer and bag panel are repeated in each HTML page. If you change o
 
 ## Editing products
 
-Edit `products.js`: name, category, price in pounds, colours (name and hex), sizes and an optional badge such as "New". The home page's featured products are set by `data-featured` on the grid in `index.html`.
+Edit `products.js`: name, category, price in pounds, colours (name and hex), sizes, `stock` and an optional badge such as "New".
+
+`stock` is the number of pieces you have. Update it by hand as items sell. Products with 20 or fewer show "Limited · N pieces", and 5 or fewer show "Only N left". Checkout refuses a quantity larger than the stock number. The home page's featured products are set by `data-featured` on the grid in `index.html`.
 
 ## How checkout works
 
@@ -62,6 +64,6 @@ Run `python3 -m http.server` in this folder and visit http://localhost:8000. Che
 
 ## Before taking real orders
 
-- Replace the example products and prices in `products.js` with your real ones, and the drawn garments with product photos.
-- Replace the example reviews with real ones.
+- Replace the drawn garments with product photos.
+- Replace the sample size chart measurements (in `app.js`, `SIZE_TABLES`) with the real ones.
 - The run alerts sign-up form is a front-end demo. Connect an email service to collect sign-ups.

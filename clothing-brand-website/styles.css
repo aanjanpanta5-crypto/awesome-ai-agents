@@ -308,3 +308,7 @@ th:first-child, td:first-child { position: sticky; left: 0; background: var(--su
 
 /* Leave room for the sticky header when jumping to a section */
 section[id], #shop-search, #grid, .legal-doc h2[id] { scroll-margin-top: 150px; }
+
+.size-title { font-size: 1.5rem; text-transform: uppercase; margin: 28px 0 10px; }
+.size-title:first-of-type { margin-top: 0; }
+#sizes table { min-width: 0; }
