@@ -11,18 +11,18 @@
     zip: '<path d="M60 44 L80 34 Q78 14 100 12 Q122 14 120 34 L140 44 L168 74 L172 160 L154 162 L140 90 L140 176 L60 176 L60 90 L46 162 L28 160 L32 74 Z"/><path d="M80 34 Q100 58 120 34" fill="none" class="st"/><path d="M100 46 L100 176" fill="none" class="st"/><path d="M68 128 L88 128 L92 154" fill="none" class="st"/><path d="M132 128 L112 128 L108 154" fill="none" class="st"/>',
     boxy: '<path d="M54 46 L78 34 Q76 12 100 10 Q124 12 122 34 L146 46 L176 78 L180 156 L160 158 L148 96 L148 168 L52 168 L52 96 L40 158 L20 156 L24 78 Z"/><path d="M78 34 Q100 60 122 34" fill="none" class="st"/><rect x="74" y="120" width="52" height="28" fill="none" class="st"/>'
   };
-  var LOGO_AT = { tee: [100, 72], hood: [100, 86], boxy: [100, 88], zip: [124, 82], sweat: [100, 74] };
-  function printMark(shape, print) {
-    var at = LOGO_AT[shape] || [100, 80];
-    var txt = function (x, y, size, fill) { return '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="' + size + '" fill="' + fill + '" stroke="none">cAP</text>'; };
-    if (print === 'logo') return txt(at[0], at[1], shape === 'zip' ? 11 : 15, '#e0102e');
-    if (print === 'graphic') return '<rect x="74" y="68" width="52" height="50" fill="#e0102e" stroke="none"/>' + txt(100, 99, 16, '#ffffff');
+  var LOGO_AT = { tee: [100, 64, 38], hood: [100, 80, 38], boxy: [100, 82, 40], zip: [124, 76, 24], sweat: [100, 66, 38] };
+  function printMark(shape, print, dark) {
+    var at = LOGO_AT[shape] || [100, 78, 36];
+    var img = function (file, cx, cy, w) { var h = w * 0.558; return '<image href="' + file + '" x="' + (cx - w / 2) + '" y="' + (cy - h / 2) + '" width="' + w + '" height="' + h + '" stroke="none"/>'; };
+    if (print === 'logo') return img(dark ? 'logo-white.svg' : 'logo.svg', at[0], at[1], at[2]);
+    if (print === 'graphic') return '<rect x="72" y="66" width="56" height="52" fill="#e0102e" stroke="none"/>' + img('logo-white.svg', 100, 92, 44);
     return '';
   }
   function art(shape, color, print) {
     var dark = /^#[0-3]/.test(color);
     return '<svg viewBox="0 0 200 200" aria-hidden="true"><g fill="' + color + '" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round">' +
-      SHAPES[shape].replace(/class="st"/g, 'stroke="' + (dark ? '#8a8a8a' : '#b9b9b9') + '" stroke-width="2" stroke-dasharray="4 3"') + printMark(shape, print) + '</g></svg>';
+      SHAPES[shape].replace(/class="st"/g, 'stroke="' + (dark ? '#8a8a8a' : '#b9b9b9') + '" stroke-width="2" stroke-dasharray="4 3"') + printMark(shape, print, dark) + '</g></svg>';
   }
   var ZOOM_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M11 8v6M8 11h6"/></svg>';
 
