@@ -24,6 +24,8 @@
     return '<svg viewBox="0 0 200 200" aria-hidden="true"><g fill="' + color + '" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round">' +
       SHAPES[shape].replace(/class="st"/g, 'stroke="' + (dark ? '#8a8a8a' : '#b9b9b9') + '" stroke-width="2" stroke-dasharray="4 3"') + printMark(shape, print) + '</g></svg>';
   }
+  var ZOOM_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M11 8v6M8 11h6"/></svg>';
+
   // Product picture: the real photo when a variant has one, otherwise the drawing
   function artFor(p, i) {
     var c = p.colors[i] || p.colors[0];
@@ -87,10 +89,12 @@
     window.addEventListener('hashchange', function () { active = fromHash(); syncFilters(); renderGrid(); });
   }
 
+  function cardHTML(p) { return card(p); }
   function card(p) {
     var c = p.colors[p.sel];
     return '<article class="card" data-id="' + p.id + '">' +
-      '<div class="art' + (c[2] ? ' has-photo' : '') + '">' + (badgeFor(p) ? '<span class="badge mono">' + badgeFor(p) + '</span>' : '') + artFor(p, p.sel) + '</div>' +
+      '<div class="art' + (c[2] ? ' has-photo' : '') + '" data-zoom>' + (badgeFor(p) ? '<span class="badge mono">' + badgeFor(p) + '</span>' : '') + artFor(p, p.sel) +
+      '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div>' +
       '<div class="card-top"><h3>' + p.name + '</h3><span class="price">' + money(p.price) + '</span></div>' +
       '<p class="spec mono">' + p.spec + '</p>' +
       (p.details ? '<details class="pdetails"><summary>Details</summary><ul>' + p.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></details>' : '') +
@@ -119,6 +123,7 @@
     if (e.target.closest('[data-clear-search]')) { setQuery(''); active = 'All'; if (filters) syncFilters(); renderGrid(); if ($('q')) $('q').focus(); return; }
     var el = e.target.closest('.card'); if (!el) return;
     var p = byId[el.dataset.id];
+    if (e.target.closest('[data-zoom]')) { openZoom(p, el); return; }
     var sw = e.target.closest('[data-sw]');
     if (sw) {
       var size = el.querySelector('select').value;
@@ -215,6 +220,104 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && !panel.hidden) closeSearch();
     if (e.key === '/' && panel.hidden && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
+  });
+
+  // Zoom viewer: full-screen picture, tap/click to zoom, drag or move to look around, switch designs
+  var Z = { p: null, i: 0, zoomed: false, ox: 50, oy: 50, card: null, start: null, moved: false };
+  var ZSCALE = 2.5;
+  var zoomEl = document.createElement('div');
+  zoomEl.className = 'zoom'; zoomEl.hidden = true;
+  zoomEl.setAttribute('role', 'dialog'); zoomEl.setAttribute('aria-modal', 'true');
+  zoomEl.innerHTML = '<div class="zoom-top"><div class="zoom-title"><b id="zoom-name"></b><span class="mono" id="zoom-variant"></span></div>' +
+    '<button type="button" class="x zoom-close" id="zoom-close" aria-label="Close">×</button></div>' +
+    '<div class="zoom-stage" id="zoom-stage"><div class="zoom-media" id="zoom-media"></div></div>' +
+    '<button type="button" class="zoom-nav zoom-prev" id="zoom-prev" aria-label="Previous design">‹</button>' +
+    '<button type="button" class="zoom-nav zoom-next" id="zoom-next" aria-label="Next design">›</button>' +
+    '<div class="zoom-bottom"><p class="zoom-hint mono" id="zoom-hint">Tap the picture to zoom in</p><div class="zoom-thumbs" id="zoom-thumbs"></div></div>';
+  document.body.appendChild(zoomEl);
+  var zStage = $('zoom-stage'), zMedia = $('zoom-media');
+  function zoomArt(p, i) {
+    var c = p.colors[i];
+    if (c[2]) return '<img src="' + c[2].replace('.jpg', '-large.jpg') + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" draggable="false">';
+    return art(p.shape, c[1], p.print);
+  }
+  function applyZoom() {
+    zMedia.style.transformOrigin = Z.ox + '% ' + Z.oy + '%';
+    zMedia.style.transform = Z.zoomed ? 'scale(' + ZSCALE + ')' : 'none';
+    zStage.classList.toggle('is-zoomed', Z.zoomed);
+    $('zoom-hint').textContent = Z.zoomed ? 'Drag to look around · tap to zoom out' : 'Tap the picture to zoom in';
+  }
+  function showZoom(i) {
+    var p = Z.p, n = p.colors.length;
+    Z.i = (i + n) % n; Z.zoomed = false; Z.ox = 50; Z.oy = 50;
+    zMedia.innerHTML = zoomArt(p, Z.i);
+    $('zoom-name').textContent = p.name + ' · ' + money(p.price);
+    $('zoom-variant').textContent = (p.variantLabel || 'Colour') + ': ' + p.colors[Z.i][0];
+    $('zoom-prev').hidden = $('zoom-next').hidden = n < 2;
+    $('zoom-prev').setAttribute('aria-label', 'Previous ' + (p.variantLabel || 'colour').toLowerCase());
+    $('zoom-next').setAttribute('aria-label', 'Next ' + (p.variantLabel || 'colour').toLowerCase());
+    $('zoom-thumbs').innerHTML = n < 2 ? '' : p.colors.map(function (c, k) {
+      var look = c[2] ? 'background:' + c[1] + ' url(' + c[2].replace('.jpg', '-thumb.jpg') + ') center 40%/cover' : 'background:' + c[1];
+      return '<button type="button" class="sw' + (c[2] ? ' sw-img' : '') + '" data-zi="' + k + '" style="' + look + '" aria-label="' + esc(c[0]) + '" aria-pressed="' + (k === Z.i) + '"></button>';
+    }).join('');
+    applyZoom();
+  }
+  function openZoom(p, card) {
+    Z.p = p; Z.card = card;
+    zoomEl.setAttribute('aria-label', p.name);
+    showZoom(p.sel);
+    zoomEl.hidden = false;
+    document.documentElement.classList.add('no-scroll');
+    $('zoom-close').focus();
+  }
+  function closeZoom() {
+    zoomEl.hidden = true;
+    document.documentElement.classList.remove('no-scroll');
+    var p = Z.p, card = Z.card;
+    if (p && card && document.body.contains(card) && p.sel !== Z.i) {
+      var size = card.querySelector('select').value;
+      p.sel = Z.i; card.outerHTML = cardHTML(p);
+      card = document.querySelector('.card[data-id="' + p.id + '"]');
+      card.querySelector('select').value = size;
+    }
+    var back = card && card.querySelector('.zoom-btn'); if (back) back.focus();
+  }
+  $('zoom-close').addEventListener('click', closeZoom);
+  $('zoom-prev').addEventListener('click', function () { showZoom(Z.i - 1); });
+  $('zoom-next').addEventListener('click', function () { showZoom(Z.i + 1); });
+  $('zoom-thumbs').addEventListener('click', function (e) { var b = e.target.closest('[data-zi]'); if (b) showZoom(+b.dataset.zi); });
+  function pct(e) { var r = zStage.getBoundingClientRect(); return [Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)), Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100))]; }
+  zStage.addEventListener('pointerdown', function (e) {
+    Z.start = { x: e.clientX, y: e.clientY, ox: Z.ox, oy: Z.oy }; Z.moved = false;
+    try { zStage.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  zStage.addEventListener('pointermove', function (e) {
+    if (Z.start) {
+      var dx = e.clientX - Z.start.x, dy = e.clientY - Z.start.y;
+      if (Math.abs(dx) + Math.abs(dy) > 6) Z.moved = true;
+      if (Z.zoomed && Z.moved) {
+        var r = zStage.getBoundingClientRect();
+        Z.ox = Math.min(100, Math.max(0, Z.start.ox - dx / r.width * 100 * 1.3));
+        Z.oy = Math.min(100, Math.max(0, Z.start.oy - dy / r.height * 100 * 1.3));
+        applyZoom();
+      }
+    } else if (Z.zoomed && e.pointerType === 'mouse') {
+      var q = pct(e); Z.ox = q[0]; Z.oy = q[1]; applyZoom();
+    }
+  });
+  zStage.addEventListener('pointerup', function (e) {
+    var st = Z.start; Z.start = null; if (!st) return;
+    var dx = e.clientX - st.x;
+    if (!Z.moved) { var q = pct(e); Z.zoomed = !Z.zoomed; Z.ox = q[0]; Z.oy = q[1]; applyZoom(); }
+    else if (!Z.zoomed && Math.abs(dx) > 50 && Z.p.colors.length > 1) showZoom(Z.i + (dx < 0 ? 1 : -1));
+  });
+  zStage.addEventListener('pointercancel', function () { Z.start = null; });
+  document.addEventListener('keydown', function (e) {
+    if (zoomEl.hidden) return;
+    if (e.key === 'Escape') closeZoom();
+    else if (e.key === 'ArrowRight') showZoom(Z.i + 1);
+    else if (e.key === 'ArrowLeft') showZoom(Z.i - 1);
+    else if (e.key === '+' || e.key === '=' || e.key === '-') { Z.zoomed = e.key !== '-'; applyZoom(); }
   });
 
   // Bag
