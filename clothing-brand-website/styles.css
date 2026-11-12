@@ -12,6 +12,8 @@
   --band-accent: #ff4d63; /* bright logo red that reads on black */
   --logo-tile: #ffffff;   /* logo's own white ground on black areas */
   --head-logo-bg: transparent;
+  --notice-bg: #c9f2d3;   /* light green offer bar */
+  --notice-fg: #0f3d1f;
   --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
   --body: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -22,13 +24,13 @@
   :root:not([data-theme="light"]) {
     --bg: #0b0b0b; --surface: #171717; --ink: #f5f5f5; --muted: #a6a6a6; --line: #2b2b2b;
     --accent: #ff4d63; --accent-ink: #160206; --band: #000000; --band-fg: #ffffff; --band-accent: #ff4d63;
-    --head-logo-bg: #ffffff; color-scheme: dark;
+    --head-logo-bg: #ffffff; --notice-bg: #b6ebc3; --notice-fg: #0b2e17; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0b0b0b; --surface: #171717; --ink: #f5f5f5; --muted: #a6a6a6; --line: #2b2b2b;
   --accent: #ff4d63; --accent-ink: #160206; --band: #000000; --band-fg: #ffffff; --band-accent: #ff4d63;
-  --head-logo-bg: #ffffff; color-scheme: dark;
+  --head-logo-bg: #ffffff; --notice-bg: #b6ebc3; --notice-fg: #0b2e17; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -44,7 +46,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 0.95; t
 h2 { font-size: clamp(2.2rem, 5vw, 3.4rem); text-transform: uppercase; }
 
 /* Header */
-.notice { background: var(--band); color: var(--band-fg); text-align: center; padding-block: 6px; }
+.notice { background: var(--notice-bg); color: var(--notice-fg); font-weight: 500; text-align: center; padding-block: 6px; }
 header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); color: var(--ink); border-bottom: 1px solid var(--line); }
 header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
 .logo { display: inline-flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 800; font-size: 1.7rem; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
