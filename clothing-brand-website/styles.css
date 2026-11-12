@@ -1,16 +1,16 @@
-/* Layout: a workshop ledger. Ivory pages, deep oxblood bands, specs set in mono like a garment tag, one oversized condensed display headline. Palette taken from the Acpanta logo. */
+/* Layout: a workshop ledger. Clean white pages, black bands, specs set in mono like a garment tag, one oversized condensed display headline. The logo red is the only colour. */
 :root {
-  --bg: #f4efe7;          /* ivory, the logo's ground */
-  --surface: #fbf8f2;
-  --ink: #2a1418;         /* warm near-black */
-  --muted: #74605f;
-  --line: #e0d4ca;
+  --bg: #ffffff;          /* bright white */
+  --surface: #f5f5f5;
+  --ink: #111111;         /* black */
+  --muted: #5e5e5e;
+  --line: #e2e2e2;
   --accent: #840a21;      /* Acpanta logo red */
   --accent-ink: #ffffff;
-  --band: #3b0e17;        /* deep oxblood */
-  --band-fg: #f6ece6;
-  --band-accent: #f39aa4; /* rose that reads on the oxblood bands */
-  --logo-tile: #f4efe7;   /* logo's own light ground on dark areas */
+  --band: #0d0d0d;        /* black bands */
+  --band-fg: #ffffff;
+  --band-accent: #ff4d63; /* bright logo red that reads on black */
+  --logo-tile: #ffffff;   /* logo's own white ground on black areas */
   --head-logo-bg: transparent;
   --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
   --body: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -20,21 +20,21 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1a0f11; --surface: #251719; --ink: #f2e8e3; --muted: #b8a3a3; --line: #3d2a2d;
-    --accent: #e4576b; --accent-ink: #1a0507; --band: #12090b; --band-fg: #f2e8e3; --band-accent: #f39aa4;
-    --head-logo-bg: #f4efe7; color-scheme: dark;
+    --bg: #0b0b0b; --surface: #171717; --ink: #f5f5f5; --muted: #a6a6a6; --line: #2b2b2b;
+    --accent: #ff4d63; --accent-ink: #160206; --band: #000000; --band-fg: #ffffff; --band-accent: #ff4d63;
+    --head-logo-bg: #ffffff; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #1a0f11; --surface: #251719; --ink: #f2e8e3; --muted: #b8a3a3; --line: #3d2a2d;
-  --accent: #e4576b; --accent-ink: #1a0507; --band: #12090b; --band-fg: #f2e8e3; --band-accent: #f39aa4;
-  --head-logo-bg: #f4efe7; color-scheme: dark;
+  --bg: #0b0b0b; --surface: #171717; --ink: #f5f5f5; --muted: #a6a6a6; --line: #2b2b2b;
+  --accent: #ff4d63; --accent-ink: #160206; --band: #000000; --band-fg: #ffffff; --band-accent: #ff4d63;
+  --head-logo-bg: #ffffff; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
 a { color: inherit; }
 button { font: inherit; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -44,8 +44,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 0.95; t
 h2 { font-size: clamp(2.2rem, 5vw, 3.4rem); text-transform: uppercase; }
 
 /* Header */
-.notice { background: var(--accent); color: var(--accent-ink); text-align: center; padding-block: 6px; }
-header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); color: var(--ink); border-bottom: 1px solid var(--line); }
+.notice { background: var(--band); color: var(--band-fg); text-align: center; padding-block: 6px; }
+header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); color: var(--ink); border-bottom: 1px solid var(--line); }
 header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
 .logo { display: inline-flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 800; font-size: 1.7rem; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
 .logo-mark { display: block; height: 44px; width: auto; padding: 5px 8px; background: var(--head-logo-bg); border-radius: 3px; }
