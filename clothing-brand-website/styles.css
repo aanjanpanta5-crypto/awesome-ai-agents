@@ -37,7 +37,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 0.95; t
 h2 { font-size: clamp(2.2rem, 5vw, 3.4rem); text-transform: uppercase; }
 
 /* Header */
-.notice { background: var(--notice-bg); color: var(--notice-fg); font-weight: 600; font-size: 0.92rem; letter-spacing: 0.08em; text-align: center; padding-block: 11px; }
+.notice { display: block; text-decoration: none; background: var(--notice-bg); color: var(--notice-fg); font-weight: 600; font-size: 0.92rem; letter-spacing: 0.08em; text-align: center; padding-block: 11px; }
 @media (max-width: 640px) { .notice { font-size: 0.78rem; letter-spacing: 0.05em; padding-block: 9px; } }
 header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); color: var(--ink); border-bottom: 1px solid var(--line); }
 header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
@@ -253,3 +253,13 @@ th:first-child, td:first-child { position: sticky; left: 0; background: var(--su
   footer.site li a { display: block; padding-block: 8px; }
   footer.site ul { gap: 0; }
 }
+
+/* Legal and policy pages */
+.legal-doc { max-width: 70ch; display: grid; gap: 4px; }
+.legal-doc h2 { font-size: clamp(1.6rem, 5vw, 2rem); margin-top: 28px; }
+.legal-doc h2:first-child { margin-top: 0; }
+.legal-doc p, .legal-doc li { line-height: 1.7; }
+.legal-doc ol, .legal-doc ul { padding-left: 1.3em; display: grid; gap: 8px; margin: 8px 0 12px; }
+.legal-doc a { color: var(--accent); }
+/* Details the owner still has to fill in */
+.fill { background: #ffe3e7; outline: 1px dashed var(--accent); padding: 0 4px; border-radius: 2px; }

@@ -11,6 +11,11 @@ The website for Acpanta (acpanta.com): a clothing storefront with T-shirts, tops
 | `about.html` | Our story: how the clothes are made, and reviews |
 | `size-guide.html` | Size chart in centimetres and inches |
 | `contact.html` | Instagram, WhatsApp and email, plus the sign-up form |
+| `returns.html` | Shipping and returns policy (14 days to cancel) |
+| `privacy.html` | Privacy policy |
+| `terms.html` | Terms and conditions |
+
+The policy pages are a starting draft for a UK shop. Fill in every highlighted `[...]` detail and have them checked before taking orders.
 
 Shared files:
 
@@ -18,7 +23,7 @@ Shared files:
 - `app.js`: products, shopping bag, filters, size chart and sign-up form
 - `logo.svg`: the Acpanta logo as a vector (sharp at any size); `logo.png` is a fallback
 
-The header, footer and bag panel are repeated in each HTML page. If you change one, change it in all five.
+The header, footer and bag panel are repeated in each HTML page. If you change one, change it in every page.
 
 ## Editing products
 
