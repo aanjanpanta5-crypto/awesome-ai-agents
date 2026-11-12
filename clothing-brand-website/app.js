@@ -476,6 +476,7 @@
       wrap: card.querySelector('.stat-value'),
       bar: card.querySelector('.stat-bar span')
     };
+    num.textContent = format(item.value, item.decimals); // show the final value, formatted (12,480 / 4.9)
     return item;
   });
 
@@ -484,8 +485,14 @@
     items.forEach(function (it) {
       var shown = it.num.textContent;
       it.num.style.minWidth = '';
-      it.num.textContent = format(it.value, it.decimals);
-      it.num.style.minWidth = Math.ceil(it.num.getBoundingClientRect().width) + 'px';
+      // Measure the final value written with each digit 0-9 and keep the widest,
+      // so no in-between number can be wider than the space reserved for it
+      var final = format(it.value, it.decimals), widest = 0;
+      for (var d = 0; d <= 9; d++) {
+        it.num.textContent = final.replace(/\d/g, String(d));
+        widest = Math.max(widest, it.num.getBoundingClientRect().width);
+      }
+      it.num.style.minWidth = Math.ceil(widest) + 'px';
       it.num.textContent = shown;
     });
   }
