@@ -17,7 +17,7 @@
   --ink: #1d2540;         /* indigo ink */
   --muted: #5a6178;
   --line: #c9cdd3;
-  --accent: #b9791a;      /* topstitch ochre */
+  --accent: #8b1e24;      /* dark red topstitch */
   --accent-ink: #ffffff;
   --band: #1d2540;
   --band-fg: #e6e8ef;
@@ -30,12 +30,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #121829; --surface: #1a2236; --ink: #e4e7ef; --muted: #9aa2b8; --line: #2c3650;
-    --accent: #e0a243; --accent-ink: #1a1408; --band: #0b1020; --band-fg: #dfe3ee; color-scheme: dark;
+    --accent: #e05a61; --accent-ink: #1a0507; --band: #0b1020; --band-fg: #dfe3ee; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121829; --surface: #1a2236; --ink: #e4e7ef; --muted: #9aa2b8; --line: #2c3650;
-  --accent: #e0a243; --accent-ink: #1a1408; --band: #0b1020; --band-fg: #dfe3ee; color-scheme: dark;
+  --accent: #e05a61; --accent-ink: #1a0507; --band: #0b1020; --band-fg: #dfe3ee; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -218,7 +218,7 @@ footer.site a { text-decoration: none; opacity: .9; }
         <dl>
           <dt>Cloth</dt><dd>12 oz cotton duck</dd>
           <dt>Dye</dt><dd>Garment-dyed indigo</dd>
-          <dt>Thread</dt><dd>Ochre poly-core</dd>
+          <dt>Thread</dt><dd>Dark red poly-core</dd>
           <dt>Shrink</dt><dd>&lt; 2% after wash</dd>
           <dt>Care</dt><dd>30°C · line dry</dd>
         </dl>
@@ -250,7 +250,7 @@ footer.site a { text-decoration: none; opacity: .9; }
       <ol class="steps">
         <li><span class="n">1</span><div><b>Weave</b><span>Loopwheel jersey and rope-dyed selvedge, woven slow on narrow looms.</span></div></li>
         <li><span class="n">2</span><div><b>Cut</b><span>300 pieces per run, hand-cut from paper patterns we revise each season.</span></div></li>
-        <li><span class="n">3</span><div><b>Sew</b><span>Chain-stitched hems and flat-felled seams in ochre thread.</span></div></li>
+        <li><span class="n">3</span><div><b>Sew</b><span>Chain-stitched hems and flat-felled seams in dark red thread.</span></div></li>
         <li><span class="n">4</span><div><b>Dye &amp; wash</b><span>Garment-dyed after sewing, then pre-washed so the fit you buy is the fit you keep.</span></div></li>
       </ol>
     </div>
@@ -360,7 +360,7 @@ footer.site a { text-decoration: none; opacity: .9; }
   };
   function art(shape, color) {
     return '<svg viewBox="0 0 200 200" aria-hidden="true"><g fill="' + color + '" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round">' +
-      SHAPES[shape].replace(/class="st"/g, 'stroke="#c9922f" stroke-width="2" stroke-dasharray="4 3"') + '</g></svg>';
+      SHAPES[shape].replace(/class="st"/g, 'stroke="#a3262d" stroke-width="2" stroke-dasharray="4 3"') + '</g></svg>';
   }
 
   var PRODUCTS = [
@@ -374,7 +374,7 @@ footer.site a { text-decoration: none; opacity: .9; }
     { id: 'stripe', name: 'Striped Tee', cat: 'T-shirts', price: 62, shape: 'tee', spec: '280 gsm yarn-dyed stripe · boat neck', colors: [['Navy Stripe', '#2b3a67'], ['Red Stripe', '#a8373a']], sizes: ['S','M','L','XL'] },
     { id: 'mock', name: 'Mock Neck Tee', cat: 'T-shirts', price: 56, shape: 'tee', spec: '260 gsm interlock · ribbed mock neck', colors: [['Black', '#26262a'], ['Bone', '#e3ddcf']], sizes: ['S','M','L','XL'] },
     { id: 'longsleeve', name: 'Long Sleeve Tee', cat: 'T-shirts', price: 64, shape: 'tee', spec: '260 gsm cotton · ribbed cuffs', colors: [['Olive', '#5c5f3a'], ['Indigo', '#2b3a67'], ['Ecru', '#e3dccb']], sizes: ['S','M','L','XL','XXL'] },
-    { id: 'graphic', name: 'Acpanta Logo Tee', cat: 'T-shirts', price: 50, shape: 'tee', spec: '240 gsm cotton · screen-printed logo', colors: [['White', '#efece4'], ['Indigo', '#24325a'], ['Mustard', '#c9922f']], sizes: ['S','M','L','XL','XXL'], badge: 'Bestseller' },
+    { id: 'graphic', name: 'Acpanta Logo Tee', cat: 'T-shirts', price: 50, shape: 'tee', spec: '240 gsm cotton · screen-printed logo', colors: [['White', '#efece4'], ['Indigo', '#24325a'], ['Burgundy', '#6e1a20']], sizes: ['S','M','L','XL','XXL'], badge: 'Bestseller' },
     { id: 'hood', name: 'Mill Hoodie', cat: 'Tops', price: 128, shape: 'hood', spec: '480 gsm brushed fleece · flat-lock seams', colors: [['Heather', '#8b8f96'], ['Indigo', '#2b3a67']], sizes: ['S','M','L','XL'] },
     { id: 'chore', name: 'Chore Coat', cat: 'Outerwear', price: 245, shape: 'jacket', spec: '12 oz cotton duck · garment-dyed', colors: [['Indigo', '#24325a'], ['Tobacco', '#7a5532'], ['Ecru', '#d9cfb6']], sizes: ['S','M','L','XL'], badge: 'Low stock' },
     { id: 'over', name: 'Twill Overshirt', cat: 'Outerwear', price: 165, shape: 'shirt', spec: '9 oz brushed twill · horn buttons', colors: [['Olive', '#5c5f3a'], ['Navy', '#1f2742']], sizes: ['S','M','L','XL','XXL'] },
