@@ -18,6 +18,30 @@
   var money = function (n) { return '£' + n.toFixed(0); };
   var $ = function (id) { return document.getElementById(id); };
 
+  // Search: matches names, categories, fabrics, colours and everyday words
+  var CAT_WORDS = {
+    'T-shirts': 'tshirt tshirts tee tees top',
+    'Tops': 'top',
+    'Outerwear': 'jacket coat outerwear',
+    'Trousers': 'trousers pants bottoms',
+    'Accessories': 'accessory accessories'
+  };
+  var PRODUCT_WORDS = { hood: 'hoodie hoody sweatshirt jumper sweater', denim: 'jeans', fatigue: 'chinos', cap: 'hat', over: 'shirt jacket', chore: 'jacket workwear', shirt: 'button' };
+  function norm(t) { return String(t).toLowerCase().replace(/\bt[\s-]+shirt/g, 'tshirt').replace(/[-‐–]/g, '').replace(/[^a-z0-9£ ]+/g, ' '); }
+  PRODUCTS.forEach(function (p) {
+    p.words = norm([p.name, p.cat, p.spec, p.badge || '', p.colors.map(function (c) { return c[0]; }).join(' '), CAT_WORDS[p.cat] || '', PRODUCT_WORDS[p.id] || ''].join(' ')).split(/\s+/).filter(Boolean);
+  });
+  function hasWord(p, w) { return p.words.some(function (x) { return x.indexOf(w) === 0; }); }
+  function matches(p, q) {
+    var words = norm(q).split(/\s+/).filter(function (w) { return w.length > 1 || /\d/.test(w); });
+    if (!words.length) return true;
+    return words.every(function (w) { return hasWord(p, w) || (w.length > 3 && /s$/.test(w) && hasWord(p, w.slice(0, -1))); });
+  }
+  function searchProducts(q) { return PRODUCTS.filter(function (p) { return matches(p, q); }); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var query = '';
+  try { query = new URLSearchParams(location.search).get('q') || ''; } catch (err) {}
+
   // Filters + grid (shop page shows every piece; home shows a featured few)
   var grid = $('grid'), filters = $('filters');
   var cats = ['All'].concat(PRODUCTS.map(function (p) { return p.cat; }).filter(function (c, i, a) { return a.indexOf(c) === i; }));
@@ -60,10 +84,15 @@
     if (!grid) return;
     var list = grid.dataset.featured
       ? grid.dataset.featured.split(',').map(function (id) { return byId[id]; }).filter(Boolean)
-      : PRODUCTS.filter(function (p) { return active === 'All' || p.cat === active; });
-    grid.innerHTML = list.map(card).join('');
+      : PRODUCTS.filter(function (p) { return (active === 'All' || p.cat === active) && (!query || matches(p, query)); });
+    grid.innerHTML = list.length ? list.map(card).join('') :
+      '<div class="no-results"><p><b>No items match “' + esc(query) + '”' + (active !== 'All' ? ' in ' + esc(active) : '') + '.</b></p>' +
+      '<p>Try “tee”, “black” or “jacket”, or <button class="link-btn" data-clear-search>show everything</button>.</p></div>';
+    var note = $('result-note');
+    if (note) note.textContent = query ? list.length + (list.length === 1 ? ' item' : ' items') + ' for “' + query + '”' + (active !== 'All' ? ' in ' + active : '') : '';
   }
   if (grid) grid.addEventListener('click', function (e) {
+    if (e.target.closest('[data-clear-search]')) { setQuery(''); active = 'All'; if (filters) syncFilters(); renderGrid(); if ($('q')) $('q').focus(); return; }
     var el = e.target.closest('.card'); if (!el) return;
     var p = byId[el.dataset.id];
     var sw = e.target.closest('[data-sw]');
@@ -82,7 +111,87 @@
       addToBag(p, p.sel, sel.value);
     }
   });
+  // Shop page search box
+  function setQuery(q) {
+    query = q;
+    if ($('q') && $('q').value !== q) $('q').value = q;
+    try {
+      var u = new URL(location.href);
+      if (q) u.searchParams.set('q', q); else u.searchParams.delete('q');
+      history.replaceState(null, '', u.pathname + u.search + u.hash);
+    } catch (err) {}
+  }
+  if ($('q')) {
+    $('q').value = query;
+    $('q').addEventListener('input', function () { setQuery(this.value.trim()); renderGrid(); });
+    $('shop-search').addEventListener('submit', function (e) { e.preventDefault(); $('q').blur(); });
+  }
   renderGrid();
+
+  // Header search: a panel with live results, on every page
+  var SEARCH_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
+  var openBagBtn = $('open-bag');
+  var sBtn = document.createElement('button');
+  sBtn.className = 'search-btn'; sBtn.id = 'open-search'; sBtn.type = 'button';
+  sBtn.setAttribute('aria-label', 'Search products');
+  sBtn.innerHTML = SEARCH_ICON + '<span>Search</span>';
+  var actions = document.createElement('div'); actions.className = 'header-actions';
+  openBagBtn.parentNode.insertBefore(actions, openBagBtn);
+  actions.appendChild(sBtn); actions.appendChild(openBagBtn);
+
+  var sScrim = document.createElement('div'); sScrim.className = 'search-scrim'; sScrim.hidden = true;
+  var panel = document.createElement('div');
+  panel.className = 'search-panel'; panel.hidden = true;
+  panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-label', 'Search products');
+  panel.innerHTML = '<div class="wrap"><form class="search-form" id="search-form" role="search" action="shop.html">' + SEARCH_ICON +
+    '<label for="search-input" hidden>Search products</label>' +
+    '<input id="search-input" name="q" type="search" placeholder="Search tees, jackets, colours…" autocomplete="off" enterkeyhint="search">' +
+    '<button type="button" class="x" id="close-search" aria-label="Close search">×</button></form>' +
+    '<div class="search-results" id="search-results" aria-live="polite"></div></div>';
+  document.body.appendChild(sScrim); document.body.appendChild(panel);
+  var sInput = $('search-input'), sResults = $('search-results');
+  var SUGGEST = ['T-shirts', 'Hoodie', 'Jacket', 'Trousers', 'Black', 'Heavyweight'];
+  function shopLink(q) { return 'shop.html?q=' + encodeURIComponent(q); }
+  function renderResults() {
+    var q = sInput.value.trim();
+    if (!q) {
+      sResults.innerHTML = '<p class="mono search-label">Popular searches</p><div class="suggest">' +
+        SUGGEST.map(function (t) { return '<button type="button" class="chip" data-suggest="' + t + '">' + t + '</button>'; }).join('') + '</div>';
+      return;
+    }
+    var found = searchProducts(q);
+    if (!found.length) {
+      sResults.innerHTML = '<p class="search-empty">No items match “' + esc(q) + '”. Try “tee”, “black” or “jacket”.</p>';
+      return;
+    }
+    sResults.innerHTML = '<p class="mono search-label">' + found.length + (found.length === 1 ? ' item' : ' items') + '</p><ul class="result-list">' +
+      found.slice(0, 6).map(function (p) {
+        return '<li><a href="' + shopLink(p.name) + '"><span class="thumb">' + art(p.shape, p.colors[0][1]) + '</span>' +
+          '<span class="r-meta"><b>' + esc(p.name) + '</b><span class="mono">' + esc(p.cat) + ' · ' + p.colors.length + ' colours</span></span>' +
+          '<span class="price">' + money(p.price) + '</span></a></li>';
+      }).join('') + '</ul>' +
+      (found.length > 1 ? '<a class="btn btn-accent see-all" href="' + shopLink(q) + '">See all ' + found.length + ' results</a>' : '');
+  }
+  function openSearch() { sScrim.hidden = false; panel.hidden = false; renderResults(); sInput.focus(); }
+  function closeSearch() { sScrim.hidden = true; panel.hidden = true; sBtn.focus(); }
+  sBtn.addEventListener('click', openSearch);
+  $('close-search').addEventListener('click', closeSearch);
+  sScrim.addEventListener('click', closeSearch);
+  sInput.addEventListener('input', renderResults);
+  sResults.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-suggest]'); if (!b) return;
+    sInput.value = b.dataset.suggest; renderResults(); sInput.focus();
+  });
+  $('search-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var q = sInput.value.trim(); if (!q) return;
+    if ($('q')) { setQuery(q); active = 'All'; if (filters) syncFilters(); renderGrid(); closeSearch(); $('grid').scrollIntoView({ behavior: 'smooth' }); }
+    else window.location.href = shopLink(q);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !panel.hidden) closeSearch();
+    if (e.key === '/' && panel.hidden && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
+  });
 
   // Bag
   var bag = [];

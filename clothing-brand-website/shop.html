@@ -48,6 +48,14 @@
         </div>
         <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
       </div>
+      <form class="shop-search" id="shop-search" role="search">
+        <label for="q" class="mono">Search the range</label>
+        <div class="shop-search-box">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <input id="q" name="q" type="search" placeholder="Search by name, colour or fabric" autocomplete="off" enterkeyhint="search">
+        </div>
+        <p class="result-note" id="result-note" aria-live="polite"></p>
+      </form>
       <div class="grid" id="grid"></div>
     </div>
   </section>
