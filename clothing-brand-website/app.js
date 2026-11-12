@@ -24,6 +24,12 @@
     return '<svg viewBox="0 0 200 200" aria-hidden="true"><g fill="' + color + '" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round">' +
       SHAPES[shape].replace(/class="st"/g, 'stroke="' + (dark ? '#8a8a8a' : '#b9b9b9') + '" stroke-width="2" stroke-dasharray="4 3"') + printMark(shape, print) + '</g></svg>';
   }
+  // Product picture: the real photo when a variant has one, otherwise the drawing
+  function artFor(p, i) {
+    var c = p.colors[i] || p.colors[0];
+    if (c[2]) return '<img src="' + c[2] + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" loading="lazy" decoding="async">';
+    return art(p.shape, c[1], p.print);
+  }
   function badgeFor(p) {
     if (typeof p.stock === 'number' && p.stock <= 5) return 'Only ' + p.stock + ' left';
     if (typeof p.stock === 'number' && p.stock <= 20) return 'Limited \u00b7 ' + p.stock + ' pieces';
@@ -41,7 +47,7 @@
     'Hoodies': 'hoodie hoodies hoody hood top',
     'Sweatshirts': 'sweatshirt sweatshirts jumper sweater crew top'
   };
-  var PRODUCT_WORDS = { 'zip-hoodie': 'zipper zipped zip up jacket', 'boxy-hoodie': 'oversized loose', 'printed-tee': 'graphic print', 'logo-tee': 'basic plain', 'logo-hoodie': 'heavy thick' };
+  var PRODUCT_WORDS = { 'zip-hoodie': 'zipper zipped zip up jacket', 'boxy-hoodie': 'oversized loose graphic print back skull eyes cigarette cotton black', 'printed-tee': 'graphic print', 'logo-tee': 'basic plain', 'logo-hoodie': 'heavy thick' };
   function norm(t) { return String(t).toLowerCase().replace(/\bt[\s-]+shirt/g, 'tshirt').replace(/[-‐–]/g, '').replace(/[^a-z0-9£ ]+/g, ' '); }
   PRODUCTS.forEach(function (p) {
     p.words = norm([p.name, p.cat, p.spec, p.badge || '', p.colors.map(function (c) { return c[0]; }).join(' '), CAT_WORDS[p.cat] || '', PRODUCT_WORDS[p.id] || ''].join(' ')).split(/\s+/).filter(Boolean);
@@ -84,11 +90,14 @@
   function card(p) {
     var c = p.colors[p.sel];
     return '<article class="card" data-id="' + p.id + '">' +
-      '<div class="art">' + (badgeFor(p) ? '<span class="badge mono">' + badgeFor(p) + '</span>' : '') + art(p.shape, c[1], p.print) + '</div>' +
+      '<div class="art' + (c[2] ? ' has-photo' : '') + '">' + (badgeFor(p) ? '<span class="badge mono">' + badgeFor(p) + '</span>' : '') + artFor(p, p.sel) + '</div>' +
       '<div class="card-top"><h3>' + p.name + '</h3><span class="price">' + money(p.price) + '</span></div>' +
       '<p class="spec mono">' + p.spec + '</p>' +
-      '<div class="swatches" role="group" aria-label="Colour: ' + c[0] + '">' + p.colors.map(function (col, i) {
-        return '<button class="sw" data-sw="' + i + '" style="background:' + col[1] + '" aria-label="' + col[0] + '" aria-pressed="' + (i === p.sel) + '" title="' + col[0] + '"></button>';
+      (p.details ? '<details class="pdetails"><summary>Details</summary><ul>' + p.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></details>' : '') +
+      '<p class="variant-name mono">' + (p.variantLabel || 'Colour') + ': <b>' + esc(c[0]) + '</b></p>' +
+      '<div class="swatches" role="group" aria-label="' + (p.variantLabel || 'Colour') + '">' + p.colors.map(function (col, i) {
+        var look = col[2] ? 'background:' + col[1] + ' url(' + col[2].replace('.jpg', '-thumb.jpg') + ') center 40%/cover' : 'background:' + col[1];
+        return '<button class="sw' + (col[2] ? ' sw-img' : '') + '" data-sw="' + i + '" style="' + look + '" aria-label="' + esc(col[0]) + '" aria-pressed="' + (i === p.sel) + '" title="' + esc(col[0]) + '"></button>';
       }).join('') + '</div>' +
       '<div class="buy"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '">' +
       (p.sizes.length > 1 ? '<option value="">Select size</option>' : '') +
@@ -181,8 +190,8 @@
     }
     sResults.innerHTML = '<p class="mono search-label">' + found.length + (found.length === 1 ? ' item' : ' items') + '</p><ul class="result-list">' +
       found.slice(0, 6).map(function (p) {
-        return '<li><a href="' + shopLink(p.name) + '"><span class="thumb">' + art(p.shape, p.colors[0][1], p.print) + '</span>' +
-          '<span class="r-meta"><b>' + esc(p.name) + '</b><span class="mono">' + esc(p.cat) + ' · ' + p.colors.map(function (c) { return c[0]; }).join(' / ') + '</span></span>' +
+        return '<li><a href="' + shopLink(p.name) + '"><span class="thumb">' + artFor(p, 0) + '</span>' +
+          '<span class="r-meta"><b>' + esc(p.name) + '</b><span class="mono">' + esc(p.cat) + ' · ' + (p.colors.length > 2 ? p.colors.length + ' ' + (p.variantLabel || 'colour').toLowerCase() + 's' : p.colors.map(function (c) { return c[0]; }).join(' / ')) + '</span></span>' +
           '<span class="price">' + money(p.price) + '</span></a></li>';
       }).join('') + '</ul>' +
       (found.length > 1 ? '<a class="btn btn-accent see-all" href="' + shopLink(q) + '">See all ' + found.length + ' results</a>' : '');
@@ -224,7 +233,7 @@
     $('bag-count').textContent = count;
     $('lines').innerHTML = bag.length ? bag.map(function (l, i) {
       var p = byId[l.id], c = p.colors[l.color];
-      return '<div class="line"><div class="thumb">' + art(p.shape, c[1], p.print) + '</div><div class="meta"><b>' + p.name + '</b>' +
+      return '<div class="line"><div class="thumb">' + artFor(p, l.color) + '</div><div class="meta"><b>' + p.name + '</b>' +
         '<span class="mono" style="color:var(--muted)">' + c[0] + ' · ' + l.size + '</span>' +
         '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
