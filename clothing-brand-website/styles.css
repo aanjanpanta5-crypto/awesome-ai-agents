@@ -21,6 +21,9 @@
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
   --gutter-l: max(16px, env(safe-area-inset-left, 0px));
   --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --holo-light: linear-gradient(100deg, #ffd0ef, #c8f3ff, #e2d0ff, #c9ffe8, #ffe3f5, #c8f3ff, #ffd0ef);
+  --holo-dark: linear-gradient(100deg, #c2187a, #2b59d9, #7a2fd0, #0d8a70, #c2187a, #2b59d9, #c2187a);
+  --holo-sheen: linear-gradient(105deg, rgba(255,255,255,0) 30%, rgba(255,201,236,.6) 42%, rgba(196,244,255,.7) 50%, rgba(220,203,255,.6) 58%, rgba(255,255,255,0) 70%);
   color-scheme: light;
 }
 
@@ -401,3 +404,49 @@ html.no-scroll, html.no-scroll body { overflow: hidden; }
   .badge.holo, .holo-seal { animation: none; }
 }
 @media (hover: none) { .card .art { transition: transform .4s ease; } }
+
+/* ---------- Hologram across the main areas ---------- */
+/* Foil text: light foil on red areas, deep foil on white areas */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero h1 em, .page-head h1, .join h2,
+  .logo span, .section-head h2, .mill h2, .size-title, .legal-doc h2 {
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    background-size: 300% 100%; animation: holo-shift 9s linear infinite;
+  }
+  .hero h1 em, .page-head h1, .join h2 { background-image: var(--holo-light); }
+  .logo span, .section-head h2, .mill h2, .size-title, .legal-doc h2 { background-image: var(--holo-dark); }
+  footer.site .logo span { background-image: var(--holo-light); }
+}
+
+/* Foil shine sweeping across the offer bar */
+.notice { position: relative; overflow: hidden; isolation: isolate; }
+.notice::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--holo-sheen); transform: translateX(-110%); animation: holo-sweep 5.5s ease-in-out infinite; mix-blend-mode: screen; }
+@keyframes holo-sweep { 0%, 35% { transform: translateX(-110%); } 75%, 100% { transform: translateX(110%); } }
+
+/* Shine across red buttons on hover or tap */
+.btn, .add, .checkout { position: relative; overflow: hidden; isolation: isolate; }
+.btn-accent::after, .add::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--holo-sheen); transform: translateX(-110%); transition: transform .7s ease; mix-blend-mode: screen; pointer-events: none; }
+.btn-accent:hover::after, .btn-accent:focus-visible::after, .btn-accent:active::after,
+.add:hover::after, .add:focus-visible::after, .add:active::after { transform: translateX(110%); }
+.add:hover { background: var(--accent); color: var(--accent-ink); }
+
+/* Foil bag counter */
+.bag-count { background: var(--holo-light); background-size: 300% 100%; color: #141414; box-shadow: inset 0 0 0 1px rgba(255,255,255,.8); animation: holo-shift 7s linear infinite; }
+
+/* Foil strips above the sign-up band and the footer, and under the search panel */
+.join, footer.site { position: relative; }
+.join::before, footer.site::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 5px; background: var(--holo-light); background-size: 300% 100%; animation: holo-shift 8s linear infinite; }
+footer.site { border-top: 0; }
+.search-panel { border-bottom: 0; }
+.search-panel::after { content: ""; position: sticky; bottom: 0; display: block; height: 4px; background: var(--holo-dark); background-size: 300% 100%; animation: holo-shift 8s linear infinite; }
+
+/* Foil edge on contact cards and the logo tile */
+.social:hover, .social:focus-visible { border-color: transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--holo-dark) border-box; }
+footer.site .logo-mark { box-shadow: 0 0 0 2px transparent; background: linear-gradient(#ffffff, #ffffff) padding-box, var(--holo-light) border-box; border: 2px solid transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 em, .page-head h1, .join h2, .logo span, .section-head h2, .mill h2, .size-title, .legal-doc h2,
+  .bag-count, .join::before, footer.site::before, .search-panel::after { animation: none; }
+  .notice::after { animation: none; display: none; }
+  .btn-accent::after, .add::after { transition: none; }
+}
