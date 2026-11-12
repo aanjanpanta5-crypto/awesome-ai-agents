@@ -486,3 +486,20 @@ footer.site .logo-mark { box-shadow: 0 0 0 2px transparent; background: linear-g
 }
 @media (max-width: 640px) { .logo-mark.logo-holo { height: 36px; } }
 @media (prefers-reduced-motion: reduce) { .logo-mark.logo-holo { animation: none; } }
+
+/* Footer: black, with holographic 3D text */
+footer.site { background: #0b0b0b; color: #ffffff; }
+footer.site a, footer.site h4, footer.site .legal, footer.site p { opacity: 1; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  footer.site li a, footer.site h4, footer.site .legal, footer.site p {
+    background-image: var(--holo-light); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 9s linear infinite;
+  }
+  footer.site h4 { background-image: linear-gradient(100deg, #ff7ac8, #7fdcff, #b99bff, #7dffc8, #ff7ac8, #7fdcff); background-size: 300% 100%; }
+  footer.site .wrap > div, footer.site .legal {
+    filter: drop-shadow(1px 1px 0 rgba(140, 40, 160, .9)) drop-shadow(1px 1px 0 rgba(40, 10, 60, .9)) drop-shadow(0 0 6px rgba(160, 200, 255, .25));
+  }
+}
+footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; text-decoration-color: #c8f3ff; }
+@media (prefers-reduced-motion: reduce) { footer.site li a, footer.site h4, footer.site .legal, footer.site p { animation: none; } }
