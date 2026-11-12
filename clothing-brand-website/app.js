@@ -34,7 +34,7 @@
     { id: 'cap', name: 'Six-Panel Cap', cat: 'Accessories', price: 42, shape: 'cap', spec: 'Leftover duck from the coat run', colors: [['Indigo', '#24325a'], ['Tobacco', '#7a5532']], sizes: ['One size'] }
   ];
   var byId = {}; PRODUCTS.forEach(function (p) { byId[p.id] = p; p.sel = 0; });
-  var money = function (n) { return '$' + n.toFixed(0); };
+  var money = function (n) { return '£' + n.toFixed(0); };
   var $ = function (id) { return document.getElementById(id); };
 
   // Filters + grid (shop page shows every piece; home shows a featured few)
@@ -124,12 +124,9 @@
         '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
     }).join('') : '<p class="empty">Your bag is empty. Pick a size on any piece and add it here.</p>';
-    var ship = sub === 0 ? 0 : (sub >= 150 ? 0 : 12);
     $('subtotal').textContent = money(sub);
-    $('shipping').textContent = sub === 0 ? '—' : (ship ? money(ship) : 'Free');
-    $('total').textContent = money(sub + ship);
-    $('ship-fill').style.width = Math.min(100, sub / 150 * 100) + '%';
-    $('ship-note').textContent = sub >= 150 ? 'Free shipping unlocked' : 'Spend ' + money(150 - sub) + ' more for free shipping';
+    $('shipping').textContent = sub === 0 ? '—' : 'Free';
+    $('total').textContent = money(sub);
     $('checkout').disabled = !bag.length;
     $('checkout-msg').textContent = '';
   }
