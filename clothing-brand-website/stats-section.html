@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Acpanta Stats Section</title>
+<!--
+  Count-up stats section: a single, self-contained file (HTML, CSS, vanilla JS, no libraries).
+  To use it on any page, copy the <style>, the <section class="stats"> and the <script>.
+
+  HOW TO EDIT THE STATS
+  Each stat is one <article class="stat"> below. On the number element set:
+    data-value     the final number, e.g. 12480 or 4.9
+    data-decimals  how many decimals to show (0 for 12480, 1 for 4.9)
+  The text after the number (+, ★, %, GSM…) goes in the .suffix span,
+  and the small label goes in the .stat-label paragraph.
+  Accent colours are the three --accent-* tokens at the top of the CSS.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=Work+Sans:wght@400;500&display=swap">
+<style>
+  /* ---------- Design tokens ---------- */
+  :root {
+    --stats-bg: #0b0b0b;          /* dark section background */
+    --card-bg: #161616;           /* each stat card */
+    --card-line: #2a2a2a;         /* card border */
+    --label: #a3a3a3;             /* small, muted labels */
+    --track: #2b2b2b;             /* empty progress bar */
+    --accent-1: #ff5fb7;          /* [HEX 1] hologram pink */
+    --accent-2: #5ad8ff;          /* [HEX 2] hologram cyan */
+    --accent-3: #a98bff;          /* [HEX 3] hologram violet */
+    --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+    --body: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--stats-bg); color: #ffffff; font: 400 16px/1.5 var(--body); }
+
+  /* ---------- Section layout (mobile first: cards stack) ---------- */
+  .stats {
+    background: var(--stats-bg);
+    padding-block: 56px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .stats-inner { max-width: 1180px; margin: 0 auto; display: grid; gap: 16px; }
+  .stats-title { margin: 0 0 8px; font: 800 clamp(1.8rem, 6vw, 2.6rem)/1 var(--display); text-transform: uppercase; letter-spacing: .01em; }
+  .stats-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 720px) {
+    .stats { padding-block: 80px; }
+    .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  }
+
+  /* ---------- One card per stat ---------- */
+  .stat {
+    background: var(--card-bg); border: 1px solid var(--card-line); border-radius: 18px;
+    padding: 28px 24px 24px; display: grid; gap: 14px; min-width: 0;
+  }
+  .stat:nth-child(1) { --accent: var(--accent-1); }
+  .stat:nth-child(2) { --accent: var(--accent-2); }
+  .stat:nth-child(3) { --accent: var(--accent-3); }
+
+  /* The big number: tabular digits so the width doesn't jitter while counting */
+  .stat-value {
+    margin: 0; display: flex; align-items: baseline; gap: 6px; color: var(--accent);
+    font: 800 clamp(64px, 16vw, 96px)/.9 var(--display);
+    font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1;
+    transform-origin: left bottom;
+  }
+  .stat-value .num { display: inline-block; text-align: left; }
+  .stat-value .suffix { font-size: .42em; letter-spacing: .02em; }
+  @media (min-width: 720px) { .stat-value { font-size: clamp(72px, 7.5vw, 104px); } }
+
+  /* Small pop when a number lands: 1.08 → 1 */
+  .stat-value.pop { animation: stat-pop .35s ease-out; }
+  @keyframes stat-pop { from { transform: scale(1.08); } to { transform: scale(1); } }
+
+  /* Thin progress bar that fills in sync with the count */
+  .stat-bar { height: 4px; border-radius: 4px; background: var(--track); overflow: hidden; }
+  .stat-bar span { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(1); }
+
+  .stat-label { margin: 0; color: var(--label); font-size: .95rem; }
+
+  /* Reduced motion: no pop (numbers are set instantly by the script) */
+  @media (prefers-reduced-motion: reduce) { .stat-value.pop { animation: none; } }
+</style>
+</head>
+<body>
+
+<!-- Stats section. The final numbers are written in the HTML, so the section
+     still reads correctly if JavaScript is off; the script resets them to 0 and counts up. -->
+<section class="stats" id="stats" aria-labelledby="stats-title">
+  <div class="stats-inner">
+    <h2 class="stats-title" id="stats-title">Acpanta in numbers</h2>
+    <div class="stats-grid">
+      <article class="stat">
+        <p class="stat-value"><span class="num" data-value="430" data-decimals="0">430</span><span class="suffix">GSM</span></p>
+        <div class="stat-bar" aria-hidden="true"><span></span></div>
+        <p class="stat-label">Our heaviest hoodie fabric</p>
+      </article>
+      <article class="stat">
+        <p class="stat-value"><span class="num" data-value="185" data-decimals="0">185</span><span class="suffix">pieces</span></p>
+        <div class="stat-bar" aria-hidden="true"><span></span></div>
+        <p class="stat-label">In our first small batch</p>
+      </article>
+      <article class="stat">
+        <p class="stat-value"><span class="num" data-value="14" data-decimals="0">14</span><span class="suffix">days</span></p>
+        <div class="stat-bar" aria-hidden="true"><span></span></div>
+        <p class="stat-label">To return, with free UK delivery</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<script>
+/* Count-up stats: starts once when the section is 40% visible. */
+(function () {
+  var DURATION = 1600;   // ms each number takes to count up
+  var STAGGER = 250;     // ms delay between one stat and the next
+  var LOCALE = 'en-GB';  // 'en-GB' gives 12,480; use 'en-IN' for Indian grouping (1,23,456)
+
+  var section = document.getElementById('stats');
+  if (!section) return;
+  var stats = [].slice.call(section.querySelectorAll('.stat'));
+
+  // Format a number with thousand separators and a fixed number of decimals
+  function format(n, decimals) {
+    return n.toLocaleString(LOCALE, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  // Ease-out curve (cubic): fast at the start, gentle as it lands
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+  // Read each stat's settings, and fix the number's width at its final size so nothing shifts
+  var items = stats.map(function (card) {
+    var num = card.querySelector('.num');
+    var item = {
+      num: num,
+      value: parseFloat(num.getAttribute('data-value')) || 0,
+      decimals: parseInt(num.getAttribute('data-decimals'), 10) || 0,
+      wrap: card.querySelector('.stat-value'),
+      bar: card.querySelector('.stat-bar span')
+    };
+    return item;
+  });
+
+  // Fix each number's width at its final size (after the font loads) so digits don't shift while counting
+  function lockWidths() {
+    items.forEach(function (it) {
+      var shown = it.num.textContent;
+      it.num.style.minWidth = '';
+      it.num.textContent = format(it.value, it.decimals);
+      it.num.style.minWidth = Math.ceil(it.num.getBoundingClientRect().width) + 'px';
+      it.num.textContent = shown;
+    });
+  }
+  lockWidths();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(lockWidths);
+
+  // Visitors who prefer reduced motion see the final numbers straight away
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) return; // final values are already in place
+
+  // Start state: numbers at 0, bars empty
+  items.forEach(function (it) {
+    it.num.textContent = format(0, it.decimals);
+    it.bar.style.transform = 'scaleX(0)';
+  });
+
+  // Animate one stat with requestAnimationFrame
+  function run(it) {
+    var start = null;
+    function frame(now) {
+      if (start === null) start = now;
+      var t = Math.min(1, (now - start) / DURATION);
+      var eased = easeOut(t);
+      it.num.textContent = format(it.value * eased, it.decimals);
+      it.bar.style.transform = 'scaleX(' + eased + ')';   // bar fills in sync with the number
+      if (t < 1) { requestAnimationFrame(frame); return; }
+      it.num.textContent = format(it.value, it.decimals);  // land exactly on the final value
+      it.wrap.classList.add('pop');                        // small pop when it lands
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // Watch for the section to be 40% visible, then count up once and stop watching
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      items.forEach(function (it, i) { setTimeout(function () { run(it); }, i * STAGGER); });
+    });
+  }, { threshold: 0.4 });
+  observer.observe(section);
+})();
+</script>
+</body>
+</html>

@@ -447,3 +447,84 @@
   var tt;
   function toast(msg) { var t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(tt); tt = setTimeout(function () { t.hidden = true; }, 2200); }
 })();
+
+/* Count-up stats: starts once when the section is 40% visible. */
+(function () {
+  var DURATION = 1600;   // ms each number takes to count up
+  var STAGGER = 250;     // ms delay between one stat and the next
+  var LOCALE = 'en-GB';  // 'en-GB' gives 12,480; use 'en-IN' for Indian grouping (1,23,456)
+
+  var section = document.getElementById('stats');
+  if (!section) return;
+  var stats = [].slice.call(section.querySelectorAll('.stat'));
+
+  // Format a number with thousand separators and a fixed number of decimals
+  function format(n, decimals) {
+    return n.toLocaleString(LOCALE, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  // Ease-out curve (cubic): fast at the start, gentle as it lands
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+  // Read each stat's settings, and fix the number's width at its final size so nothing shifts
+  var items = stats.map(function (card) {
+    var num = card.querySelector('.num');
+    var item = {
+      num: num,
+      value: parseFloat(num.getAttribute('data-value')) || 0,
+      decimals: parseInt(num.getAttribute('data-decimals'), 10) || 0,
+      wrap: card.querySelector('.stat-value'),
+      bar: card.querySelector('.stat-bar span')
+    };
+    return item;
+  });
+
+  // Fix each number's width at its final size (after the font loads) so digits don't shift while counting
+  function lockWidths() {
+    items.forEach(function (it) {
+      var shown = it.num.textContent;
+      it.num.style.minWidth = '';
+      it.num.textContent = format(it.value, it.decimals);
+      it.num.style.minWidth = Math.ceil(it.num.getBoundingClientRect().width) + 'px';
+      it.num.textContent = shown;
+    });
+  }
+  lockWidths();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(lockWidths);
+
+  // Visitors who prefer reduced motion see the final numbers straight away
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) return; // final values are already in place
+
+  // Start state: numbers at 0, bars empty
+  items.forEach(function (it) {
+    it.num.textContent = format(0, it.decimals);
+    it.bar.style.transform = 'scaleX(0)';
+  });
+
+  // Animate one stat with requestAnimationFrame
+  function run(it) {
+    var start = null;
+    function frame(now) {
+      if (start === null) start = now;
+      var t = Math.min(1, (now - start) / DURATION);
+      var eased = easeOut(t);
+      it.num.textContent = format(it.value * eased, it.decimals);
+      it.bar.style.transform = 'scaleX(' + eased + ')';   // bar fills in sync with the number
+      if (t < 1) { requestAnimationFrame(frame); return; }
+      it.num.textContent = format(it.value, it.decimals);  // land exactly on the final value
+      it.wrap.classList.add('pop');                        // small pop when it lands
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // Watch for the section to be 40% visible, then count up once and stop watching
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      items.forEach(function (it, i) { setTimeout(function () { run(it); }, i * STAGGER); });
+    });
+  }, { threshold: 0.4 });
+  observer.observe(section);
+})();

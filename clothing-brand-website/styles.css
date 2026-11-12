@@ -521,3 +521,72 @@ footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; t
   .join .form-msg { background: none; color: #c8f3ff; filter: none; animation: none; -webkit-background-clip: border-box; background-clip: border-box; }
 }
 @media (prefers-reduced-motion: reduce) { .join p, .join label, .join h2 { animation: none; } }
+
+/* ---------- Count-up stats section (same as stats-section.html) ---------- */
+  /* ---------- Design tokens ---------- */
+  .stats {
+    --stats-bg: #0b0b0b;          /* dark section background */
+    --card-bg: #161616;           /* each stat card */
+    --card-line: #2a2a2a;         /* card border */
+    --label: #a3a3a3;             /* small, muted labels */
+    --track: #2b2b2b;             /* empty progress bar */
+    --accent-1: #ff5fb7;          /* [HEX 1] hologram pink */
+    --accent-2: #5ad8ff;          /* [HEX 2] hologram cyan */
+    --accent-3: #a98bff;          /* [HEX 3] hologram violet */
+    --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+    --body: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  /* ---------- Section layout (mobile first: cards stack) ---------- */
+  .stats {
+    background: var(--stats-bg);
+    padding-block: 56px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .stats-inner { max-width: 1180px; margin: 0 auto; display: grid; gap: 16px; }
+  .stats-title { margin: 0 0 8px; font: 800 clamp(1.8rem, 6vw, 2.6rem)/1 var(--display); text-transform: uppercase; letter-spacing: .01em; }
+  .stats-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 720px) {
+    .stats { padding-block: 80px; }
+    .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  }
+
+  /* ---------- One card per stat ---------- */
+  .stat {
+    background: var(--card-bg); border: 1px solid var(--card-line); border-radius: 18px;
+    padding: 28px 24px 24px; display: grid; gap: 14px; min-width: 0;
+  }
+  .stat:nth-child(1) { --accent: var(--accent-1); }
+  .stat:nth-child(2) { --accent: var(--accent-2); }
+  .stat:nth-child(3) { --accent: var(--accent-3); }
+
+  /* The big number: tabular digits so the width doesn't jitter while counting */
+  .stat-value {
+    margin: 0; display: flex; align-items: baseline; gap: 6px; color: var(--accent);
+    font: 800 clamp(64px, 16vw, 96px)/.9 var(--display);
+    font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1;
+    transform-origin: left bottom;
+  }
+  .stat-value .num { display: inline-block; text-align: left; }
+  .stat-value .suffix { font-size: .42em; letter-spacing: .02em; }
+  @media (min-width: 720px) { .stat-value { font-size: clamp(72px, 7.5vw, 104px); } }
+
+  /* Small pop when a number lands: 1.08 → 1 */
+  .stat-value.pop { animation: stat-pop .35s ease-out; }
+  @keyframes stat-pop { from { transform: scale(1.08); } to { transform: scale(1); } }
+
+  /* Thin progress bar that fills in sync with the count */
+  .stat-bar { height: 4px; border-radius: 4px; background: var(--track); overflow: hidden; }
+  .stat-bar span { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(1); }
+
+  .stat-label { margin: 0; color: var(--label); font-size: .95rem; }
+
+  /* Reduced motion: no pop (numbers are set instantly by the script) */
+  @media (prefers-reduced-motion: reduce) { .stat-value.pop { animation: none; } }
+.stats { border-top: 1px solid #222; }
+.stats .stats-title {
+  background-image: var(--holo-light); background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent; animation: holo-shift 9s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) { .stats .stats-title { animation: none; } }
