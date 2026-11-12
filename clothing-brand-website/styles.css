@@ -503,3 +503,21 @@ footer.site a, footer.site h4, footer.site .legal, footer.site p { opacity: 1; }
 }
 footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; text-decoration-color: #c8f3ff; }
 @media (prefers-reduced-motion: reduce) { footer.site li a, footer.site h4, footer.site .legal, footer.site p { animation: none; } }
+
+/* Sign-up section: black, with holographic 3D text (matches the footer) */
+.join { background: #0b0b0b; color: #ffffff; }
+.join input { border-color: rgba(255,255,255,.7); color: #ffffff; }
+.join input:focus { border-color: #c8f3ff; outline: none; box-shadow: 0 0 0 2px rgba(200,243,255,.35); }
+.join .btn-accent { background: #ffffff; color: #141414; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .join p, .join label, .join h2 {
+    background-image: var(--holo-light); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 9s linear infinite;
+  }
+  .join h2, .join p, .join label { filter: drop-shadow(1px 1px 0 rgba(140,40,160,.9)) drop-shadow(1px 1px 0 rgba(40,10,60,.9)) drop-shadow(0 0 8px rgba(160,200,255,.25)); }
+  .join p { opacity: 1; }
+  .join .btn-accent { background-image: none; }
+  .join .form-msg { background: none; color: #c8f3ff; filter: none; animation: none; -webkit-background-clip: border-box; background-clip: border-box; }
+}
+@media (prefers-reduced-motion: reduce) { .join p, .join label, .join h2 { animation: none; } }
