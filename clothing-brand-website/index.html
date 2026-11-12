@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Acpanta</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" href="logo.png">
 <meta name="description" content="Acpanta: garment-dyed workwear cut in small numbered runs.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,10 +18,12 @@
   --ink: #1d2540;         /* indigo ink */
   --muted: #5a6178;
   --line: #c9cdd3;
-  --accent: #8b1e24;      /* dark red topstitch */
+  --accent: #840a21;      /* Acpanta logo red */
   --accent-ink: #ffffff;
   --band: #1d2540;
   --band-fg: #e6e8ef;
+  --band-accent: #ec6b74; /* red that reads on the dark blue bands */
+  --logo-bg: #f4f1ec;     /* logo always sits on its own light ground */
   --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
   --body: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -39,6 +42,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--band); }
 a { color: inherit; }
@@ -53,7 +57,8 @@ h2 { font-size: clamp(2.2rem, 5vw, 3.4rem); text-transform: uppercase; }
 .notice { background: var(--accent); color: var(--accent-ink); text-align: center; padding-block: 6px; }
 header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--band); color: var(--band-fg); }
 header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
-.logo { font-family: var(--display); font-weight: 800; font-size: 1.7rem; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
+.logo { display: inline-flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 800; font-size: 1.7rem; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
+.logo-mark { display: block; height: 44px; width: auto; padding: 5px 8px; background: var(--logo-bg); border-radius: 3px; }
 nav.main { display: flex; gap: 24px; }
 nav.main a { text-decoration: none; font-weight: 500; opacity: 0.85; }
 nav.main a:hover { opacity: 1; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 5px; }
@@ -65,7 +70,7 @@ nav.main a:hover { opacity: 1; text-decoration: underline; text-decoration-color
 .hero { background: var(--band); color: var(--band-fg); overflow: hidden; }
 .hero .wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: end; padding-block: 56px 0; }
 .hero h1 { font-size: clamp(3.6rem, 11vw, 9rem); text-transform: uppercase; }
-.hero h1 em { font-style: normal; color: var(--accent); }
+.hero h1 em { font-style: normal; color: var(--band-accent); }
 .hero p { max-width: 46ch; color: var(--band-fg); opacity: 0.85; font-size: 1.08rem; }
 .hero-copy { display: grid; gap: 22px; padding-bottom: 56px; min-width: 0; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -154,6 +159,8 @@ footer.site .wrap { display: grid; grid-template-columns: repeat(auto-fit, minma
 footer.site h4 { margin: 0 0 10px; font-family: var(--mono); font-weight: 500; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; opacity: .7; }
 footer.site ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 footer.site a { text-decoration: none; opacity: .9; }
+footer.site a.logo { opacity: 1; }
+footer.site li { overflow-wrap: anywhere; }
 .legal { padding-block: 0 28px; opacity: .6; }
 
 /* Bag drawer */
@@ -188,7 +195,7 @@ footer.site a { text-decoration: none; opacity: .9; }
 
 <header class="site">
   <div class="wrap">
-    <a class="logo" href="#top" id="top">Acpanta</a>
+    <a class="logo" href="#top" id="top"><img class="logo-mark" src="logo.png" alt="" width="80" height="44"><span>Acpanta</span></a>
     <nav class="main" aria-label="Main">
       <a href="#shop">Shop</a>
       <a href="#mill">How it's made</a>
@@ -204,7 +211,7 @@ footer.site a { text-decoration: none; opacity: .9; }
   <div class="hero">
     <div class="wrap">
       <div class="hero-copy">
-        <span class="mono" style="color:var(--accent)">Autumn / Winter 26 · Run No. 07</span>
+        <span class="mono" style="color:var(--band-accent)">Autumn / Winter 26 · Run No. 07</span>
         <h1>Made to <em>wear in</em>, not out.</h1>
         <p>Heavyweight cotton and 14&nbsp;oz selvedge, cut and sewn in batches of 300. Every garment carries its run number.</p>
         <div class="cta-row">
@@ -323,7 +330,7 @@ footer.site a { text-decoration: none; opacity: .9; }
 
 <footer class="site">
   <div class="wrap">
-    <div><a class="logo" href="#top">Acpanta</a><p style="opacity:.75;max-width:30ch">Garment-dyed workwear, cut in numbered runs of 300.</p></div>
+    <div><a class="logo" href="#top"><img class="logo-mark" src="logo.png" alt="" width="80" height="44"><span>Acpanta</span></a><p style="opacity:.75;max-width:30ch">Garment-dyed workwear, cut in numbered runs of 300.</p></div>
     <div><h4>Shop</h4><ul><li><a href="#shop">T-shirts</a></li><li><a href="#shop">Tops</a></li><li><a href="#shop">Outerwear</a></li><li><a href="#shop">Trousers</a></li></ul></div>
     <div><h4>Help</h4><ul><li><a href="#sizes">Size guide</a></li><li><a href="#mill">Shipping &amp; returns</a></li></ul></div>
     <div><h4>Workshop</h4><ul><li><a href="#mill">How it's made</a></li><li><a href="#journal">Wearers</a></li><li><a href="#join">Run alerts</a></li></ul></div>
