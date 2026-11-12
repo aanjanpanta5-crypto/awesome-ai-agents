@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Size guide · Acpanta</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Acpanta size chart in centimetres and inches for tops and trousers.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="sizes">
+
+<div class="notice mono">Free shipping over $150 · 30-day returns</div>
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="./" aria-label="Acpanta home"><img class="logo-mark" src="logo.svg" alt="" width="80" height="44"><span>Acpanta</span></a>
+    <nav class="main" aria-label="Main">
+      <a href="shop.html" data-page="shop">Shop</a>
+      <a href="shop.html#t-shirts">T-shirts</a>
+      <a href="about.html" data-page="about">Our story</a>
+      <a href="size-guide.html" data-page="sizes">Size guide</a>
+      <a href="contact.html" data-page="contact">Contact</a>
+    </nav>
+    <button class="bag-btn" id="open-bag" aria-label="Open bag">Bag <span class="bag-count" id="bag-count">0</span></button>
+  </div>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="wrap">
+      <span class="mono">Help</span>
+      <h1>Size guide</h1>
+      <p>Find your fit before you order. Switch between centimetres and inches.</p>
+    </div>
+  </div>
+  <section id="sizes">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Measurements</h2>
+          <p>Tops measured flat across the chest, 2&nbsp;cm below the armhole. Between sizes? Size down for a trim fit, up for layering.</p>
+        </div>
+        <div class="filters" role="group" aria-label="Units">
+          <button class="chip" id="unit-cm" aria-pressed="true">cm</button>
+          <button class="chip" id="unit-in" aria-pressed="false">in</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Size</th><th>Chest (flat)</th><th>Body length</th><th>Sleeve</th><th>Trouser waist</th><th>Inseam</th></tr></thead>
+          <tbody id="size-body"></tbody>
+        </table>
+      </div>
+      <p class="note">Measurements are taken after our pre-wash. Selvedge denim may relax about 1&nbsp;cm at the waist with wear.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div><a class="logo" href="./" aria-label="Acpanta home"><img class="logo-mark" src="logo.svg" alt="" width="80" height="44"><span>Acpanta</span></a><p style="opacity:.75;max-width:30ch">Garment-dyed workwear, cut in numbered runs of 300.</p></div>
+    <div><h4>Shop</h4><ul><li><a href="shop.html#t-shirts">T-shirts</a></li><li><a href="shop.html#tops">Tops</a></li><li><a href="shop.html#outerwear">Outerwear</a></li><li><a href="shop.html#trousers">Trousers</a></li><li><a href="shop.html#accessories">Accessories</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="size-guide.html">Size guide</a></li><li><a href="contact.html">Contact us</a></li></ul></div>
+    <div><h4>Acpanta</h4><ul><li><a href="about.html">Our story</a></li><li><a href="about.html#journal">Wearers</a></li><li><a href="contact.html#join">Run alerts</a></li></ul></div>
+    <div><h4>Follow us</h4><ul><li><a href="https://www.instagram.com/acpanta" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:aanjan.panta5@gmail.com">Email us</a></li></ul></div>
+  </div>
+  <div class="wrap legal mono">© 2026 Acpanta · acpanta.com</div>
+</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="Shopping bag" role="dialog" aria-modal="true">
+  <div class="drawer-head"><h2>Your bag</h2><button class="x" id="close-bag" aria-label="Close bag">×</button></div>
+  <div class="lines" id="lines"></div>
+  <div class="totals">
+    <div class="row"><span>Subtotal</span><span id="subtotal">$0</span></div>
+    <div class="row"><span>Shipping</span><span id="shipping">—</span></div>
+    <div class="ship-bar"><i id="ship-fill" style="width:0"></i></div>
+    <span class="mono" id="ship-note" style="color:var(--muted)">Spend $150 for free shipping</span>
+    <div class="row big"><span>Total</span><span id="total">$0</span></div>
+    <button class="btn btn-accent checkout" id="checkout">Checkout</button>
+    <p class="form-msg" id="checkout-msg" role="status"></p>
+  </div>
+</aside>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
