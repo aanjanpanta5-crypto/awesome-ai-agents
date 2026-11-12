@@ -276,8 +276,8 @@
   // Size guide
   if ($('size-body-tee')) {
   var SIZE_TABLES = {
-    'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23], ['XL', 62, 75, 24]],
-    'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64], ['XL', 66, 74, 66]]
+    'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23]],
+    'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64]]
   };
   function renderSizes(unit) {
     Object.keys(SIZE_TABLES).forEach(function (id) {
