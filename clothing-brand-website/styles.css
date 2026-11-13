@@ -625,3 +625,21 @@ footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; t
   .stat-value .num, .stat-value .suffix, .stat-bar span { animation: none; }
   .stat-value.pop { animation: none; }
 }
+
+/* Holographic writing in the offer bar and the main menu */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .notice span {
+    background-image: var(--holo-light); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 8s linear infinite;
+    filter: drop-shadow(1px 1px 0 rgba(90, 0, 20, .55));
+  }
+  nav.main a {
+    background-image: var(--holo-dark); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 9s linear infinite; opacity: 1;
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, .12));
+  }
+  nav.main a:hover { filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, .12)) brightness(1.15); }
+}
+@media (prefers-reduced-motion: reduce) { .notice span, nav.main a { animation: none; } }
