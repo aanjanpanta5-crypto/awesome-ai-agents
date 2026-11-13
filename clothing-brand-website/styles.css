@@ -1041,3 +1041,32 @@ header.site .search-btn:hover { border-color: var(--ink); }
 .form-msg.err { color: #e0102e; font-weight: 600; }
 .form-msg.err a { color: inherit; }
 @media (max-width: 600px) { .rv-grid { grid-template-columns: 1fr; } .review-form .btn { justify-self: stretch; } }
+
+/* ---------- Logo and offer bar: full 360° holographic shine ----------
+   Colours turn all the way round the wheel and the shine pulses with a soft glow.
+   Filter and transform only, so no flashing when zoomed on phones. */
+@keyframes shine360 {
+  0%   { filter: hue-rotate(0deg)   brightness(1.15) saturate(1.4)  drop-shadow(0 0 0 rgba(170,120,255,0)); }
+  12%  { filter: hue-rotate(45deg)  brightness(1.35) saturate(1.5)  drop-shadow(0 0 5px rgba(170,120,255,.75)); }
+  25%  { filter: hue-rotate(90deg)  brightness(1.15) saturate(1.4)  drop-shadow(0 0 1px rgba(170,120,255,.2)); }
+  37%  { filter: hue-rotate(135deg) brightness(1.35) saturate(1.5)  drop-shadow(0 0 5px rgba(90,200,255,.75)); }
+  50%  { filter: hue-rotate(180deg) brightness(1.15) saturate(1.4)  drop-shadow(0 0 1px rgba(90,200,255,.2)); }
+  62%  { filter: hue-rotate(225deg) brightness(1.35) saturate(1.5)  drop-shadow(0 0 5px rgba(255,90,190,.75)); }
+  75%  { filter: hue-rotate(270deg) brightness(1.15) saturate(1.4)  drop-shadow(0 0 1px rgba(255,90,190,.2)); }
+  87%  { filter: hue-rotate(315deg) brightness(1.35) saturate(1.5)  drop-shadow(0 0 5px rgba(120,255,210,.75)); }
+  100% { filter: hue-rotate(360deg) brightness(1.15) saturate(1.4)  drop-shadow(0 0 0 rgba(170,120,255,0)); }
+}
+.notice .marquee span { font-weight: 800; letter-spacing: .1em; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .notice .marquee span, header.site .logo span:not(.logo-mark), footer.site .logo span:not(.logo-mark) {
+    background-image: linear-gradient(100deg, #ff2fa0, #2b6bff, #9b3dff, #00b894, #ff2fa0, #2b6bff, #ff2fa0) !important;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+}
+.notice .marquee { animation: marquee 30s linear infinite, shine360 6s linear infinite !important; animation-play-state: running !important; }
+header.site .logo span:not(.logo-mark), footer.site .logo span:not(.logo-mark) { animation: shine360 6s linear infinite !important; animation-play-state: running !important; }
+header.site .logo-mark.logo-holo { animation: logo-roll 7s ease-in-out infinite, shine360 6s linear infinite !important; animation-play-state: running !important; }
+footer.site .logo-mark { animation: logo-roll 7s ease-in-out infinite, shine360 6s linear infinite !important; animation-play-state: running !important; }
+@media (prefers-reduced-motion: reduce) {
+  .notice .marquee, header.site .logo span:not(.logo-mark), footer.site .logo span:not(.logo-mark), header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: none !important; }
+}
