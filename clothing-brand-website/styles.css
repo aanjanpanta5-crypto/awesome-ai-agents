@@ -671,3 +671,7 @@ footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; t
   .search-panel .search-label, .search-panel .chip, .search-panel .search-empty,
   .search-panel .r-meta b, .search-panel .r-meta .mono, .search-panel .result-list .price { animation: none; }
 }
+
+/* Home: Instagram follow box (replaces the email sign-up) */
+.join-cta { display: flex; align-items: center; }
+.join .join-cta .btn { min-height: 48px; display: inline-flex; align-items: center; }

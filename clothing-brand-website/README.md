@@ -6,11 +6,11 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 
 | File | Page |
 |---|---|
-| `index.html` | Home: hero, new in, choose your weight, new stock alerts sign-up |
+| `index.html` | Home: hero, new in, choose your weight, Instagram follow box, stats |
 | `shop.html` | Every product, with category filters. `shop.html#t-shirts` opens on T-shirts |
 | `about.html` | Our story |
 | `size-guide.html` | Size chart in centimetres and inches |
-| `contact.html` | Instagram, WhatsApp and email, plus the sign-up form |
+| `contact.html` | Instagram, WhatsApp and email |
 | `returns.html` | Shipping and returns policy (14 days to cancel) |
 | `privacy.html` | Privacy policy |
 | `terms.html` | Terms and conditions |
@@ -21,7 +21,7 @@ The policy pages are a starting draft for a UK sole trader. Fill in any highligh
 Shared files:
 
 - `products.js`: **the product list and prices.** Both the website and the checkout use it, so a customer always pays the price in this file.
-- `app.js`: shopping bag, filters, size chart, sign-up form and checkout button
+- `app.js`: shopping bag, filters, search, zoom, size chart, stats and checkout button
 - `styles.css`: all styling, including the red and white colours (the `:root` block at the top)
 - `logo.svg`: the Acpanta logo as a vector; `logo.png` is a fallback
 - `netlify/functions/create-checkout.js`: creates the Stripe payment page for the bag
@@ -66,4 +66,3 @@ Run `python3 -m http.server` in this folder and visit http://localhost:8000. Che
 
 - Replace the drawn garments with product photos.
 - Replace the sample size chart measurements (in `app.js`, `SIZE_TABLES`) with the real ones.
-- The run alerts sign-up form is a front-end demo. Connect an email service to collect sign-ups.
