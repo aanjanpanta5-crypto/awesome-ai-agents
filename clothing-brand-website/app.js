@@ -136,7 +136,7 @@
     }
     if (e.target.closest('[data-add]')) {
       var sel = el.querySelector('select');
-      if (!sel.value) { sel.focus(); toast('Choose a size first'); return; }
+      if (!sel.value) { sel.focus(); toast('Pick a size first'); return; }
       addToBag(p, p.sel, sel.value);
     }
   });
