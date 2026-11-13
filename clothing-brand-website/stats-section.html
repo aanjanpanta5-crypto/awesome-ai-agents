@@ -86,6 +86,40 @@
 
   /* Reduced motion: no pop (numbers are set instantly by the script) */
   @media (prefers-reduced-motion: reduce) { .stat-value.pop { animation: none; } }
+
+  /* ---------- Holographic 360° numbers ---------- */
+  /* Each number and its word are filled with a holographic foil built from the card's accent,
+     and the colours keep turning a full 360° around the colour wheel. */
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .stat-value .num, .stat-value .suffix {
+      background-image: linear-gradient(110deg, var(--accent) 0%, #ffd0ef 18%, #c8f3ff 34%, var(--accent) 50%, #e2d0ff 66%, #c9ffe8 82%, var(--accent) 100%);
+      background-size: 300% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: holo360-shift 6s linear infinite, holo360-hue 8s linear infinite;
+    }
+  }
+  @keyframes holo360-shift { to { background-position: 300% 0; } }
+  @keyframes holo360-hue { to { filter: hue-rotate(360deg); } }
+
+  /* When a number lands: a full 360° spin together with the 1.08 → 1 pop */
+  .stat-value { perspective: 700px; }
+  .stat-value.pop { animation: stat-pop .9s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes stat-pop {
+    from { transform: rotateY(0deg) scale(1.08); }
+    to   { transform: rotateY(360deg) scale(1); }
+  }
+
+  /* Holographic progress bars */
+  .stat-bar span {
+    background: linear-gradient(90deg, var(--accent), #ffd0ef, #c8f3ff, #e2d0ff, #c9ffe8, var(--accent));
+    background-size: 200% 100%;
+    animation: holo360-shift 6s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stat-value .num, .stat-value .suffix, .stat-bar span { animation: none; }
+    .stat-value.pop { animation: none; }
+  }
 </style>
 </head>
 <body>
