@@ -94,11 +94,19 @@
     'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23]],
     'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64]]
   };
-  // Text shown on a product card once a size is picked
+  // Rough body chest each size suits, worked out from the garment's flat chest width.
+  // Tees sit closer; hoodies and sweatshirts are cut roomier.
+  function fitRange(tableId, row) {
+    var off = tableId === 'size-body-tee' ? [16, 8] : [24, 14];
+    return [2 * row[1] - off[0], 2 * row[1] - off[1]];
+  }
+  // Text shown on a product card and in the bag once a size is picked
   function sizeText(p, size) {
-    var rows = SIZE_TABLES[p.cat === 'T-shirts' ? 'size-body-tee' : 'size-body-hood'] || [];
+    var id = p.cat === 'T-shirts' ? 'size-body-tee' : 'size-body-hood', rows = SIZE_TABLES[id] || [];
     for (var i = 0; i < rows.length; i++) if (rows[i][0] === size) {
-      return '<b>Size ' + size + '</b> · chest ' + rows[i][1] + ' cm · length ' + rows[i][2] + ' cm · sleeve ' + rows[i][3] + ' cm';
+      var fit = fitRange(id, rows[i]);
+      return '<b>Size ' + size + '</b> · chest ' + rows[i][1] + ' cm · length ' + rows[i][2] + ' cm · sleeve ' + rows[i][3] + ' cm' +
+        '<br>Best for a body chest of about ' + fit[0] + '–' + fit[1] + ' cm';
     }
     return '';
   }
@@ -388,6 +396,7 @@
       var p = byId[l.id], c = p.colors[l.color];
       return '<div class="line"><div class="thumb">' + artFor(p, l.color) + '</div><div class="meta"><b>' + p.name + '</b>' +
         '<span class="mono" style="color:var(--muted)">' + c[0] + ' · ' + l.size + '</span>' +
+        '<span class="line-size mono">' + sizeText(p, l.size) + '</span>' +
         '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
     }).join('') : '<p class="empty">Your bag is empty. Pick a size on any piece and add it here.</p>';
@@ -443,7 +452,7 @@
       $(id).innerHTML = SIZE_TABLES[id].map(function (r) {
         return '<tr><td>' + r[0] + '</td>' + r.slice(1).map(function (v) {
           return '<td>' + (unit === 'in' ? (v / 2.54).toFixed(1) + '\u2033' : v + ' cm') + '</td>';
-        }).join('') + '</tr>';
+        }).join('') + (function () { var fr = fitRange(id, r); return '<td>' + (unit === 'in' ? (fr[0] / 2.54).toFixed(0) + '\u2013' + (fr[1] / 2.54).toFixed(0) + '\u2033' : fr[0] + '\u2013' + fr[1] + ' cm') + '</td>'; })() + '</tr>';
       }).join('');
     });
     $('unit-cm').setAttribute('aria-pressed', unit === 'cm');
@@ -473,7 +482,7 @@
         '<div class="review-empty"><p><b>No reviews yet.</b> We’re new, and we’d rather show nothing than make something up.</p>' +
         '<p>Bought something from us? Send us your review on WhatsApp or Instagram with your order number, and we’ll add it here.</p>' +
         '<div class="review-actions"><a class="btn btn-accent" href="https://wa.me/447448795690" target="_blank" rel="noopener">Send a review on WhatsApp</a>' +
-        '<a class="btn btn-outline" href="https://www.instagram.com/acpanta" target="_blank" rel="noopener">Message us on Instagram</a></div></div>';
+        '<a class="btn btn-outline" href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Message us on Instagram</a></div></div>';
     } else {
       var avg = REVIEWS.reduce(function (t, r) { return t + r.rating; }, 0) / REVIEWS.length;
       $('review-summary').innerHTML = stars(avg) + '<span class="review-avg">' + avg.toFixed(1) + ' out of 5</span>' +

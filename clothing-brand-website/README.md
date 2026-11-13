@@ -15,6 +15,7 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 | `privacy.html` | Privacy policy |
 | `terms.html` | Terms and conditions |
 | `thank-you.html` | Shown after a successful payment; empties the bag |
+| `404.html` | Shown when a page doesn't exist |
 
 The policy pages are a starting draft for a UK sole trader. Fill in any highlighted `[...]` detail and have them checked before taking orders.
 
