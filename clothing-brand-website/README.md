@@ -17,6 +17,10 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 | `thank-you.html` | Shown after a successful payment; empties the bag |
 | `404.html` | Shown when a page doesn't exist |
 
+Also: `og-image.jpg` (the picture shown when the site is shared on WhatsApp, Instagram and elsewhere), `robots.txt` and `sitemap.xml` (help Google find the pages; they assume the site lives at https://acpanta.com).
+
+The standalone `stats-section.html` and `rotating-hero.html` demos live in `extras/` at the repository root, so they aren't published with the shop.
+
 The policy pages are a starting draft for a UK sole trader. Fill in any highlighted `[...]` detail and have them checked before taking orders.
 
 Shared files:
