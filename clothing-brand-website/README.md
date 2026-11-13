@@ -15,6 +15,7 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 | `privacy.html` | Privacy policy |
 | `terms.html` | Terms and conditions |
 | `thank-you.html` | Shown after a successful payment; empties the bag |
+| `help.html` | Help centre: delivery, returns, sizing, payment and care questions |
 | `404.html` | Shown when a page doesn't exist |
 
 Also: `og-image.jpg` (the picture shown when the site is shared on WhatsApp, Instagram and elsewhere), `robots.txt` and `sitemap.xml` (help Google find the pages; they assume the site lives at https://acpanta.com).

@@ -220,6 +220,29 @@
   }
   renderGrid();
 
+  // Menu drawer: a side panel with the shop sections and help links (opened from the header)
+  var MENU_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  var mBtn = document.createElement('button');
+  mBtn.className = 'search-btn menu-btn'; mBtn.id = 'open-menu'; mBtn.type = 'button';
+  mBtn.setAttribute('aria-label', 'Open menu'); mBtn.innerHTML = MENU_ICON + '<span>Menu</span>';
+  var mScrim = document.createElement('div'); mScrim.className = 'search-scrim'; mScrim.hidden = true;
+  var menu = document.createElement('nav');
+  menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
+  var tile = function (href, label, note) { return '<a class="menu-tile" href="' + href + '"><span>' + label + '</span><small>' + note + '</small></a>'; };
+  menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
+    '<div class="menu-tiles">' + tile('shop.html', 'Shop all', '6 pieces') + tile('shop.html#t-shirts', 'T-shirts', '260 GSM and up') +
+    tile('shop.html#hoodies', 'Hoodies', '400+ GSM') + tile('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left') + '</div>' +
+    '<ul class="menu-links"><li><a href="help.html">Help centre</a></li><li><a href="size-guide.html">Size guide</a></li><li><a href="returns.html">Delivery &amp; returns</a></li>' +
+    '<li><a href="about.html">About us</a></li><li><a href="contact.html">Contact us</a></li><li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
+  document.body.appendChild(mScrim); document.body.appendChild(menu);
+  function openMenu() { mScrim.hidden = false; menu.hidden = false; document.documentElement.classList.add('no-scroll'); $('close-menu').focus(); }
+  function closeMenu() { mScrim.hidden = true; menu.hidden = true; document.documentElement.classList.remove('no-scroll'); mBtn.focus(); }
+  mBtn.addEventListener('click', openMenu);
+  $('close-menu').addEventListener('click', closeMenu);
+  mScrim.addEventListener('click', closeMenu);
+  menu.addEventListener('click', function (e) { if (e.target.closest('a')) closeMenu(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
+
   // Header search: a panel with live results, on every page
   var SEARCH_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
   var openBagBtn = $('open-bag');
@@ -229,7 +252,7 @@
   sBtn.innerHTML = SEARCH_ICON + '<span>Search</span>';
   var actions = document.createElement('div'); actions.className = 'header-actions';
   openBagBtn.parentNode.insertBefore(actions, openBagBtn);
-  actions.appendChild(sBtn); actions.appendChild(openBagBtn);
+  actions.appendChild(mBtn); actions.appendChild(sBtn); actions.appendChild(openBagBtn);
 
   var sScrim = document.createElement('div'); sScrim.className = 'search-scrim'; sScrim.hidden = true;
   var panel = document.createElement('div');
