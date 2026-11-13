@@ -715,3 +715,40 @@ footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; t
 .review-empty p { margin: 0; }
 .review-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Black top area: offer bar, header and menu ---------- */
+body::before { background: #0b0b0b; }
+.notice { background: #0b0b0b; color: #ffffff; border-bottom: 1px solid #222222; }
+header.site { background: #0b0b0b; color: #ffffff; border-bottom: 1px solid #222222; }
+header.site .bag-btn { color: #ffffff; }
+header.site .search-btn { color: #ffffff; border-color: rgba(255,255,255,.35); }
+header.site .search-btn:hover { border-color: #ffffff; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .notice span, nav.main a, header.site .logo span { background-image: var(--holo-light); filter: none; }
+  nav.main a:hover { filter: none; text-decoration: underline; text-decoration-color: #c8f3ff; text-underline-offset: 5px; }
+}
+@supports ((-webkit-mask-image: url(x.svg)) or (mask-image: url(x.svg))) {
+  header.site .logo-mark.logo-holo { background-image: var(--holo-light); filter: none; }
+}
+
+/* ---------- Premium cotton section ---------- */
+.craft { border-bottom: 1px solid var(--line); }
+.craft-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.craft-grid li { background: #0b0b0b; color: #ffffff; border-radius: 12px; padding: 22px; display: grid; gap: 8px; align-content: start; }
+.craft-grid b { font: 800 1.35rem/1.1 var(--display); text-transform: uppercase; letter-spacing: .02em; color: #e2d0ff; }
+.craft-grid li:nth-child(2) b { color: #c8f3ff; }
+.craft-grid li:nth-child(3) b { color: #c9ffe8; }
+.craft-grid li:nth-child(4) b { color: #ffd0ef; }
+.craft-grid span { color: #c9c9c9; line-height: 1.55; }
+
+/* ---------- Phones and tablets: stop flashing and broken patches when zooming ----------
+   Constantly moving colours and 3D tilt make touch browsers redraw the page many times a
+   second, which shows up as flashing or blank patches when pinch-zoomed. On touch screens
+   the hologram colours stay, but hold still; one-off animations still play. */
+@media (pointer: coarse) {
+  *, *::before, *::after { animation-play-state: paused !important; }
+  .stat-value.pop { animation-play-state: running !important; }
+  .card .art { transform: none !important; transition: none; }
+  .card .art::after, .notice::after { display: none; }
+  .card:hover .art img, .card:hover .art svg { transform: none; }
+}
