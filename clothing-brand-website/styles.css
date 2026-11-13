@@ -752,3 +752,51 @@ header.site .search-btn:hover { border-color: #ffffff; }
   .card .art::after, .notice::after { display: none; }
   .card:hover .art img, .card:hover .art svg { transform: none; }
 }
+
+/* ---------- Size measurements on product cards ---------- */
+.size-info { margin: 0; font-size: .66rem; line-height: 1.5; color: var(--muted); min-height: 3em; }
+.size-info.is-set { color: var(--ink); }
+.size-info b { color: var(--accent); font-weight: 500; }
+
+/* ---------- Moving offer bar ---------- */
+.notice { white-space: nowrap; padding-inline: 0; }
+.notice .marquee {
+  display: inline-flex; background: none; -webkit-background-clip: border-box; background-clip: border-box;
+  filter: none; will-change: transform;
+  animation: marquee 30s linear infinite, holo-hue 8s linear infinite;
+}
+.notice .marquee span { padding-inline: 1.6em; animation: none; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ---------- 360° holographic shine ----------
+   The colours of every holographic element turn a full 360° around the colour wheel.
+   This runs as a filter animation, which browsers handle off the main thread, so it
+   doesn't force the page to redraw (the cause of flashing when zoomed on phones). */
+@keyframes holo-hue { to { filter: hue-rotate(360deg); } }
+header.site .logo, nav.main, .bag-count,
+.hero h1, .page-head h1, .section-head h2, .mill h2, .size-title, .legal-doc h2, .stats-title,
+.badge.holo, .btn-holo span, .join h2, .join p,
+footer.site .wrap > div, footer.site .legal,
+.search-panel .search-label, .search-panel .suggest, .search-panel .result-list,
+.craft-grid b {
+  animation: holo-hue 8s linear infinite;
+}
+@media (pointer: coarse) {
+  header.site .logo, nav.main, .bag-count,
+  .hero h1, .page-head h1, .section-head h2, .mill h2, .size-title, .legal-doc h2, .stats-title,
+  .badge.holo, .btn-holo span, .join h2, .join p,
+  footer.site .wrap > div, footer.site .legal,
+  .search-panel .search-label, .search-panel .suggest, .search-panel .result-list,
+  .craft-grid b, .notice .marquee, .hero-seal,
+  .stat-value .num, .stat-value .suffix {
+    animation-play-state: running !important;
+  }
+  /* on touch screens these run the 360° colour turn only (no redraw-heavy gradient slide) */
+  .stat-value .num, .stat-value .suffix { animation: holo360-hue 8s linear infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .notice .marquee { animation: none; }
+  header.site .logo, nav.main, .bag-count, .hero h1, .page-head h1, .section-head h2, .mill h2, .size-title,
+  .legal-doc h2, .stats-title, .badge.holo, .btn-holo span, .join h2, .join p, footer.site .wrap > div,
+  footer.site .legal, .search-panel .search-label, .search-panel .suggest, .search-panel .result-list, .craft-grid b { animation: none; }
+}

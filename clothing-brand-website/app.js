@@ -89,6 +89,26 @@
     window.addEventListener('hashchange', function () { active = fromHash(); syncFilters(); renderGrid(); });
   }
 
+  // Measurements for each size (also used by the size guide page)
+  var SIZE_TABLES = {
+    'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23]],
+    'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64]]
+  };
+  // Text shown on a product card once a size is picked
+  function sizeText(p, size) {
+    var rows = SIZE_TABLES[p.cat === 'T-shirts' ? 'size-body-tee' : 'size-body-hood'] || [];
+    for (var i = 0; i < rows.length; i++) if (rows[i][0] === size) {
+      return '<b>Size ' + size + '</b> · chest ' + rows[i][1] + ' cm · length ' + rows[i][2] + ' cm · sleeve ' + rows[i][3] + ' cm';
+    }
+    return '';
+  }
+  function refreshSize(el) {
+    var info = el.querySelector('[data-size-info]'), sel = el.querySelector('select');
+    if (!info || !sel) return;
+    var t = sel.value ? sizeText(byId[el.dataset.id], sel.value) : '';
+    info.innerHTML = t || 'Pick a size to see its measurements';
+    info.classList.toggle('is-set', !!t);
+  }
   function cardHTML(p) { return card(p); }
   function card(p) {
     var c = p.colors[p.sel];
@@ -103,6 +123,7 @@
         var look = col[2] ? 'background:' + col[1] + ' url(' + col[2].replace('.jpg', '-thumb.jpg') + ') center 40%/cover' : 'background:' + col[1];
         return '<button class="sw' + (col[2] ? ' sw-img' : '') + '" data-sw="' + i + '" style="' + look + '" aria-label="' + esc(col[0]) + '" aria-pressed="' + (i === p.sel) + '" title="' + esc(col[0]) + '"></button>';
       }).join('') + '</div>' +
+      '<p class="size-info mono" data-size-info aria-live="polite">Pick a size to see its measurements</p>' +
       '<div class="buy"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '">' +
       (p.sizes.length > 1 ? '<option value="">Select size</option>' : '') +
       p.sizes.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select>' +
@@ -131,6 +152,7 @@
       el.outerHTML = card(p);
       var fresh = document.querySelector('.card[data-id="' + p.id + '"]');
       fresh.querySelector('select').value = size;
+      refreshSize(fresh);
       fresh.querySelector('[data-sw="' + p.sel + '"]').focus();
       return;
     }
@@ -160,6 +182,12 @@
     grid.addEventListener('pointerout', holoOff);
     grid.addEventListener('pointercancel', holoOff);
   }
+
+  // Show a size's measurements as soon as it is picked
+  if (grid) grid.addEventListener('change', function (e) {
+    var el = e.target.closest('.card');
+    if (el && e.target.tagName === 'SELECT') refreshSize(el);
+  });
 
   // Shop page search box
   function setQuery(q) {
@@ -300,6 +328,7 @@
       p.sel = Z.i; card.outerHTML = cardHTML(p);
       card = document.querySelector('.card[data-id="' + p.id + '"]');
       card.querySelector('select').value = size;
+      refreshSize(card);
     }
     var back = card && card.querySelector('.zoom-btn'); if (back) back.focus();
   }
@@ -408,10 +437,6 @@
 
   // Size guide
   if ($('size-body-tee')) {
-  var SIZE_TABLES = {
-    'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23]],
-    'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64]]
-  };
   function renderSizes(unit) {
     Object.keys(SIZE_TABLES).forEach(function (id) {
       if (!$(id)) return;
