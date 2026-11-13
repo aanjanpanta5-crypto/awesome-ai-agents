@@ -675,3 +675,43 @@ footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; t
 /* Home: Instagram follow box (replaces the email sign-up) */
 .join-cta { display: flex; align-items: center; }
 .join .join-cta .btn { min-height: 48px; display: inline-flex; align-items: center; }
+
+/* ---------- White instead of red: offer bar, home banner and page title bands ---------- */
+:root { --band: #ffffff; --band-fg: #141414; --band-accent: #6a6a6a; --notice-bg: #ffffff; --notice-fg: #141414; }
+.notice { border-bottom: 1px solid var(--line); }
+.hero, .page-head { border-bottom: 1px solid var(--line); }
+.hero .btn-accent { background: #0b0b0b; color: #ffffff; }
+.btn-ghost.btn-holo { box-shadow: inset 0 0 0 1px #141414; }
+.hero-seal { box-shadow: inset 0 0 0 3px rgba(255,255,255,.85), inset 0 0 28px rgba(255,255,255,.75), 0 12px 30px rgba(0,0,0,.14); }
+
+/* Home headline: small, unique line, all holographic */
+.hero h1 { font-size: clamp(1.9rem, 5.2vw, 3.2rem); letter-spacing: .01em; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero h1, .hero h1 em, .page-head h1 {
+    background-image: var(--holo-dark); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 9s linear infinite;
+  }
+  .hero h1 em { font-style: normal; filter: none; }
+  .notice span { background-image: var(--holo-dark); filter: none; }
+  .btn-accent.btn-holo span { background-image: var(--holo-light); filter: drop-shadow(1px 1px 0 rgba(0,0,0,.4)); }
+  .btn-ghost.btn-holo span { background-image: var(--holo-dark); filter: none; }
+}
+
+/* ---------- Customer reviews ---------- */
+.reviews { border-top: 1px solid var(--line); }
+.review-summary { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.stars { color: #f2b01e; letter-spacing: 2px; font-size: 1.1rem; }
+.stars-off { color: #d6d6d6; }
+.review-avg { font-weight: 600; }
+.review-count { color: var(--muted); }
+.review-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.review-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 10px; }
+.review-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.verified { font-size: .68rem; color: #0a7a3d; background: #e6f7ee; padding: 3px 8px; border-radius: 999px; }
+.review-text { margin: 0; line-height: 1.6; }
+.review-meta { margin: 0; color: var(--muted); font-size: .7rem; }
+.review-empty { grid-column: 1 / -1; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 8px; max-width: 720px; }
+.review-empty p { margin: 0; }
+.review-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

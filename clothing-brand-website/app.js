@@ -438,6 +438,31 @@
     this.reset();
   });
 
+  // Customer reviews (home page): real reviews from reviews.js only
+  if ($('review-list')) {
+    var REVIEWS = (window.ACPANTA_REVIEWS || []).filter(function (r) { return r && r.text && r.rating >= 1 && r.rating <= 5; });
+    var stars = function (n) { var full = Math.round(n); return '<span class="stars" aria-hidden="true">' + '★★★★★'.slice(0, full) + '<span class="stars-off">' + '★★★★★'.slice(full) + '</span></span>'; };
+    if (!REVIEWS.length) {
+      $('review-summary').innerHTML = '';
+      $('review-list').innerHTML =
+        '<div class="review-empty"><p><b>No reviews yet.</b> We’re new, and we’d rather show nothing than make something up.</p>' +
+        '<p>Bought something from us? Send us your review on WhatsApp or Instagram with your order number, and we’ll add it here.</p>' +
+        '<div class="review-actions"><a class="btn btn-accent" href="https://wa.me/447448795690" target="_blank" rel="noopener">Send a review on WhatsApp</a>' +
+        '<a class="btn btn-outline" href="https://www.instagram.com/acpanta" target="_blank" rel="noopener">Message us on Instagram</a></div></div>';
+    } else {
+      var avg = REVIEWS.reduce(function (t, r) { return t + r.rating; }, 0) / REVIEWS.length;
+      $('review-summary').innerHTML = stars(avg) + '<span class="review-avg">' + avg.toFixed(1) + ' out of 5</span>' +
+        '<span class="review-count">' + REVIEWS.length + (REVIEWS.length === 1 ? ' review' : ' reviews') + '</span>';
+      $('review-list').innerHTML = REVIEWS.slice().sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); }).map(function (r) {
+        var when = r.date ? new Date(r.date + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+        return '<article class="review-card"><div class="review-top">' + stars(r.rating) + '<span class="sr-only">' + r.rating + ' out of 5 stars</span>' +
+          (r.verified ? '<span class="verified mono">✓ Verified buyer</span>' : '') + '</div>' +
+          '<p class="review-text">' + esc(r.text) + '</p>' +
+          '<p class="review-meta mono">' + esc(r.name || 'Customer') + (r.product ? ' · ' + esc(r.product) : '') + (when ? ' · ' + when : '') + '</p></article>';
+      }).join('');
+    }
+  }
+
   // Mark the current page in the menu
   var page = document.body.getAttribute('data-page');
   [].forEach.call(document.querySelectorAll('nav.main a[data-page]'), function (a) {

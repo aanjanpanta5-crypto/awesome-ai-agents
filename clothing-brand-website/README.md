@@ -6,7 +6,7 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 
 | File | Page |
 |---|---|
-| `index.html` | Home: hero, new in, choose your weight, Instagram follow box, stats |
+| `index.html` | Home: hero, new in, customer reviews, choose your weight, Instagram follow box, stats |
 | `shop.html` | Every product, with category filters. `shop.html#t-shirts` opens on T-shirts |
 | `about.html` | Our story |
 | `size-guide.html` | Size chart in centimetres and inches |
@@ -20,6 +20,7 @@ The policy pages are a starting draft for a UK sole trader. Fill in any highligh
 
 Shared files:
 
+- `reviews.js`: real customer reviews shown on the home page (see below)
 - `products.js`: **the product list and prices.** Both the website and the checkout use it, so a customer always pays the price in this file.
 - `app.js`: shopping bag, filters, search, zoom, size chart, stats and checkout button
 - `styles.css`: all styling, including the red and white colours (the `:root` block at the top)
@@ -33,6 +34,16 @@ The header, footer and bag panel are repeated in each HTML page. If you change o
 Edit `products.js`: name, category, price in pounds, colours (name and hex), sizes, `stock` and an optional badge such as "New".
 
 `stock` is the number of pieces you have. Update it by hand as items sell. Products with 20 or fewer show "Limited · N pieces", and 5 or fewer show "Only N left". Checkout refuses a quantity larger than the stock number. The home page's featured products are set by `data-featured` on the grid in `index.html`.
+
+## Adding customer reviews
+
+Reviews live in `reviews.js` and show in the Customer reviews section on the home page, with the average star rating worked out automatically.
+
+1. A customer sends you a review on WhatsApp or Instagram with their order number.
+2. Find that order in the Stripe Dashboard (**Payments**) and check the name and product match.
+3. Add it to `reviews.js` with `verified: true`, using their first name and initial only.
+
+Only add reviews from real customers. Writing your own, or showing unverified reviews as genuine, is illegal in the UK (Digital Markets, Competition and Consumers Act 2024). Until there's at least one review, the section says so honestly and asks buyers to send theirs.
 
 ## How checkout works
 
