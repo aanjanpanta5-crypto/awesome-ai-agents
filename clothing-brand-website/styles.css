@@ -966,21 +966,27 @@ header.site .search-btn:hover { border-color: var(--ink); }
 .badge.holo, .card .price, .help-topics a, .craft-grid b,
 .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono,
 .join .btn-accent, footer.site .btn-accent, .stats .btn-accent, .search-panel .btn-accent {
-  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85) !important; transform: none !important;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85) !important; transform: none;
 }
 .btn-accent:hover, .add:hover, .checkout:hover, .btn-accent:active, .add:active, .checkout:active,
 .chip[aria-pressed="true"]:active, .help-topics a:active {
-  transform: none !important; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85) !important;
+  transform: none; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85) !important;
 }
 .btn-outline, .hero .btn-ghost.btn-holo, .btn-outline:active, .hero .btn-ghost.btn-holo:active {
-  box-shadow: inset 0 0 0 1.5px #141414 !important; transform: none !important;
+  box-shadow: inset 0 0 0 1.5px #141414 !important; transform: none;
 }
 .btn-accent, .add, .checkout, .chip[aria-pressed="true"], .badge.holo, .card .price, .help-topics a, .craft-grid b,
 .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono {
-  animation: foil-360 8s linear infinite !important;
+  animation: foil-360 8s linear infinite, logo-roll 6s ease-in-out infinite !important;
 }
 @keyframes foil-360 { to { filter: hue-rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   .btn-accent, .add, .checkout, .chip[aria-pressed="true"], .badge.holo, .card .price, .help-topics a, .craft-grid b,
   .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: none !important; }
 }
+/* everything in foil also flips round like the logo, then rests so it stays readable */
+.card .price, .craft-grid b { animation-delay: 0s, 1.5s !important; }
+.add, .checkout { animation-delay: 0s, 3s !important; }
+.btn-outline, .hero .btn-ghost.btn-holo { animation: logo-roll 6s ease-in-out 1.5s infinite; }
+@media (pointer: coarse) { .btn-outline, .hero .btn-ghost.btn-holo { animation-play-state: running !important; } }
+@media (prefers-reduced-motion: reduce) { .btn-outline, .hero .btn-ghost.btn-holo { animation: none; } }
