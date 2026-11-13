@@ -837,3 +837,36 @@ footer.site .logo-mark { animation: logo-roll 7s ease-in-out infinite; }
 .stats .stats-title { animation: holo-hue 8s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .stats .stats-title { animation: none; } }
 .line .meta .line-size b { display: inline; }
+
+/* ---------- One holographic style everywhere: the deep, vivid one ----------
+   White areas use the deep foil (magenta, blue, purple, green). Black areas use a
+   brighter version of the same colours instead of pale pastels. */
+:root {
+  --holo-light: linear-gradient(100deg, #ff4fb0, #5a8cff, #a66bff, #1fd1a0, #ff4fb0, #5a8cff, #ff4fb0);
+}
+/* Top area back to white, with the deep foil on the logo, name, menu and offer bar */
+body::before { background: #ffffff; }
+.notice { background: #ffffff; color: var(--ink); border-bottom: 1px solid var(--line); }
+header.site { background: #ffffff; color: var(--ink); border-bottom: 1px solid var(--line); }
+header.site .bag-btn { color: var(--ink); }
+header.site .search-btn { color: var(--ink); border-color: var(--line); }
+header.site .search-btn:hover { border-color: var(--ink); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .notice span, nav.main a, header.site .logo span { background-image: var(--holo-dark); }
+  nav.main a:hover { text-decoration-color: var(--accent); }
+}
+@supports ((-webkit-mask-image: url(x.svg)) or (mask-image: url(x.svg))) {
+  header.site .logo-mark.logo-holo {
+    background-image: linear-gradient(100deg, #c2187a, #2b59d9, #7a2fd0, #0d8a70, #e0102e, #2b59d9, #c2187a);
+    filter: drop-shadow(1px 1px 0 rgba(0,0,0,.18));
+  }
+}
+/* Black cards: vivid headings to match */
+.craft-grid b, .craft-grid li:nth-child(2) b, .craft-grid li:nth-child(3) b, .craft-grid li:nth-child(4) b { color: #a66bff; }
+.craft-grid li:nth-child(2) b { color: #5a8cff; }
+.craft-grid li:nth-child(3) b { color: #1fd1a0; }
+.craft-grid li:nth-child(4) b { color: #ff4fb0; }
+
+/* Keep the shimmer inside the blue / purple / magenta family: the colours sway gently
+   instead of going all the way round the wheel (which passed through muddy green and brown). */
+@keyframes holo-hue { 0%, 100% { filter: hue-rotate(-22deg); } 50% { filter: hue-rotate(28deg); } }
