@@ -172,7 +172,7 @@
     }
     if (e.target.closest('[data-add]')) {
       var sel = el.querySelector('select');
-      if (!sel.value) { sel.focus(); toast('Pick a size first'); return; }
+      if (!sel.value) { sel.classList.add('need-size'); sel.addEventListener('change', function () { sel.classList.remove('need-size'); }, { once: true }); sel.focus(); toast('Pick a size first'); return; }
       addToBag(p, p.sel, sel.value);
     }
   });
@@ -228,10 +228,10 @@
   var mScrim = document.createElement('div'); mScrim.className = 'search-scrim'; mScrim.hidden = true;
   var menu = document.createElement('nav');
   menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
-  var tile = function (href, label, note) { return '<a class="menu-tile" href="' + href + '"><span>' + label + '</span><small>' + note + '</small></a>'; };
+  var tile = function (href, label, note, low) { return '<a class="menu-tile" href="' + href + '"><span>' + label + '</span><small' + (low ? ' class="low"' : '') + '>' + note + '</small></a>'; };
   menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
     '<div class="menu-tiles">' + tile('shop.html', 'Shop all', '6 pieces') + tile('shop.html#t-shirts', 'T-shirts', '260 GSM and up') +
-    tile('shop.html#hoodies', 'Hoodies', '400+ GSM') + tile('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left') + '</div>' +
+    tile('shop.html#hoodies', 'Hoodies', '400+ GSM') + tile('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + '</div>' +
     '<ul class="menu-links"><li><a href="help.html">Help centre</a></li><li><a href="size-guide.html">Size guide</a></li><li><a href="returns.html">Delivery &amp; returns</a></li>' +
     '<li><a href="about.html">About us</a></li><li><a href="contact.html">Contact us</a></li><li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
   document.body.appendChild(mScrim); document.body.appendChild(menu);

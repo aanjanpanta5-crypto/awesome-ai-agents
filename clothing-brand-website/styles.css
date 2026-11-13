@@ -990,3 +990,26 @@ header.site .search-btn:hover { border-color: var(--ink); }
 .btn-outline, .hero .btn-ghost.btn-holo { animation: logo-roll 6s ease-in-out 1.5s infinite; }
 @media (pointer: coarse) { .btn-outline, .hero .btn-ghost.btn-holo { animation-play-state: running !important; } }
 @media (prefers-reduced-motion: reduce) { .btn-outline, .hero .btn-ghost.btn-holo { animation: none; } }
+
+/* ---------- Flip only where it matters ----------
+   The logos, the logo seal and the stock badges flip. Buttons, prices and labels stay still
+   and just keep their 360° holographic colour. */
+.btn-accent, .add, .checkout, .chip[aria-pressed="true"], .card .price, .help-topics a, .craft-grid b,
+.hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono {
+  animation: foil-360 8s linear infinite !important; animation-delay: 0s !important;
+}
+.btn-outline, .hero .btn-ghost.btn-holo { animation: none !important; }
+.badge.holo { animation: foil-360 8s linear infinite, logo-roll 6s ease-in-out infinite !important; }
+
+/* ---------- Red where it needs attention ---------- */
+.badge:not(.holo) { background: #e0102e !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff; font-weight: 600;
+  padding: 6px 12px; border-radius: 3px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6); animation: logo-roll 6s ease-in-out infinite; }
+.menu-tile small.low { color: #ff4d64; font-weight: 600; }
+#checkout-msg:not(:empty) { color: #e0102e; font-weight: 600; }
+.card select.need-size { outline: 2px solid #e0102e; outline-offset: 1px; }
+@media (pointer: coarse) { .badge:not(.holo) { animation-play-state: running !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .badge.holo, .badge:not(.holo) { animation: none !important; }
+  .btn-accent, .add, .checkout, .chip[aria-pressed="true"], .card .price, .help-topics a, .craft-grid b,
+  .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: none !important; }
+}
