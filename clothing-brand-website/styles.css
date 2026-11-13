@@ -912,3 +912,51 @@ header.site .search-btn:hover { border-color: var(--ink); }
 .help-contact { margin-top: 30px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px; box-shadow: 5px 5px 0 var(--line); }
 .help-contact p { margin: 0 0 10px; }
 .help-contact .btn { margin: 4px 6px 4px 0; }
+
+/* ---------- Holographic foil, 3D: the important things ----------
+   Same pastel foil as the "Limited · 20 pieces" tag: pink, ice blue and lilac with black text,
+   a white edge and a solid offset shadow so it sits up off the page. Buttons press in on tap. */
+:root { --foil: linear-gradient(110deg, #ffc9ec, #c4f4ff, #dccbff, #c6ffe6, #ffd6f2, #c4f4ff);
+  --foil-edge: inset 0 0 0 1.5px rgba(255,255,255,.85), inset 0 2px 0 rgba(255,255,255,.9);
+  --foil-depth: 3px 4px 0 #141414, 5px 8px 16px rgba(20,0,60,.18); }
+.btn-accent, .hero .btn-accent, .add, .add:hover, .checkout, .chip[aria-pressed="true"],
+.badge.holo, .card .price, .help-topics a, .craft-grid b,
+.hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono, .about .mono {
+  background: var(--foil) !important; color: #141414 !important; -webkit-text-fill-color: #141414;
+  border: 0; border-color: transparent; border-radius: 4px;
+  box-shadow: var(--foil-edge), var(--foil-depth) !important;
+}
+/* the little tags */
+.card .price, .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono, .craft-grid b {
+  display: inline-block; width: max-content; max-width: 100%; padding: 4px 9px; font-weight: 500; letter-spacing: .06em;
+  transform: perspective(400px) rotateX(8deg) rotateZ(-1.5deg);
+}
+.card .price { transform: perspective(400px) rotateX(8deg) rotateZ(2deg); font-size: .82rem; }
+.craft-grid b { margin-bottom: 8px; background-clip: border-box !important; animation: none; }
+.badge.holo { padding: 6px 12px; border-radius: 3px; transform: perspective(400px) rotateX(8deg); }
+/* the buttons */
+.btn-accent, .add, .checkout { font-weight: 700; letter-spacing: .03em; transform: translateY(-2px);
+  transition: transform .12s ease, box-shadow .12s ease; }
+.btn-accent:hover, .add:hover, .checkout:hover { transform: translateY(-4px); box-shadow: var(--foil-edge), 5px 7px 0 #141414, 7px 12px 20px rgba(20,0,60,.22) !important; }
+.btn-accent:active, .add:active, .checkout:active, .chip[aria-pressed="true"]:active { transform: translate(3px, 3px); box-shadow: var(--foil-edge), 0 1px 0 #141414 !important; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .btn-accent.btn-holo span { background: none !important; color: #141414; -webkit-text-fill-color: #141414; filter: none !important; animation: none; }
+}
+.help-topics a { min-height: 40px; }
+.help-topics a:active { transform: translate(3px, 3px); box-shadow: var(--foil-edge), 0 1px 0 #141414 !important; }
+/* on the black areas the shadow is lilac so it still shows */
+.join .btn-accent, footer.site .btn-accent, .stats .btn-accent, .search-panel .btn-accent {
+  box-shadow: var(--foil-edge), 3px 4px 0 #8a5cff, 0 8px 22px rgba(138,92,255,.35) !important; }
+/* gentle colour turn: filter only, so no flashing when zoomed */
+.btn-accent, .add, .checkout, .card .price, .help-topics a, .craft-grid b,
+.hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: foil-sway 7s ease-in-out infinite alternate; }
+@keyframes foil-sway { from { filter: hue-rotate(-20deg); } to { filter: hue-rotate(25deg); } }
+@media (pointer: coarse) { .btn-accent, .add, .checkout, .card .price, .help-topics a, .craft-grid b,
+  .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation-play-state: running !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .btn-accent, .add, .checkout, .card .price, .help-topics a, .craft-grid b,
+  .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: none !important; transition: none; }
+}
+/* secondary buttons: white with a foil 3D edge */
+.btn-outline, .hero .btn-ghost.btn-holo { background: #ffffff; border-radius: 4px; box-shadow: inset 0 0 0 1.5px #141414, 4px 5px 0 -1px #dccbff, 4px 5px 0 0.5px #141414 !important; transition: transform .12s ease; }
+.btn-outline:active, .hero .btn-ghost.btn-holo:active { transform: translate(3px, 3px); box-shadow: inset 0 0 0 1.5px #141414 !important; }
