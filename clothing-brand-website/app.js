@@ -514,9 +514,7 @@
       $('review-summary').innerHTML = '';
       $('review-list').innerHTML =
         '<div class="review-empty"><p><b>No reviews yet.</b> We’re new, and we’d rather show nothing than make something up.</p>' +
-        '<p>Bought something from us? Send us your review on WhatsApp or Instagram with your order number, and we’ll add it here.</p>' +
-        '<div class="review-actions"><a class="btn btn-accent" href="https://wa.me/447448795690" target="_blank" rel="noopener">Send a review on WhatsApp</a>' +
-        '<a class="btn btn-outline" href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Message us on Instagram</a></div></div>';
+        '<p>Bought something from us? Be the first to write one below.</p></div>';
     } else {
       var avg = REVIEWS.reduce(function (t, r) { return t + r.rating; }, 0) / REVIEWS.length;
       $('review-summary').innerHTML = stars(avg) + '<span class="review-avg">' + avg.toFixed(1) + ' out of 5</span>' +
@@ -529,6 +527,30 @@
           '<p class="review-meta mono">' + esc(r.name || 'Customer') + (r.product ? ' · ' + esc(r.product) : '') + (when ? ' · ' + when : '') + '</p></article>';
       }).join('');
     }
+  }
+
+  // Review form: sends to Netlify Forms. Reviews are checked against an order before going up.
+  var rForm = $('review-form');
+  if (rForm) {
+    rForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = $('review-msg'), btn = rForm.querySelector('button[type=submit]');
+      msg.className = 'form-msg';
+      if (!rForm.checkValidity()) { rForm.reportValidity(); return; }
+      btn.disabled = true; msg.textContent = 'Sending…';
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(rForm)).toString() })
+        .then(function (r) { if (!r.ok) throw new Error('bad'); })
+        .then(function () {
+          rForm.reset(); msg.className = 'form-msg ok';
+          msg.textContent = 'Thank you! We’ll check it against your order and post it here soon.';
+        })
+        .catch(function () {
+          msg.className = 'form-msg err';
+          msg.innerHTML = 'Sorry, that didn’t send. Please try again, or send your review on <a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a>.';
+        })
+        .then(function () { btn.disabled = false; });
+    });
   }
 
   // Mark the current page in the menu

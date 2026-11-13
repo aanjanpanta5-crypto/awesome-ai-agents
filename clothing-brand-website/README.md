@@ -83,3 +83,13 @@ Run `python3 -m http.server` in this folder and visit http://localhost:8000. Che
 
 - Replace the drawn garments with product photos.
 - Size measurements live in `SIZE_TABLES` in `app.js` (confirmed against the stock). If a new batch measures differently, update them there; setting `MEASUREMENTS_READY = false` hides all measurements and asks customers to message you on WhatsApp instead.
+
+## Customer reviews
+
+Customers write reviews with the form in the home page's reviews section. Netlify Forms collects them:
+
+1. In Netlify, open your site, then **Forms**. Turn on form detection once, then redeploy.
+2. New reviews appear under the **review** form. You can add an email notification there.
+3. Find the order in Stripe (**Payments**, search the email) and check the name and product match.
+4. Copy the review into `reviews.js` with `verified: true`. Only first name and initial, rating, product, review and date go there, never the email.
+5. Delete the submission in Netlify once it's checked.

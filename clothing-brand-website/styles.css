@@ -1013,3 +1013,31 @@ header.site .search-btn:hover { border-color: var(--ink); }
   .btn-accent, .add, .checkout, .chip[aria-pressed="true"], .card .price, .help-topics a, .craft-grid b,
   .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: none !important; }
 }
+
+/* ---------- Write a review ---------- */
+.review-form { margin-top: 32px; max-width: 720px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: clamp(18px, 4vw, 28px); display: grid; gap: 16px; }
+.review-form h3 { margin: 0; font: 800 1.6rem/1 var(--display); text-transform: uppercase; }
+.review-form-note { margin: 0; color: var(--muted); line-height: 1.6; }
+.rv-rating { border: 0; margin: 0; padding: 0; }
+.rv-rating legend { font-weight: 600; margin-bottom: 6px; padding: 0; }
+.rv-stars { display: inline-flex; flex-direction: row-reverse; gap: 4px; }
+.rv-stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.rv-stars label { font-size: 2rem; line-height: 1; cursor: pointer; color: #d6d6d6; padding: 4px 2px; min-width: 40px; text-align: center; }
+.rv-stars input:checked ~ label, .rv-stars label:hover, .rv-stars label:hover ~ label { color: #141414; }
+.rv-stars input:focus-visible + label { outline: 2px solid #e0102e; outline-offset: 2px; border-radius: 4px; }
+.rv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.rv-wide { grid-column: 1 / -1; }
+.rv-grid label { display: grid; gap: 6px; font-weight: 600; font-size: .92rem; }
+.rv-grid small { font-weight: 400; color: var(--muted); }
+.review-form input:not([type=radio]):not([type=checkbox]), .review-form select, .review-form textarea {
+  font: inherit; font-weight: 400; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 12px; min-height: 46px; width: 100%; box-sizing: border-box; }
+.review-form textarea { resize: vertical; min-height: 120px; }
+.review-form input:focus, .review-form select:focus, .review-form textarea:focus { outline: 2px solid #8a5cff; outline-offset: 0; border-color: transparent; }
+.rv-consent { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; line-height: 1.5; color: var(--muted); }
+.rv-consent input { width: 20px; height: 20px; margin-top: 1px; flex: none; accent-color: #141414; }
+.review-form .btn { justify-self: start; }
+.review-form button:disabled { opacity: .6; }
+.form-msg.ok { color: #0d7a4f; font-weight: 600; }
+.form-msg.err { color: #e0102e; font-weight: 600; }
+.form-msg.err a { color: inherit; }
+@media (max-width: 600px) { .rv-grid { grid-template-columns: 1fr; } .review-form .btn { justify-self: stretch; } }

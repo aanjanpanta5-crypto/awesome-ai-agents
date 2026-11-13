@@ -97,6 +97,23 @@
         <div class="review-summary" id="review-summary" aria-live="polite"></div>
       </div>
       <div class="review-list" id="review-list"></div>
+
+      <form class="review-form" id="review-form" name="review" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="./#reviews">
+        <input type="hidden" name="form-name" value="review">
+        <p class="hp" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <h3>Write a review</h3>
+        <p class="review-form-note">Bought something from us? Tell everyone what you think. We match each review to a real order before it goes up, usually within a few days.</p>
+        <fieldset class="rv-rating"><legend>Your rating</legend><div class="rv-stars"><input type="radio" id="rv-star5" name="rating" value="5" required><label for="rv-star5" title="5 stars">★<span class="sr-only">5 stars</span></label><input type="radio" id="rv-star4" name="rating" value="4" required><label for="rv-star4" title="4 stars">★<span class="sr-only">4 stars</span></label><input type="radio" id="rv-star3" name="rating" value="3" required><label for="rv-star3" title="3 stars">★<span class="sr-only">3 stars</span></label><input type="radio" id="rv-star2" name="rating" value="2" required><label for="rv-star2" title="2 stars">★<span class="sr-only">2 stars</span></label><input type="radio" id="rv-star1" name="rating" value="1" required><label for="rv-star1" title="1 star">★<span class="sr-only">1 star</span></label></div></fieldset>
+        <div class="rv-grid">
+          <label>First name and initial<input name="name" required maxlength="40" autocomplete="name" placeholder="e.g. Sam T."></label>
+          <label>Which piece did you buy?<select name="product" required><option value="">Choose one</option><option>Premium Logo Tee</option><option>Printed Tee</option><option>Heavyweight Logo Hoodie</option><option>Premium Boxy Hoodie</option><option>Zip Hoodie</option><option>Heavyweight Sweatshirt</option></select></label>
+          <label class="rv-wide">Email you used at checkout<input type="email" name="email" required maxlength="120" autocomplete="email" placeholder="So we can find your order"><small>Never shown on the site.</small></label>
+          <label class="rv-wide">Your review<textarea name="review" required minlength="10" maxlength="1000" rows="5" placeholder="Fit, feel, quality, delivery..."></textarea></label>
+        </div>
+        <label class="rv-consent"><input type="checkbox" name="consent" value="yes" required> I bought this from Acpanta, and I'm happy for my first name and initial, rating and review to be shown on this website.</label>
+        <button class="btn btn-accent" type="submit">Send my review</button>
+        <p class="form-msg" id="review-msg" role="status"></p>
+      </form>
     </div>
   </section>
 
