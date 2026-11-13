@@ -89,6 +89,39 @@
     window.addEventListener('hashchange', function () { active = fromHash(); syncFilters(); renderGrid(); });
   }
 
+  // Measurements for each size (also used by the size guide page).
+  // MEASUREMENTS_READY: keep false until SIZE_TABLES holds the REAL measurements of your stock.
+  // While false, no numbers are shown anywhere; customers are asked to message you instead.
+  var MEASUREMENTS_READY = true;
+  var SIZE_TABLES = {
+    'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23]],
+    'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64]]
+  };
+  // Rough body chest each size suits, worked out from the garment's flat chest width.
+  // Tees sit closer; hoodies and sweatshirts are cut roomier.
+  function fitRange(tableId, row) {
+    var off = tableId === 'size-body-tee' ? [16, 8] : [24, 14];
+    return [2 * row[1] - off[0], 2 * row[1] - off[1]];
+  }
+  // Text shown on a product card and in the bag once a size is picked
+  function sizeText(p, size) {
+    if (!MEASUREMENTS_READY) return '';
+    var id = p.cat === 'T-shirts' ? 'size-body-tee' : 'size-body-hood', rows = SIZE_TABLES[id] || [];
+    for (var i = 0; i < rows.length; i++) if (rows[i][0] === size) {
+      var fit = fitRange(id, rows[i]);
+      return '<b>Size ' + size + '</b> · chest ' + rows[i][1] + ' cm · length ' + rows[i][2] + ' cm · sleeve ' + rows[i][3] + ' cm' +
+        '<br>Best for a body chest of about ' + fit[0] + '–' + fit[1] + ' cm';
+    }
+    return '';
+  }
+  function refreshSize(el) {
+    var info = el.querySelector('[data-size-info]'), sel = el.querySelector('select');
+    if (!info || !sel) return;
+    var t = sel.value ? sizeText(byId[el.dataset.id], sel.value) : '';
+    info.innerHTML = t || (MEASUREMENTS_READY ? 'Pick a size to see its measurements' :
+      'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>');
+    info.classList.toggle('is-set', !!t);
+  }
   function cardHTML(p) { return card(p); }
   function card(p) {
     var c = p.colors[p.sel];
@@ -103,6 +136,8 @@
         var look = col[2] ? 'background:' + col[1] + ' url(' + col[2].replace('.jpg', '-thumb.jpg') + ') center 40%/cover' : 'background:' + col[1];
         return '<button class="sw' + (col[2] ? ' sw-img' : '') + '" data-sw="' + i + '" style="' + look + '" aria-label="' + esc(col[0]) + '" aria-pressed="' + (i === p.sel) + '" title="' + esc(col[0]) + '"></button>';
       }).join('') + '</div>' +
+      '<p class="size-info mono" data-size-info aria-live="polite">' + (MEASUREMENTS_READY ? 'Pick a size to see its measurements' :
+        'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>') + '</p>' +
       '<div class="buy"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '">' +
       (p.sizes.length > 1 ? '<option value="">Select size</option>' : '') +
       p.sizes.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select>' +
@@ -131,12 +166,13 @@
       el.outerHTML = card(p);
       var fresh = document.querySelector('.card[data-id="' + p.id + '"]');
       fresh.querySelector('select').value = size;
+      refreshSize(fresh);
       fresh.querySelector('[data-sw="' + p.sel + '"]').focus();
       return;
     }
     if (e.target.closest('[data-add]')) {
       var sel = el.querySelector('select');
-      if (!sel.value) { sel.focus(); toast('Choose a size first'); return; }
+      if (!sel.value) { sel.classList.add('need-size'); sel.addEventListener('change', function () { sel.classList.remove('need-size'); }, { once: true }); sel.focus(); toast('Pick a size first'); return; }
       addToBag(p, p.sel, sel.value);
     }
   });
@@ -161,6 +197,12 @@
     grid.addEventListener('pointercancel', holoOff);
   }
 
+  // Show a size's measurements as soon as it is picked
+  if (grid) grid.addEventListener('change', function (e) {
+    var el = e.target.closest('.card');
+    if (el && e.target.tagName === 'SELECT') refreshSize(el);
+  });
+
   // Shop page search box
   function setQuery(q) {
     query = q;
@@ -178,6 +220,29 @@
   }
   renderGrid();
 
+  // Menu drawer: a side panel with the shop sections and help links (opened from the header)
+  var MENU_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  var mBtn = document.createElement('button');
+  mBtn.className = 'search-btn menu-btn'; mBtn.id = 'open-menu'; mBtn.type = 'button';
+  mBtn.setAttribute('aria-label', 'Open menu'); mBtn.innerHTML = MENU_ICON + '<span>Menu</span>';
+  var mScrim = document.createElement('div'); mScrim.className = 'search-scrim'; mScrim.hidden = true;
+  var menu = document.createElement('nav');
+  menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
+  var tile = function (href, label, note, low) { return '<a class="menu-tile" href="' + href + '"><span>' + label + '</span><small' + (low ? ' class="low"' : '') + '>' + note + '</small></a>'; };
+  menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
+    '<div class="menu-tiles">' + tile('shop.html', 'Shop all', '6 pieces') + tile('shop.html#t-shirts', 'T-shirts', '260 GSM and up') +
+    tile('shop.html#hoodies', 'Hoodies', '400+ GSM') + tile('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + '</div>' +
+    '<ul class="menu-links"><li><a href="help.html">Help centre</a></li><li><a href="size-guide.html">Size guide</a></li><li><a href="returns.html">Delivery &amp; returns</a></li>' +
+    '<li><a href="about.html">About us</a></li><li><a href="contact.html">Contact us</a></li><li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
+  document.body.appendChild(mScrim); document.body.appendChild(menu);
+  function openMenu() { mScrim.hidden = false; menu.hidden = false; document.documentElement.classList.add('no-scroll'); $('close-menu').focus(); }
+  function closeMenu() { mScrim.hidden = true; menu.hidden = true; document.documentElement.classList.remove('no-scroll'); mBtn.focus(); }
+  mBtn.addEventListener('click', openMenu);
+  $('close-menu').addEventListener('click', closeMenu);
+  mScrim.addEventListener('click', closeMenu);
+  menu.addEventListener('click', function (e) { if (e.target.closest('a')) closeMenu(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
+
   // Header search: a panel with live results, on every page
   var SEARCH_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
   var openBagBtn = $('open-bag');
@@ -187,7 +252,7 @@
   sBtn.innerHTML = SEARCH_ICON + '<span>Search</span>';
   var actions = document.createElement('div'); actions.className = 'header-actions';
   openBagBtn.parentNode.insertBefore(actions, openBagBtn);
-  actions.appendChild(sBtn); actions.appendChild(openBagBtn);
+  actions.appendChild(mBtn); actions.appendChild(sBtn); actions.appendChild(openBagBtn);
 
   var sScrim = document.createElement('div'); sScrim.className = 'search-scrim'; sScrim.hidden = true;
   var panel = document.createElement('div');
@@ -300,6 +365,7 @@
       p.sel = Z.i; card.outerHTML = cardHTML(p);
       card = document.querySelector('.card[data-id="' + p.id + '"]');
       card.querySelector('select').value = size;
+      refreshSize(card);
     }
     var back = card && card.querySelector('.zoom-btn'); if (back) back.focus();
   }
@@ -343,7 +409,13 @@
 
   // Bag
   var bag = [];
-  try { bag = JSON.parse(localStorage.getItem('acpanta-bag') || '[]').filter(function (l) { return byId[l.id]; }); } catch (err) { bag = []; }
+  try {
+    // Only keep bag lines that match a real product, colour and size (ignores anything tampered with)
+    bag = JSON.parse(localStorage.getItem('acpanta-bag') || '[]').filter(function (l) {
+      var p = l && byId[l.id];
+      return p && p.colors[l.color] && p.sizes.indexOf(l.size) !== -1 && l.qty === Math.floor(l.qty) && l.qty >= 1 && l.qty <= 20;
+    });
+  } catch (err) { bag = []; }
   function save() { try { localStorage.setItem('acpanta-bag', JSON.stringify(bag)); } catch (err) {} }
   function addToBag(p, color, size) {
     var hit = bag.find(function (l) { return l.id === p.id && l.color === color && l.size === size; });
@@ -359,6 +431,7 @@
       var p = byId[l.id], c = p.colors[l.color];
       return '<div class="line"><div class="thumb">' + artFor(p, l.color) + '</div><div class="meta"><b>' + p.name + '</b>' +
         '<span class="mono" style="color:var(--muted)">' + c[0] + ' · ' + l.size + '</span>' +
+        '<span class="line-size mono">' + sizeText(p, l.size) + '</span>' +
         '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
     }).join('') : '<p class="empty">Your bag is empty. Pick a size on any piece and add it here.</p>';
@@ -406,19 +479,20 @@
   if (document.body.getAttribute('data-page') === 'thanks' && /session_id=/.test(location.search)) { bag = []; save(); }
   renderBag();
 
-  // Size guide
+  // Size guide: show the tables only once the real measurements are in
+  if ($('size-tables')) {
+    $('size-tables').hidden = !MEASUREMENTS_READY;
+    $('unit-switch').hidden = !MEASUREMENTS_READY;
+    $('size-pending').hidden = MEASUREMENTS_READY;
+  }
   if ($('size-body-tee')) {
-  var SIZE_TABLES = {
-    'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23]],
-    'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64]]
-  };
   function renderSizes(unit) {
     Object.keys(SIZE_TABLES).forEach(function (id) {
       if (!$(id)) return;
       $(id).innerHTML = SIZE_TABLES[id].map(function (r) {
         return '<tr><td>' + r[0] + '</td>' + r.slice(1).map(function (v) {
           return '<td>' + (unit === 'in' ? (v / 2.54).toFixed(1) + '\u2033' : v + ' cm') + '</td>';
-        }).join('') + '</tr>';
+        }).join('') + (function () { var fr = fitRange(id, r); return '<td>' + (unit === 'in' ? (fr[0] / 2.54).toFixed(0) + '\u2013' + (fr[1] / 2.54).toFixed(0) + '\u2033' : fr[0] + '\u2013' + fr[1] + ' cm') + '</td>'; })() + '</tr>';
       }).join('');
     });
     $('unit-cm').setAttribute('aria-pressed', unit === 'cm');
@@ -437,6 +511,53 @@
     $('form-msg').textContent = 'Looks good. This form is a demo: connect an email service (for example Mailchimp or Klaviyo) to collect sign-ups.';
     this.reset();
   });
+
+  // Customer reviews (home page): real reviews from reviews.js only
+  if ($('review-list')) {
+    var REVIEWS = (window.ACPANTA_REVIEWS || []).filter(function (r) { return r && r.text && r.rating >= 1 && r.rating <= 5; });
+    var stars = function (n) { var full = Math.round(n); return '<span class="stars" aria-hidden="true">' + '★★★★★'.slice(0, full) + '<span class="stars-off">' + '★★★★★'.slice(full) + '</span></span>'; };
+    if (!REVIEWS.length) {
+      $('review-summary').innerHTML = '';
+      $('review-list').innerHTML =
+        '<div class="review-empty"><p><b>No reviews yet.</b> We’re new, and we’d rather show nothing than make something up.</p>' +
+        '<p>Bought something from us? Be the first to write one below.</p></div>';
+    } else {
+      var avg = REVIEWS.reduce(function (t, r) { return t + r.rating; }, 0) / REVIEWS.length;
+      $('review-summary').innerHTML = stars(avg) + '<span class="review-avg">' + avg.toFixed(1) + ' out of 5</span>' +
+        '<span class="review-count">' + REVIEWS.length + (REVIEWS.length === 1 ? ' review' : ' reviews') + '</span>';
+      $('review-list').innerHTML = REVIEWS.slice().sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); }).map(function (r) {
+        var when = r.date ? new Date(r.date + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+        return '<article class="review-card"><div class="review-top">' + stars(r.rating) + '<span class="sr-only">' + r.rating + ' out of 5 stars</span>' +
+          (r.verified ? '<span class="verified mono">✓ Verified buyer</span>' : '') + '</div>' +
+          '<p class="review-text">' + esc(r.text) + '</p>' +
+          '<p class="review-meta mono">' + esc(r.name || 'Customer') + (r.product ? ' · ' + esc(r.product) : '') + (when ? ' · ' + when : '') + '</p></article>';
+      }).join('');
+    }
+  }
+
+  // Review form: sends to Netlify Forms. Reviews are checked against an order before going up.
+  var rForm = $('review-form');
+  if (rForm) {
+    rForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = $('review-msg'), btn = rForm.querySelector('button[type=submit]');
+      msg.className = 'form-msg';
+      if (!rForm.checkValidity()) { rForm.reportValidity(); return; }
+      btn.disabled = true; msg.textContent = 'Sending…';
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(rForm)).toString() })
+        .then(function (r) { if (!r.ok) throw new Error('bad'); })
+        .then(function () {
+          rForm.reset(); msg.className = 'form-msg ok';
+          msg.textContent = 'Thank you! We’ll check it against your order and post it here soon.';
+        })
+        .catch(function () {
+          msg.className = 'form-msg err';
+          msg.innerHTML = 'Sorry, that didn’t send. Please try again, or send your review on <a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a>.';
+        })
+        .then(function () { btn.disabled = false; });
+    });
+  }
 
   // Mark the current page in the menu
   var page = document.body.getAttribute('data-page');

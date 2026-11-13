@@ -6,6 +6,16 @@
 <title>Acpanta</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Acpanta: heavyweight T-shirts and hoodies with the Acpanta logo. Free UK delivery and 14-day returns.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Acpanta">
+<meta property="og:title" content="Acpanta">
+<meta property="og:description" content="Acpanta: heavyweight T-shirts and hoodies with the Acpanta logo. Free UK delivery and 14-day returns.">
+<meta property="og:url" content="https://acpanta.com/">
+<meta property="og:image" content="https://acpanta.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0b0b">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +25,7 @@
 </head>
 <body data-page="home">
 
-<a class="notice mono" href="returns.html">Free shipping on every order · 14-day returns</a>
+<a class="notice mono" href="returns.html" aria-label="Free shipping on every order. 14-day returns."><span class="marquee" aria-hidden="true"><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span></span></a>
 
 <header class="site">
   <div class="wrap">
@@ -35,8 +45,8 @@
   <div class="hero">
     <div class="wrap">
       <div class="hero-copy">
-        <span class="mono" style="color:var(--band-accent)">New collection · Limited stock</span>
-        <h1>Made to <em>wear in</em>, not out.</h1>
+        <span class="mono" style="color:var(--band-accent)">First batch · Limited stock</span>
+        <h1>Weighs more. <em>Says less.</em></h1>
         <div class="cta-row">
           <a class="btn btn-accent btn-holo" href="shop.html"><span>Shop the collection</span></a>
           <a class="btn btn-ghost btn-holo" href="about.html"><span>Our story</span></a>
@@ -46,16 +56,64 @@
     </div>
   </div>
 
+  <section class="craft" id="craft">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="mono" style="color:var(--accent)">Luxury heavyweight</span>
+          <h2 style="margin-top:10px">Premium cotton, made properly.</h2>
+          <p>Thick, soft and built to last. Here's what goes into every piece.</p>
+        </div>
+      </div>
+      <ul class="craft-grid">
+        <li><b>100% cotton</b><span>Premium heavyweight cotton. Nothing blended in.</span></li>
+        <li><b>Stitched and printed by hand</b><span>Each piece is sewn and printed by hand, not rushed off a line.</span></li>
+        <li><b>Small batches, less waste</b><span>We only make what we can sell, so nothing sits in a warehouse or gets thrown away.</span></li>
+        <li><b>Designed by Acpanta</b><span>The cut, the weight and the prints are chosen by us in London.</span></li>
+      </ul>
+    </div>
+  </section>
+
   <section id="featured">
     <div class="wrap">
       <div class="section-head">
         <div>
           <h2>New in</h2>
-          <p>Heavyweight essentials with the Acpanta logo. Free UK delivery on every order.</p>
+          <p>Thick tees and hoodies with our logo on. Delivery in the UK is free.</p>
         </div>
       </div>
       <div class="grid" id="grid" data-featured="logo-tee,boxy-hoodie,logo-hoodie,zip-hoodie"></div>
       <div class="more"><a class="btn btn-outline" href="shop.html">Shop all 6 pieces</a></div>
+    </div>
+  </section>
+
+  <section id="reviews" class="reviews">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Customer reviews</h2>
+          <p>Only from people who've bought from us. We check every one against a real order before it goes up.</p>
+        </div>
+        <div class="review-summary" id="review-summary" aria-live="polite"></div>
+      </div>
+      <div class="review-list" id="review-list"></div>
+
+      <form class="review-form" id="review-form" name="review" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="./#reviews">
+        <input type="hidden" name="form-name" value="review">
+        <p class="hp" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <h3>Write a review</h3>
+        <p class="review-form-note">Bought something from us? Tell everyone what you think. We match each review to a real order before it goes up, usually within a few days.</p>
+        <fieldset class="rv-rating"><legend>Your rating</legend><div class="rv-stars"><input type="radio" id="rv-star5" name="rating" value="5" required><label for="rv-star5" title="5 stars">★<span class="sr-only">5 stars</span></label><input type="radio" id="rv-star4" name="rating" value="4" required><label for="rv-star4" title="4 stars">★<span class="sr-only">4 stars</span></label><input type="radio" id="rv-star3" name="rating" value="3" required><label for="rv-star3" title="3 stars">★<span class="sr-only">3 stars</span></label><input type="radio" id="rv-star2" name="rating" value="2" required><label for="rv-star2" title="2 stars">★<span class="sr-only">2 stars</span></label><input type="radio" id="rv-star1" name="rating" value="1" required><label for="rv-star1" title="1 star">★<span class="sr-only">1 star</span></label></div></fieldset>
+        <div class="rv-grid">
+          <label>First name and initial<input name="name" required maxlength="40" autocomplete="name" placeholder="e.g. Sam T."></label>
+          <label>Which piece did you buy?<select name="product" required><option value="">Choose one</option><option>Premium Logo Tee</option><option>Printed Tee</option><option>Heavyweight Logo Hoodie</option><option>Premium Boxy Hoodie</option><option>Zip Hoodie</option><option>Heavyweight Sweatshirt</option></select></label>
+          <label class="rv-wide">Email you used at checkout<input type="email" name="email" required maxlength="120" autocomplete="email" placeholder="So we can find your order"><small>Never shown on the site.</small></label>
+          <label class="rv-wide">Your review<textarea name="review" required minlength="10" maxlength="1000" rows="5" placeholder="Fit, feel, quality, delivery..."></textarea></label>
+        </div>
+        <label class="rv-consent"><input type="checkbox" name="consent" value="yes" required> I bought this from Acpanta, and I'm happy for my first name and initial, rating and review to be shown on this website.</label>
+        <button class="btn btn-accent" type="submit">Send my review</button>
+        <p class="form-msg" id="review-msg" role="status"></p>
+      </form>
     </div>
   </section>
 
@@ -64,30 +122,27 @@
       <div>
         <span class="mono" style="color:var(--accent)">Choose your weight</span>
         <h2 style="margin-top:10px">From 260 to 430 GSM.</h2>
-        <p>GSM means grams per square metre. The higher the number, the thicker, warmer and more structured the fabric.</p>
+        <p>GSM is how much the fabric weighs, in grams per square metre. Bigger number, thicker garment. You notice it the moment you pick one up.</p>
         <p><a class="btn btn-accent" href="shop.html">Shop the collection</a></p>
       </div>
       <ol class="steps">
         <li><span class="n">T</span><div><b>Premium Logo Tee</b><span>260 GSM · everyday heavyweight · £22</span></div></li>
-        <li><span class="n">S</span><div><b>Heavyweight Sweatshirt</b><span>320 GSM · only 5 left · £35</span></div></li>
+        <li><span class="n">S</span><div><b>Heavyweight Sweatshirt</b><span>320 GSM · 5 left · £35</span></div></li>
         <li><span class="n">B</span><div><b>Premium Boxy Hoodie</b><span>400+ GSM · back print or plain · £50</span></div></li>
         <li><span class="n">H</span><div><b>Heavyweight Logo Hoodie</b><span>430 GSM · our heaviest · £42</span></div></li>
       </ol>
     </div>
   </section>
 
-  <section class="join" id="join">
+  <section class="join" id="follow-ig">
     <div class="wrap">
       <div>
-        <h2>Hear about new stock first</h2>
-        <p>One email when new designs or restocks land. No other mail.</p>
+        <h2>New stock goes up on Instagram first</h2>
+        <p>Follow us to see new pieces and restocks before anyone else. Questions? Message us there or on WhatsApp.</p>
       </div>
-      <form id="join-form" novalidate>
-        <label for="email" class="mono" style="flex-basis:100%">Email address</label>
-        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
-        <button class="btn btn-accent" type="submit">Notify me</button>
-        <p class="form-msg" id="form-msg" role="status"></p>
-      </form>
+      <div class="join-cta">
+        <a class="btn btn-accent" href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Follow @acpanta9 on Instagram</a>
+      </div>
     </div>
   </section>
 
@@ -103,12 +158,12 @@
         <article class="stat">
           <p class="stat-value"><span class="num" data-value="185" data-decimals="0">185</span><span class="suffix">pieces</span></p>
           <div class="stat-bar" aria-hidden="true"><span></span></div>
-          <p class="stat-label">In our first small batch</p>
+          <p class="stat-label">That's the whole first batch</p>
         </article>
         <article class="stat">
           <p class="stat-value"><span class="num" data-value="14" data-decimals="0">14</span><span class="suffix">days</span></p>
           <div class="stat-bar" aria-hidden="true"><span></span></div>
-          <p class="stat-label">To return, with free UK delivery</p>
+          <p class="stat-label">To send it back if it's not right</p>
         </article>
       </div>
     </div>
@@ -117,11 +172,11 @@
 
 <footer class="site">
   <div class="wrap">
-    <div><a class="logo" href="./" aria-label="Acpanta home"><img class="logo-mark" src="logo.svg" alt="" width="80" height="44"><span>Acpanta</span></a><p style="opacity:.75;max-width:30ch">Heavyweight T-shirts and hoodies with the Acpanta logo. Limited stock, made in small batches.</p></div>
+    <div><a class="logo" href="./" aria-label="Acpanta home"><img class="logo-mark" src="logo.svg" alt="" width="80" height="44"><span>Acpanta</span></a><p style="opacity:.75;max-width:30ch">Heavy tees and hoodies, made in small batches and posted from London.</p></div>
     <div><h4>Shop</h4><ul><li><a href="shop.html">Everything</a></li><li><a href="shop.html#t-shirts">T-shirts</a></li><li><a href="shop.html#hoodies">Hoodies</a></li><li><a href="shop.html#sweatshirts">Sweatshirts</a></li></ul></div>
-    <div><h4>Help</h4><ul><li><a href="size-guide.html">Size guide</a></li><li><a href="returns.html">Returns &amp; shipping</a></li><li><a href="contact.html">Contact us</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="terms.html">Terms &amp; conditions</a></li></ul></div>
-    <div><h4>Acpanta</h4><ul><li><a href="about.html">Our story</a></li><li><a href="contact.html#join">New stock alerts</a></li></ul></div>
-    <div><h4>Follow us</h4><ul><li><a href="https://www.instagram.com/acpanta" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:aanjan.panta5@gmail.com">Email us</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="help.html">Help centre</a></li><li><a href="returns.html#delivery">Delivery</a></li><li><a href="returns.html#returns">Returns</a></li><li><a href="size-guide.html">Size guide</a></li><li><a href="contact.html">Contact us</a></li></ul></div>
+    <div><h4>About Acpanta</h4><ul><li><a href="about.html">About us</a></li><li><a href="./#reviews">Customer reviews</a></li><li><a href="terms.html">Terms &amp; conditions</a></li><li><a href="privacy.html">Privacy policy</a></li></ul></div>
+    <div><h4>Follow us</h4><ul><li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:aanjan.panta5@gmail.com">Email us</a></li></ul></div>
   </div>
   <div class="wrap legal mono">© 2026 Acpanta · acpanta.com</div>
 </footer>
@@ -142,6 +197,7 @@
 <div class="toast" id="toast" hidden role="status"></div>
 
 <script src="products.js"></script>
+<script src="reviews.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

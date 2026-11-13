@@ -6,22 +6,29 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 
 | File | Page |
 |---|---|
-| `index.html` | Home: hero, new in, choose your weight, new stock alerts sign-up |
+| `index.html` | Home: hero, new in, customer reviews, choose your weight, Instagram follow box, stats |
 | `shop.html` | Every product, with category filters. `shop.html#t-shirts` opens on T-shirts |
 | `about.html` | Our story |
 | `size-guide.html` | Size chart in centimetres and inches |
-| `contact.html` | Instagram, WhatsApp and email, plus the sign-up form |
+| `contact.html` | Instagram, WhatsApp and email |
 | `returns.html` | Shipping and returns policy (14 days to cancel) |
 | `privacy.html` | Privacy policy |
 | `terms.html` | Terms and conditions |
 | `thank-you.html` | Shown after a successful payment; empties the bag |
+| `help.html` | Help centre: delivery, returns, sizing, payment and care questions |
+| `404.html` | Shown when a page doesn't exist |
+
+Also: `og-image.jpg` (the picture shown when the site is shared on WhatsApp, Instagram and elsewhere), `robots.txt` and `sitemap.xml` (help Google find the pages; they assume the site lives at https://acpanta.com).
+
+The standalone `stats-section.html` and `rotating-hero.html` demos live in `extras/` at the repository root, so they aren't published with the shop.
 
 The policy pages are a starting draft for a UK sole trader. Fill in any highlighted `[...]` detail and have them checked before taking orders.
 
 Shared files:
 
+- `reviews.js`: real customer reviews shown on the home page (see below)
 - `products.js`: **the product list and prices.** Both the website and the checkout use it, so a customer always pays the price in this file.
-- `app.js`: shopping bag, filters, size chart, sign-up form and checkout button
+- `app.js`: shopping bag, filters, search, zoom, size chart, stats and checkout button
 - `styles.css`: all styling, including the red and white colours (the `:root` block at the top)
 - `logo.svg`: the Acpanta logo as a vector; `logo.png` is a fallback
 - `netlify/functions/create-checkout.js`: creates the Stripe payment page for the bag
@@ -33,6 +40,16 @@ The header, footer and bag panel are repeated in each HTML page. If you change o
 Edit `products.js`: name, category, price in pounds, colours (name and hex), sizes, `stock` and an optional badge such as "New".
 
 `stock` is the number of pieces you have. Update it by hand as items sell. Products with 20 or fewer show "Limited · N pieces", and 5 or fewer show "Only N left". Checkout refuses a quantity larger than the stock number. The home page's featured products are set by `data-featured` on the grid in `index.html`.
+
+## Adding customer reviews
+
+Reviews live in `reviews.js` and show in the Customer reviews section on the home page, with the average star rating worked out automatically.
+
+1. A customer sends you a review on WhatsApp or Instagram with their order number.
+2. Find that order in the Stripe Dashboard (**Payments**) and check the name and product match.
+3. Add it to `reviews.js` with `verified: true`, using their first name and initial only.
+
+Only add reviews from real customers. Writing your own, or showing unverified reviews as genuine, is illegal in the UK (Digital Markets, Competition and Consumers Act 2024). Until there's at least one review, the section says so honestly and asks buyers to send theirs.
 
 ## How checkout works
 
@@ -65,5 +82,14 @@ Run `python3 -m http.server` in this folder and visit http://localhost:8000. Che
 ## Before taking real orders
 
 - Replace the drawn garments with product photos.
-- Replace the sample size chart measurements (in `app.js`, `SIZE_TABLES`) with the real ones.
-- The run alerts sign-up form is a front-end demo. Connect an email service to collect sign-ups.
+- Size measurements live in `SIZE_TABLES` in `app.js` (confirmed against the stock). If a new batch measures differently, update them there; setting `MEASUREMENTS_READY = false` hides all measurements and asks customers to message you on WhatsApp instead.
+
+## Customer reviews
+
+Customers write reviews with the form in the home page's reviews section. Netlify Forms collects them:
+
+1. In Netlify, open your site, then **Forms**. Turn on form detection once, then redeploy.
+2. New reviews appear under the **review** form. You can add an email notification there.
+3. Find the order in Stripe (**Payments**, search the email) and check the name and product match.
+4. Copy the review into `reviews.js` with `verified: true`. Only first name and initial, rating, product, review and date go there, never the email.
+5. Delete the submission in Netlify once it's checked.

@@ -564,13 +564,13 @@ footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; t
   /* The big number: tabular digits so the width doesn't jitter while counting */
   .stat-value {
     margin: 0; display: flex; align-items: baseline; gap: 6px; color: var(--accent);
-    font: 800 clamp(64px, 16vw, 96px)/.9 var(--display);
+    font: 800 clamp(48px, 12vw, 72px)/.9 var(--display);
     font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1;
     transform-origin: left bottom;
   }
   .stat-value .num { display: inline-block; text-align: left; }
   .stat-value .suffix { font-size: .42em; letter-spacing: .02em; }
-  @media (min-width: 720px) { .stat-value { font-size: clamp(72px, 7.5vw, 104px); } }
+  @media (min-width: 720px) { .stat-value { font-size: clamp(60px, 5.5vw, 80px); } }
 
   /* Small pop when a number lands: 1.08 → 1 */
   .stat-value.pop { animation: stat-pop .35s ease-out; }
@@ -590,3 +590,454 @@ footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; t
   -webkit-background-clip: text; background-clip: text; color: transparent; animation: holo-shift 9s linear infinite;
 }
 @media (prefers-reduced-motion: reduce) { .stats .stats-title { animation: none; } }
+
+/* Stats: holographic 360° (same as stats-section.html) */
+/* ---------- Holographic 360° numbers ---------- */
+/* Each number and its word are filled with a holographic foil built from the card's accent,
+   and the colours keep turning a full 360° around the colour wheel. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .stat-value .num, .stat-value .suffix {
+    background-image: linear-gradient(110deg, var(--accent) 0%, #ffd0ef 18%, #c8f3ff 34%, var(--accent) 50%, #e2d0ff 66%, #c9ffe8 82%, var(--accent) 100%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo360-shift 6s linear infinite, holo360-hue 8s linear infinite;
+  }
+}
+@keyframes holo360-shift { to { background-position: 300% 0; } }
+@keyframes holo360-hue { to { filter: hue-rotate(360deg); } }
+
+/* When a number lands: a full 360° spin together with the 1.08 → 1 pop */
+.stat-value { perspective: 700px; }
+.stat-value.pop { animation: stat-pop .9s cubic-bezier(.2, .8, .2, 1); }
+@keyframes stat-pop {
+  from { transform: rotateY(0deg) scale(1.08); }
+  to   { transform: rotateY(360deg) scale(1); }
+}
+
+/* Holographic progress bars */
+.stat-bar span {
+  background: linear-gradient(90deg, var(--accent), #ffd0ef, #c8f3ff, #e2d0ff, #c9ffe8, var(--accent));
+  background-size: 200% 100%;
+  animation: holo360-shift 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-value .num, .stat-value .suffix, .stat-bar span { animation: none; }
+  .stat-value.pop { animation: none; }
+}
+
+/* Holographic writing in the offer bar and the main menu */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .notice span {
+    background-image: var(--holo-light); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 8s linear infinite;
+    filter: drop-shadow(1px 1px 0 rgba(90, 0, 20, .55));
+  }
+  nav.main a {
+    background-image: var(--holo-dark); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 9s linear infinite; opacity: 1;
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, .12));
+  }
+  nav.main a:hover { filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, .12)) brightness(1.15); }
+}
+@media (prefers-reduced-motion: reduce) { .notice span, nav.main a { animation: none; } }
+
+/* Search panel: black, with holographic writing (matches the footer) */
+.search-panel { background: #0b0b0b; color: #ffffff; }
+.search-form { border-bottom-color: rgba(255,255,255,.85); }
+.search-form svg { color: #ffd0ef; }
+.search-form input { color: #ffffff; caret-color: #c8f3ff; }
+.search-form input::placeholder { color: rgba(255,255,255,.75); }
+.search-panel .x { color: #ffffff; }
+.search-panel .chip { border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.08); }
+.search-panel .chip:hover { border-color: #ffffff; background: rgba(255,255,255,.16); }
+.search-panel .result-list a { border-bottom-color: rgba(255,255,255,.25); color: #ffffff; }
+.search-panel .result-list .thumb { background: #ffffff; }
+.search-panel .see-all { background: #ffffff; color: #141414; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .search-panel .search-label, .search-panel .chip, .search-panel .search-empty,
+  .search-panel .r-meta b, .search-panel .r-meta .mono, .search-panel .result-list .price {
+    background-image: var(--holo-light); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 8s linear infinite;
+    filter: drop-shadow(1px 1px 0 rgba(140, 40, 160, .9)) drop-shadow(0 0 6px rgba(160, 200, 255, .2));
+  }
+  .search-panel .chip { background-color: transparent; }
+}
+.search-panel .result-list a:hover b { filter: brightness(1.2); }
+@media (prefers-reduced-motion: reduce) {
+  .search-panel .search-label, .search-panel .chip, .search-panel .search-empty,
+  .search-panel .r-meta b, .search-panel .r-meta .mono, .search-panel .result-list .price { animation: none; }
+}
+
+/* Home: Instagram follow box (replaces the email sign-up) */
+.join-cta { display: flex; align-items: center; }
+.join .join-cta .btn { min-height: 48px; display: inline-flex; align-items: center; }
+
+/* ---------- White instead of red: offer bar, home banner and page title bands ---------- */
+:root { --band: #ffffff; --band-fg: #141414; --band-accent: #6a6a6a; --notice-bg: #ffffff; --notice-fg: #141414; }
+.notice { border-bottom: 1px solid var(--line); }
+.hero, .page-head { border-bottom: 1px solid var(--line); }
+.hero .btn-accent { background: #0b0b0b; color: #ffffff; }
+.btn-ghost.btn-holo { box-shadow: inset 0 0 0 1px #141414; }
+.hero-seal { box-shadow: inset 0 0 0 3px rgba(255,255,255,.85), inset 0 0 28px rgba(255,255,255,.75), 0 12px 30px rgba(0,0,0,.14); }
+
+/* Home headline: small, unique line, all holographic */
+.hero h1 { font-size: clamp(1.9rem, 5.2vw, 3.2rem); letter-spacing: .01em; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero h1, .hero h1 em, .page-head h1 {
+    background-image: var(--holo-dark); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 9s linear infinite;
+  }
+  .hero h1 em { font-style: normal; filter: none; }
+  .notice span { background-image: var(--holo-dark); filter: none; }
+  .btn-accent.btn-holo span { background-image: var(--holo-light); filter: drop-shadow(1px 1px 0 rgba(0,0,0,.4)); }
+  .btn-ghost.btn-holo span { background-image: var(--holo-dark); filter: none; }
+}
+
+/* ---------- Customer reviews ---------- */
+.reviews { border-top: 1px solid var(--line); }
+.review-summary { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.stars { color: #f2b01e; letter-spacing: 2px; font-size: 1.1rem; }
+.stars-off { color: #d6d6d6; }
+.review-avg { font-weight: 600; }
+.review-count { color: var(--muted); }
+.review-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.review-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 10px; }
+.review-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.verified { font-size: .68rem; color: #0a7a3d; background: #e6f7ee; padding: 3px 8px; border-radius: 999px; }
+.review-text { margin: 0; line-height: 1.6; }
+.review-meta { margin: 0; color: var(--muted); font-size: .7rem; }
+.review-empty { grid-column: 1 / -1; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 8px; max-width: 720px; }
+.review-empty p { margin: 0; }
+.review-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Black top area: offer bar, header and menu ---------- */
+body::before { background: #0b0b0b; }
+.notice { background: #0b0b0b; color: #ffffff; border-bottom: 1px solid #222222; }
+header.site { background: #0b0b0b; color: #ffffff; border-bottom: 1px solid #222222; }
+header.site .bag-btn { color: #ffffff; }
+header.site .search-btn { color: #ffffff; border-color: rgba(255,255,255,.35); }
+header.site .search-btn:hover { border-color: #ffffff; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .notice span, nav.main a, header.site .logo span { background-image: var(--holo-light); filter: none; }
+  nav.main a:hover { filter: none; text-decoration: underline; text-decoration-color: #c8f3ff; text-underline-offset: 5px; }
+}
+@supports ((-webkit-mask-image: url(x.svg)) or (mask-image: url(x.svg))) {
+  header.site .logo-mark.logo-holo { background-image: var(--holo-light); filter: none; }
+}
+
+/* ---------- Premium cotton section ---------- */
+.craft { border-bottom: 1px solid var(--line); }
+.craft-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.craft-grid li { background: #0b0b0b; color: #ffffff; border-radius: 12px; padding: 22px; display: grid; gap: 8px; align-content: start; }
+.craft-grid b { font: 800 1.35rem/1.1 var(--display); text-transform: uppercase; letter-spacing: .02em; color: #e2d0ff; }
+.craft-grid li:nth-child(2) b { color: #c8f3ff; }
+.craft-grid li:nth-child(3) b { color: #c9ffe8; }
+.craft-grid li:nth-child(4) b { color: #ffd0ef; }
+.craft-grid span { color: #c9c9c9; line-height: 1.55; }
+
+/* ---------- Phones and tablets: stop flashing and broken patches when zooming ----------
+   Constantly moving colours and 3D tilt make touch browsers redraw the page many times a
+   second, which shows up as flashing or blank patches when pinch-zoomed. On touch screens
+   the hologram colours stay, but hold still; one-off animations still play. */
+@media (pointer: coarse) {
+  *, *::before, *::after { animation-play-state: paused !important; }
+  .stat-value.pop { animation-play-state: running !important; }
+  .card .art { transform: none !important; transition: none; }
+  .card .art::after, .notice::after { display: none; }
+  .card:hover .art img, .card:hover .art svg { transform: none; }
+}
+
+/* ---------- Size measurements on product cards ---------- */
+.size-info { margin: 0; font-size: .66rem; line-height: 1.5; color: var(--muted); min-height: 3em; }
+.size-info.is-set { color: var(--ink); }
+.size-info b { color: var(--accent); font-weight: 500; }
+
+/* ---------- Moving offer bar ---------- */
+.notice { white-space: nowrap; padding-inline: 0; }
+.notice .marquee {
+  display: inline-flex; background: none; -webkit-background-clip: border-box; background-clip: border-box;
+  filter: none; will-change: transform;
+  animation: marquee 30s linear infinite, holo-hue 8s linear infinite;
+}
+.notice .marquee span { padding-inline: 1.6em; animation: none; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ---------- 360° holographic shine ----------
+   The colours of every holographic element turn a full 360° around the colour wheel.
+   This runs as a filter animation, which browsers handle off the main thread, so it
+   doesn't force the page to redraw (the cause of flashing when zoomed on phones). */
+@keyframes holo-hue { to { filter: hue-rotate(360deg); } }
+header.site .logo, nav.main, .bag-count,
+.hero h1, .page-head h1, .section-head h2, .mill h2, .size-title, .legal-doc h2, .stats-title,
+.badge.holo, .btn-holo span, .join h2, .join p,
+footer.site .wrap > div, footer.site .legal,
+.search-panel .search-label, .search-panel .suggest, .search-panel .result-list,
+.craft-grid b {
+  animation: holo-hue 8s linear infinite;
+}
+@media (pointer: coarse) {
+  header.site .logo, nav.main, .bag-count,
+  .hero h1, .page-head h1, .section-head h2, .mill h2, .size-title, .legal-doc h2, .stats-title,
+  .badge.holo, .btn-holo span, .join h2, .join p,
+  footer.site .wrap > div, footer.site .legal,
+  .search-panel .search-label, .search-panel .suggest, .search-panel .result-list,
+  .craft-grid b, .notice .marquee, .hero-seal,
+  .stat-value .num, .stat-value .suffix {
+    animation-play-state: running !important;
+  }
+  /* on touch screens these run the 360° colour turn only (no redraw-heavy gradient slide) */
+  .stat-value .num, .stat-value .suffix { animation: holo360-hue 8s linear infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .notice .marquee { animation: none; }
+  header.site .logo, nav.main, .bag-count, .hero h1, .page-head h1, .section-head h2, .mill h2, .size-title,
+  .legal-doc h2, .stats-title, .badge.holo, .btn-holo span, .join h2, .join p, footer.site .wrap > div,
+  footer.site .legal, .search-panel .search-label, .search-panel .suggest, .search-panel .result-list, .craft-grid b { animation: none; }
+}
+
+/* ---------- Bag: size details ---------- */
+.line-size { display: block; margin-top: 4px; font-size: .64rem; line-height: 1.5; color: var(--muted); text-transform: none; letter-spacing: .02em; }
+.line-size b { color: var(--accent); font-weight: 500; }
+
+/* ---------- 3D rolling logos ---------- */
+/* Each logo turns once like a coin, then rests so it stays readable. Transform only. */
+@keyframes logo-roll { 0% { transform: perspective(500px) rotateY(0deg); } 45%, 100% { transform: perspective(500px) rotateY(360deg); } }
+@keyframes seal-roll { 0% { transform: perspective(700px) rotateY(0deg) rotate(-8deg); } 45%, 100% { transform: perspective(700px) rotateY(360deg) rotate(-8deg); } }
+header.site .logo-mark.logo-holo { animation: logo-roll 7s ease-in-out infinite; filter: drop-shadow(1px 1px 0 #b98cff) drop-shadow(1px 1px 0 #6fb6ff) drop-shadow(0 0 6px rgba(200,243,255,.35)); }
+footer.site .logo-mark { animation: logo-roll 7s ease-in-out infinite; }
+.hero-seal { background: none; animation: seal-roll 6s ease-in-out infinite; }
+.hero-seal::before {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, #ffc9ec, #c4f4ff, #dccbff, #c6ffe6, #ffe0f4, #c4f4ff, #ffc9ec);
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,.85), inset 0 0 28px rgba(255,255,255,.75), inset 0 -10px 18px rgba(120,60,200,.18);
+  animation: holo-spin 6s linear infinite;
+}
+
+/* ---------- 3D touches: buttons press in, cards stand off the page ---------- */
+.btn-accent, .add { box-shadow: 0 4px 0 rgba(0,0,0,.3); transition: transform .12s ease, box-shadow .12s ease; }
+.btn-accent:active, .add:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.3); }
+.craft-grid li { box-shadow: 6px 6px 0 #d9c8ff; }
+.stat { box-shadow: 0 8px 0 #000000, 0 9px 0 #2a2a2a; }
+.review-card, .review-empty { box-shadow: 5px 5px 0 var(--line); }
+
+@media (pointer: coarse) {
+  header.site .logo-mark.logo-holo, footer.site .logo-mark, .hero-seal, .hero-seal::before { animation-play-state: running !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  header.site .logo-mark.logo-holo, footer.site .logo-mark, .hero-seal, .hero-seal::before { animation: none; }
+}
+
+/* Stats heading: use the 360 colour turn only (no gradient slide) */
+.stats .stats-title { animation: holo-hue 8s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .stats .stats-title { animation: none; } }
+.line .meta .line-size b { display: inline; }
+
+/* ---------- One holographic style everywhere: the deep, vivid one ----------
+   White areas use the deep foil (magenta, blue, purple, green). Black areas use a
+   brighter version of the same colours instead of pale pastels. */
+:root {
+  --holo-light: linear-gradient(100deg, #ff4fb0, #5a8cff, #a66bff, #1fd1a0, #ff4fb0, #5a8cff, #ff4fb0);
+}
+/* Top area back to white, with the deep foil on the logo, name, menu and offer bar */
+body::before { background: #ffffff; }
+.notice { background: #ffffff; color: var(--ink); border-bottom: 1px solid var(--line); }
+header.site { background: #ffffff; color: var(--ink); border-bottom: 1px solid var(--line); }
+header.site .bag-btn { color: var(--ink); }
+header.site .search-btn { color: var(--ink); border-color: var(--line); }
+header.site .search-btn:hover { border-color: var(--ink); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .notice span, nav.main a, header.site .logo span { background-image: var(--holo-dark); }
+  nav.main a:hover { text-decoration-color: var(--accent); }
+}
+@supports ((-webkit-mask-image: url(x.svg)) or (mask-image: url(x.svg))) {
+  header.site .logo-mark.logo-holo {
+    background-image: linear-gradient(100deg, #c2187a, #2b59d9, #7a2fd0, #0d8a70, #e0102e, #2b59d9, #c2187a);
+    filter: drop-shadow(1px 1px 0 rgba(0,0,0,.18));
+  }
+}
+/* Black cards: vivid headings to match */
+.craft-grid b, .craft-grid li:nth-child(2) b, .craft-grid li:nth-child(3) b, .craft-grid li:nth-child(4) b { color: #a66bff; }
+.craft-grid li:nth-child(2) b { color: #5a8cff; }
+.craft-grid li:nth-child(3) b { color: #1fd1a0; }
+.craft-grid li:nth-child(4) b { color: #ff4fb0; }
+
+/* Keep the shimmer inside the blue / purple / magenta family: the colours sway gently
+   instead of going all the way round the wheel (which passed through muddy green and brown). */
+@keyframes holo-hue { 0%, 100% { filter: hue-rotate(-22deg); } 50% { filter: hue-rotate(28deg); } }
+
+/* Size guide while real measurements are on their way */
+.size-pending { background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 10px; max-width: 720px; box-shadow: 5px 5px 0 var(--line); }
+.size-pending p { margin: 0; }
+.size-info a { color: var(--accent); }
+
+/* ---------- Menu drawer ---------- */
+.menu-drawer { position: fixed; top: 0; bottom: 0; left: 0; width: min(420px, 92%); z-index: 23; background: var(--bg); color: var(--ink); overflow-y: auto;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  box-shadow: 10px 0 40px rgba(0,0,0,.25); display: grid; align-content: start; gap: 18px; }
+.menu-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.menu-head .mono { color: var(--muted); }
+.menu-tiles { display: grid; gap: 10px; }
+.menu-tile { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 84px; padding: 0 22px; text-decoration: none;
+  background: #0b0b0b; border-radius: 6px; box-shadow: 5px 5px 0 #d9c8ff; }
+.menu-tile span { font: 800 1.7rem/1 var(--display); text-transform: uppercase; letter-spacing: .02em; color: #ffffff; }
+.menu-tile small { font: 500 .7rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: #c9c9c9; text-align: right; }
+.menu-tile:hover span, .menu-tile:focus-visible span { color: #c8f3ff; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .menu-tile span { background-image: var(--holo-light); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+}
+.menu-links { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.menu-links a { display: block; padding: 14px 4px; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); font-weight: 500; }
+.menu-links a:hover { color: var(--accent); }
+@media (max-width: 640px) { .menu-btn span { display: none; } }
+
+/* ---------- Help centre ---------- */
+.help-wrap { display: grid; gap: 8px; max-width: 760px; }
+.help-topics { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.help-topics a { border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; text-decoration: none; color: var(--ink); font-size: .9rem; min-height: 40px; display: inline-flex; align-items: center; }
+.help-wrap h2 { font-size: clamp(1.6rem, 5vw, 2.1rem); margin-top: 26px; scroll-margin-top: 150px; }
+.faq { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; padding: 16px 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-weight: 400; font-size: 1.3rem; line-height: 1; color: var(--accent); }
+.faq[open] summary::after { content: "\2212"; }
+.faq div { padding: 0 0 16px; color: var(--muted); line-height: 1.65; }
+.faq a, .help-more a { color: var(--accent); }
+.help-more { margin: 10px 0 0; }
+.help-contact { margin-top: 30px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px; box-shadow: 5px 5px 0 var(--line); }
+.help-contact p { margin: 0 0 10px; }
+.help-contact .btn { margin: 4px 6px 4px 0; }
+
+/* ---------- Holographic foil, 3D: the important things ----------
+   Same pastel foil as the "Limited · 20 pieces" tag: pink, ice blue and lilac with black text,
+   a white edge and a solid offset shadow so it sits up off the page. Buttons press in on tap. */
+:root { --foil: linear-gradient(110deg, #ffc9ec, #c4f4ff, #dccbff, #c6ffe6, #ffd6f2, #c4f4ff);
+  --foil-edge: inset 0 0 0 1.5px rgba(255,255,255,.85), inset 0 2px 0 rgba(255,255,255,.9);
+  --foil-depth: 3px 4px 0 #141414, 5px 8px 16px rgba(20,0,60,.18); }
+.btn-accent, .hero .btn-accent, .add, .add:hover, .checkout, .chip[aria-pressed="true"],
+.badge.holo, .card .price, .help-topics a, .craft-grid b,
+.hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono, .about .mono {
+  background: var(--foil) !important; color: #141414 !important; -webkit-text-fill-color: #141414;
+  border: 0; border-color: transparent; border-radius: 4px;
+  box-shadow: var(--foil-edge), var(--foil-depth) !important;
+}
+/* the little tags */
+.card .price, .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono, .craft-grid b {
+  display: inline-block; width: max-content; max-width: 100%; padding: 4px 9px; font-weight: 500; letter-spacing: .06em;
+  transform: perspective(400px) rotateX(8deg) rotateZ(-1.5deg);
+}
+.card .price { transform: perspective(400px) rotateX(8deg) rotateZ(2deg); font-size: .82rem; }
+.craft-grid b { margin-bottom: 8px; background-clip: border-box !important; animation: none; }
+.badge.holo { padding: 6px 12px; border-radius: 3px; transform: perspective(400px) rotateX(8deg); }
+/* the buttons */
+.btn-accent, .add, .checkout { font-weight: 700; letter-spacing: .03em; transform: translateY(-2px);
+  transition: transform .12s ease, box-shadow .12s ease; }
+.btn-accent:hover, .add:hover, .checkout:hover { transform: translateY(-4px); box-shadow: var(--foil-edge), 5px 7px 0 #141414, 7px 12px 20px rgba(20,0,60,.22) !important; }
+.btn-accent:active, .add:active, .checkout:active, .chip[aria-pressed="true"]:active { transform: translate(3px, 3px); box-shadow: var(--foil-edge), 0 1px 0 #141414 !important; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .btn-accent.btn-holo span { background: none !important; color: #141414; -webkit-text-fill-color: #141414; filter: none !important; animation: none; }
+}
+.help-topics a { min-height: 40px; }
+.help-topics a:active { transform: translate(3px, 3px); box-shadow: var(--foil-edge), 0 1px 0 #141414 !important; }
+/* on the black areas the shadow is lilac so it still shows */
+.join .btn-accent, footer.site .btn-accent, .stats .btn-accent, .search-panel .btn-accent {
+  box-shadow: var(--foil-edge), 3px 4px 0 #8a5cff, 0 8px 22px rgba(138,92,255,.35) !important; }
+/* gentle colour turn: filter only, so no flashing when zoomed */
+.btn-accent, .add, .checkout, .card .price, .help-topics a, .craft-grid b,
+.hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: foil-sway 7s ease-in-out infinite alternate; }
+@keyframes foil-sway { from { filter: hue-rotate(-20deg); } to { filter: hue-rotate(25deg); } }
+@media (pointer: coarse) { .btn-accent, .add, .checkout, .card .price, .help-topics a, .craft-grid b,
+  .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation-play-state: running !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .btn-accent, .add, .checkout, .card .price, .help-topics a, .craft-grid b,
+  .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: none !important; transition: none; }
+}
+/* secondary buttons: white with a foil 3D edge */
+.btn-outline, .hero .btn-ghost.btn-holo { background: #ffffff; border-radius: 4px; box-shadow: inset 0 0 0 1.5px #141414, 4px 5px 0 -1px #dccbff, 4px 5px 0 0.5px #141414 !important; transition: transform .12s ease; }
+.btn-outline:active, .hero .btn-ghost.btn-holo:active { transform: translate(3px, 3px); box-shadow: inset 0 0 0 1.5px #141414 !important; }
+
+/* ---------- Flat holographic foil with a full 360° colour turn (no 3D) ---------- */
+.btn-accent, .hero .btn-accent, .add, .add:hover, .checkout, .chip[aria-pressed="true"],
+.badge.holo, .card .price, .help-topics a, .craft-grid b,
+.hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono,
+.join .btn-accent, footer.site .btn-accent, .stats .btn-accent, .search-panel .btn-accent {
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85) !important; transform: none;
+}
+.btn-accent:hover, .add:hover, .checkout:hover, .btn-accent:active, .add:active, .checkout:active,
+.chip[aria-pressed="true"]:active, .help-topics a:active {
+  transform: none; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85) !important;
+}
+.btn-outline, .hero .btn-ghost.btn-holo, .btn-outline:active, .hero .btn-ghost.btn-holo:active {
+  box-shadow: inset 0 0 0 1.5px #141414 !important; transform: none;
+}
+.btn-accent, .add, .checkout, .chip[aria-pressed="true"], .badge.holo, .card .price, .help-topics a, .craft-grid b,
+.hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono {
+  animation: foil-360 8s linear infinite, logo-roll 6s ease-in-out infinite !important;
+}
+@keyframes foil-360 { to { filter: hue-rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .btn-accent, .add, .checkout, .chip[aria-pressed="true"], .badge.holo, .card .price, .help-topics a, .craft-grid b,
+  .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: none !important; }
+}
+/* everything in foil also flips round like the logo, then rests so it stays readable */
+.card .price, .craft-grid b { animation-delay: 0s, 1.5s !important; }
+.add, .checkout { animation-delay: 0s, 3s !important; }
+.btn-outline, .hero .btn-ghost.btn-holo { animation: logo-roll 6s ease-in-out 1.5s infinite; }
+@media (pointer: coarse) { .btn-outline, .hero .btn-ghost.btn-holo { animation-play-state: running !important; } }
+@media (prefers-reduced-motion: reduce) { .btn-outline, .hero .btn-ghost.btn-holo { animation: none; } }
+
+/* ---------- Flip only where it matters ----------
+   The logos, the logo seal and the stock badges flip. Buttons, prices and labels stay still
+   and just keep their 360° holographic colour. */
+.btn-accent, .add, .checkout, .chip[aria-pressed="true"], .card .price, .help-topics a, .craft-grid b,
+.hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono {
+  animation: foil-360 8s linear infinite !important; animation-delay: 0s !important;
+}
+.btn-outline, .hero .btn-ghost.btn-holo { animation: none !important; }
+.badge.holo { animation: foil-360 8s linear infinite, logo-roll 6s ease-in-out infinite !important; }
+
+/* ---------- Red where it needs attention ---------- */
+.badge:not(.holo) { background: #e0102e !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff; font-weight: 600;
+  padding: 6px 12px; border-radius: 3px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6); animation: logo-roll 6s ease-in-out infinite; }
+.menu-tile small.low { color: #ff4d64; font-weight: 600; }
+#checkout-msg:not(:empty) { color: #e0102e; font-weight: 600; }
+.card select.need-size { outline: 2px solid #e0102e; outline-offset: 1px; }
+@media (pointer: coarse) { .badge:not(.holo) { animation-play-state: running !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .badge.holo, .badge:not(.holo) { animation: none !important; }
+  .btn-accent, .add, .checkout, .chip[aria-pressed="true"], .card .price, .help-topics a, .craft-grid b,
+  .hero-copy > .mono, .section-head .mono, .mill .mono, .page-head .mono { animation: none !important; }
+}
+
+/* ---------- Write a review ---------- */
+.review-form { margin-top: 32px; max-width: 720px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: clamp(18px, 4vw, 28px); display: grid; gap: 16px; }
+.review-form h3 { margin: 0; font: 800 1.6rem/1 var(--display); text-transform: uppercase; }
+.review-form-note { margin: 0; color: var(--muted); line-height: 1.6; }
+.rv-rating { border: 0; margin: 0; padding: 0; }
+.rv-rating legend { font-weight: 600; margin-bottom: 6px; padding: 0; }
+.rv-stars { display: inline-flex; flex-direction: row-reverse; gap: 4px; }
+.rv-stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.rv-stars label { font-size: 2rem; line-height: 1; cursor: pointer; color: #d6d6d6; padding: 4px 2px; min-width: 40px; text-align: center; }
+.rv-stars input:checked ~ label, .rv-stars label:hover, .rv-stars label:hover ~ label { color: #141414; }
+.rv-stars input:focus-visible + label { outline: 2px solid #e0102e; outline-offset: 2px; border-radius: 4px; }
+.rv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.rv-wide { grid-column: 1 / -1; }
+.rv-grid label { display: grid; gap: 6px; font-weight: 600; font-size: .92rem; }
+.rv-grid small { font-weight: 400; color: var(--muted); }
+.review-form input:not([type=radio]):not([type=checkbox]), .review-form select, .review-form textarea {
+  font: inherit; font-weight: 400; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 12px; min-height: 46px; width: 100%; box-sizing: border-box; }
+.review-form textarea { resize: vertical; min-height: 120px; }
+.review-form input:focus, .review-form select:focus, .review-form textarea:focus { outline: 2px solid #8a5cff; outline-offset: 0; border-color: transparent; }
+.rv-consent { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; line-height: 1.5; color: var(--muted); }
+.rv-consent input { width: 20px; height: 20px; margin-top: 1px; flex: none; accent-color: #141414; }
+.review-form .btn { justify-self: start; }
+.review-form button:disabled { opacity: .6; }
+.form-msg.ok { color: #0d7a4f; font-weight: 600; }
+.form-msg.err { color: #e0102e; font-weight: 600; }
+.form-msg.err a { color: inherit; }
+@media (max-width: 600px) { .rv-grid { grid-template-columns: 1fr; } .review-form .btn { justify-self: stretch; } }

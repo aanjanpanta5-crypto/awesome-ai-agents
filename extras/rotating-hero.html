@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rotating Word Hero</title>
+<!--
+  Landing page hero with a rotating word in the headline.
+  Single self-contained file: HTML, CSS and vanilla JS, no libraries.
+
+  HOW TO EDIT
+  - Static text:   the "Built for" span in the <h1>.
+  - Words/colours: one <span class="word" style="--c: #HEX"> per word inside .rotator,
+                   plus one matching pill in .pills (same order, same colour).
+  - Subheadline:   the <p class="sub">.
+  - Button:        the <a class="cta"> text and link.
+  - Timing:        INTERVAL in the script (milliseconds between words).
+  Everything that moves uses transform and opacity only, so nothing on the page reflows.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;800&display=swap">
+<style>
+  /* ---------- Tokens (one committed dark look) ---------- */
+  :root {
+    --bg: #0b0b0f;
+    --text: #ffffff;
+    --muted: #a7a7b3;
+    --pill-line: #2c2c36;
+    --font: "Inter Tight", "Helvetica Neue", Arial, system-ui, sans-serif;
+    --speed: .6s;                       /* slide / underline transition */
+    --ease: cubic-bezier(.65, 0, .35, 1);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); }
+
+  /* ---------- Hero layout (mobile first) ---------- */
+  .hero {
+    min-height: 100%;
+    display: grid; align-content: center; justify-items: start; gap: 28px;
+    max-width: 1100px; margin: 0 auto;
+    padding-block: 64px;
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+  @media (min-width: 760px) { .hero { gap: 34px; padding-block: 96px; } }
+
+  /* Headline: the rotating word uses the same size and weight */
+  .headline {
+    margin: 0; font-weight: 800; letter-spacing: -.035em; line-height: 1.04;
+    font-size: clamp(2.6rem, 11vw, 6.4rem);
+  }
+  .static { display: inline-block; vertical-align: top; height: 1.12em; line-height: 1.12em; margin-right: .22em; }
+
+  /* ---------- The rotating word ---------- */
+  /* A fixed-height mask: one line tall, as wide as the widest word (set by the script),
+     so the headline never changes size while words slide through it. */
+  .rotator {
+    position: relative; display: inline-block; vertical-align: top;
+    height: 1.12em;                     /* one line of the headline */
+    line-height: 1.12em;                /* same line box as "Built for", so baselines match */
+    padding-bottom: .24em;              /* room for the underline below the letters (clears the tail of g/y) */
+    box-sizing: content-box;
+    overflow: hidden;
+  }
+  .word {
+    position: absolute; left: 0; top: 0; white-space: nowrap;
+    color: var(--c);
+    transform: translateY(105%); opacity: 0;            /* waiting below the mask */
+    transition: transform var(--speed) var(--ease), opacity var(--speed) var(--ease);
+    will-change: transform, opacity;
+  }
+  .word.is-active  { transform: translateY(0);     opacity: 1; }   /* in view */
+  .word.is-leaving { transform: translateY(-105%); opacity: 0; }   /* slides up and out */
+  .word.no-anim    { transition: none; }                           /* instant reset to below */
+
+  /* ---------- Underline ---------- */
+  /* One bar per word, stacked. All bars share the current word's width (scaleX),
+     and only the current word's bar is visible, so width and colour change with
+     transform + opacity only. */
+  .underline {
+    position: absolute; left: 0; bottom: 0; width: 100%; height: .1em; min-height: 5px;
+    border-radius: 999px; background: var(--c);
+    transform-origin: left center; transform: scaleX(var(--w, 1));
+    opacity: 0;
+    transition: transform var(--speed) var(--ease), opacity var(--speed) var(--ease);
+  }
+  .underline.is-active { opacity: 1; }
+
+  /* ---------- Sub, pills, button ---------- */
+  .sub { margin: 0; max-width: 34ch; color: var(--muted); font-weight: 500; font-size: clamp(1.05rem, 3.6vw, 1.3rem); line-height: 1.5; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .pill {
+    position: relative; isolation: isolate; overflow: hidden;
+    font: 500 .9rem/1 var(--font); color: var(--muted);
+    background: transparent; border: 1px solid var(--pill-line); border-radius: 999px;
+    padding: 10px 16px; min-height: 40px; cursor: pointer;
+  }
+  /* Highlight fill fades in with opacity only */
+  .pill::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--c); opacity: 0; transition: opacity var(--speed) var(--ease); }
+  /* Two copies of the label: light (normal) and dark (on the colour fill), cross-faded with opacity */
+  .pill .lbl { position: relative; transition: opacity var(--speed) var(--ease); }
+  .pill::after {
+    content: attr(data-label); position: absolute; inset: 0; display: grid; place-items: center;
+    color: #0b0b0f; opacity: 0; transition: opacity var(--speed) var(--ease);
+  }
+  .pill.is-active { border-color: var(--c); }
+  .pill.is-active::before, .pill.is-active::after { opacity: 1; }
+  .pill.is-active .lbl { opacity: 0; }
+  .pill:focus-visible, .cta:focus-visible { outline: 2px solid #ffffff; outline-offset: 3px; }
+
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #ffffff; color: #0b0b0f; text-decoration: none;
+    font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em;
+    padding: 16px 26px; border-radius: 999px; min-height: 52px;
+    transition: transform .2s ease;
+  }
+  .cta:hover { transform: translateY(-2px); }
+  .cta span { transition: transform .2s ease; }
+  .cta:hover span { transform: translateX(3px); }
+
+  /* Screen readers get the full sentence once, not the animation */
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Reduced motion: no transitions at all (the script also stops rotating) */
+  @media (prefers-reduced-motion: reduce) {
+    .word, .underline, .pill::before, .pill::after, .pill .lbl, .cta, .cta span { transition: none; }
+    .cta:hover, .cta:hover span { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero" aria-labelledby="hero-title">
+  <h1 class="headline" id="hero-title">
+    <span class="sr-only">Built for founders, designers, agencies and creators.</span>
+    <span aria-hidden="true">
+      <span class="static">Built for</span><span class="rotator" id="rotator">
+        <!-- Rotating words: each with its own accent colour -->
+        <span class="word is-active" style="--c:#FF5A36">founders</span>
+        <span class="word" style="--c:#8B5CF6">designers</span>
+        <span class="word" style="--c:#2BD67B">agencies</span>
+        <span class="word" style="--c:#FFD23F">creators</span>
+        <!-- One underline per word, same colours (the script sets the width) -->
+        <span class="underline is-active" style="--c:#FF5A36"></span>
+        <span class="underline" style="--c:#8B5CF6"></span>
+        <span class="underline" style="--c:#2BD67B"></span>
+        <span class="underline" style="--c:#FFD23F"></span>
+      </span>
+    </span>
+  </h1>
+
+  <!-- Pills: same words, same order; the active one is highlighted -->
+  <ul class="pills" aria-label="Who it's for">
+    <li><button type="button" class="pill is-active" style="--c:#FF5A36" aria-pressed="true" data-label="Founders"><span class="lbl">Founders</span></button></li>
+    <li><button type="button" class="pill" style="--c:#8B5CF6" aria-pressed="false" data-label="Designers"><span class="lbl">Designers</span></button></li>
+    <li><button type="button" class="pill" style="--c:#2BD67B" aria-pressed="false" data-label="Agencies"><span class="lbl">Agencies</span></button></li>
+    <li><button type="button" class="pill" style="--c:#FFD23F" aria-pressed="false" data-label="Creators"><span class="lbl">Creators</span></button></li>
+  </ul>
+
+  <!-- [ONE LINE] subheadline: replace with your own -->
+  <p class="sub">Plan it, build it and get paid for it, all from one simple workspace.</p>
+
+  <!-- [CTA] button: replace the text and link -->
+  <a class="cta" href="#start">Start for free <span aria-hidden="true">→</span></a>
+</section>
+
+<script>
+/* Rotating headline word: changes every INTERVAL ms, pauses while the tab is hidden. */
+(function () {
+  var INTERVAL = 2000;  // ms between words
+  var rotator = document.getElementById('rotator');
+  var words = [].slice.call(rotator.querySelectorAll('.word'));
+  var bars = [].slice.call(rotator.querySelectorAll('.underline'));
+  var pills = [].slice.call(document.querySelectorAll('.pill'));
+  var current = 0;
+  var timer = null;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Fix the mask's width to the widest word, so the headline never reflows,
+  // and work out each word's width as a fraction of it for the underline.
+  var fractions = [];
+  function measure() {
+    var widths = words.map(function (w) { return w.getBoundingClientRect().width; });
+    var widest = Math.max.apply(null, widths);
+    rotator.style.width = Math.ceil(widest) + 'px';
+    fractions = widths.map(function (w) { return w / widest; });
+    setUnderline(current);
+  }
+
+  // All bars share the current word's width; only the current word's colour is visible
+  function setUnderline(i) {
+    bars.forEach(function (bar, k) {
+      bar.style.setProperty('--w', fractions[i] || 1);
+      bar.classList.toggle('is-active', k === i);
+    });
+  }
+
+  // Highlight the matching pill
+  function setPills(i) {
+    pills.forEach(function (p, k) {
+      p.classList.toggle('is-active', k === i);
+      p.setAttribute('aria-pressed', k === i ? 'true' : 'false');
+    });
+  }
+
+  // Show word i: the current word slides up and out, the next slides up from below
+  function show(i) {
+    if (i === current) return;
+    var prev = words[current], next = words[i];
+
+    // Put the incoming word just below the mask without animating, then let it slide in
+    next.classList.add('no-anim');
+    next.classList.remove('is-leaving', 'is-active');
+    void next.offsetWidth;              // apply the reset before animating
+    next.classList.remove('no-anim');
+
+    prev.classList.remove('is-active');
+    prev.classList.add('is-leaving');
+    next.classList.add('is-active');
+
+    current = i;
+    setUnderline(i);
+    setPills(i);
+  }
+
+  function step() { show((current + 1) % words.length); }
+  function start() { if (!timer && !reduce) timer = setInterval(step, INTERVAL); }
+  function stop() { clearInterval(timer); timer = null; }
+
+  // Clicking a pill jumps to that word and restarts the timer
+  pills.forEach(function (p, k) {
+    p.addEventListener('click', function () { stop(); show(k); start(); });
+  });
+
+  // Pause while the tab is hidden, resume when it is visible again
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stop(); else start();
+  });
+
+  // Measure now, again once the web font has loaded, and when the screen size changes
+  measure();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  window.addEventListener('resize', measure);
+
+  // Reduced motion: the first word stays, no rotation
+  if (!reduce && !document.hidden) start();
+})();
+</script>
+</body>
+</html>

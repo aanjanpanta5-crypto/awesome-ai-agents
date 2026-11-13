@@ -29,6 +29,19 @@ exports.handler = async (event) => {
     return json(400, { error: 'Your bag is empty.' });
   }
 
+  // Count each product across all bag lines, so splitting it into several lines can't get past the stock limit
+  const totals = {};
+  for (const item of items) {
+    const p = byId[item && item.id];
+    if (p) totals[p.id] = (totals[p.id] || 0) + (Number(item.qty) || 0);
+  }
+  for (const id of Object.keys(totals)) {
+    const p = byId[id];
+    if (totals[id] > MAX_QTY || (typeof p.stock === 'number' && totals[id] > p.stock)) {
+      return json(400, { error: `Sorry, we don't have that many of the ${p.name}. Please lower the quantity and try again.` });
+    }
+  }
+
   const params = new URLSearchParams();
   let i = 0;
   for (const item of items) {
