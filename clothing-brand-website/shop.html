@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shop · Acpanta</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Shop Acpanta T-shirts, hoodies and sweatshirts in black and white, sizes S, M and L.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="shop">
+
+<a class="notice mono" href="returns.html">Free shipping on every order · 14-day returns</a>
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="./" aria-label="Acpanta home"><span class="logo-mark logo-holo" aria-hidden="true"></span><span>Acpanta</span></a>
+    <nav class="main" aria-label="Main">
+      <a href="shop.html" data-page="shop">Shop</a>
+      <a href="shop.html#t-shirts">T-shirts</a>
+      <a href="about.html" data-page="about">Our story</a>
+      <a href="size-guide.html" data-page="sizes">Size guide</a>
+      <a href="contact.html" data-page="contact">Contact</a>
+    </nav>
+    <button class="bag-btn" id="open-bag" aria-label="Open bag">Bag <span class="bag-count" id="bag-count">0</span></button>
+  </div>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="wrap">
+      <span class="mono">New collection · Limited stock</span>
+      <h1>Shop</h1>
+      <p>Six pieces in black and white, sizes S, M and L. Stock is limited, so when it's gone, it's gone.</p>
+    </div>
+  </div>
+  <section id="shop">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>The collection</h2>
+          <p>Not sure of your size? Check the <a href="size-guide.html">size guide</a> before you order.</p>
+        </div>
+        <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
+      </div>
+      <form class="shop-search" id="shop-search" role="search">
+        <label for="q" class="mono">Search the range</label>
+        <div class="shop-search-box">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <input id="q" name="q" type="search" placeholder="Search by name, colour or fabric" autocomplete="off" enterkeyhint="search">
+        </div>
+        <p class="result-note" id="result-note" aria-live="polite"></p>
+      </form>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div><a class="logo" href="./" aria-label="Acpanta home"><img class="logo-mark" src="logo.svg" alt="" width="80" height="44"><span>Acpanta</span></a><p style="opacity:.75;max-width:30ch">Heavyweight T-shirts and hoodies with the Acpanta logo. Limited stock, made in small batches.</p></div>
+    <div><h4>Shop</h4><ul><li><a href="shop.html">Everything</a></li><li><a href="shop.html#t-shirts">T-shirts</a></li><li><a href="shop.html#hoodies">Hoodies</a></li><li><a href="shop.html#sweatshirts">Sweatshirts</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="size-guide.html">Size guide</a></li><li><a href="returns.html">Returns &amp; shipping</a></li><li><a href="contact.html">Contact us</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="terms.html">Terms &amp; conditions</a></li></ul></div>
+    <div><h4>Acpanta</h4><ul><li><a href="about.html">Our story</a></li><li><a href="contact.html#join">New stock alerts</a></li></ul></div>
+    <div><h4>Follow us</h4><ul><li><a href="https://www.instagram.com/acpanta" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:aanjan.panta5@gmail.com">Email us</a></li></ul></div>
+  </div>
+  <div class="wrap legal mono">© 2026 Acpanta · acpanta.com</div>
+</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="Shopping bag" role="dialog" aria-modal="true">
+  <div class="drawer-head"><h2>Your bag</h2><button class="x" id="close-bag" aria-label="Close bag">×</button></div>
+  <div class="lines" id="lines"></div>
+  <div class="totals">
+    <div class="row"><span>Subtotal</span><span id="subtotal">£0</span></div>
+    <div class="row"><span>Shipping</span><span id="shipping">—</span></div>
+    <span class="mono" style="color:var(--muted)">Free shipping · 14-day returns</span>
+    <div class="row big"><span>Total</span><span id="total">£0</span></div>
+    <button class="btn btn-accent checkout" id="checkout">Checkout</button>
+    <p class="form-msg" id="checkout-msg" role="status"></p>
+  </div>
+</aside>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
