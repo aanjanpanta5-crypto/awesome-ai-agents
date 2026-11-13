@@ -643,3 +643,31 @@ footer.site li a:hover { filter: brightness(1.25); text-decoration: underline; t
   nav.main a:hover { filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, .12)) brightness(1.15); }
 }
 @media (prefers-reduced-motion: reduce) { .notice span, nav.main a { animation: none; } }
+
+/* Search panel: red, with holographic writing */
+.search-panel { background: var(--accent); color: #ffffff; }
+.search-form { border-bottom-color: rgba(255,255,255,.85); }
+.search-form svg { color: #ffd0ef; }
+.search-form input { color: #ffffff; caret-color: #c8f3ff; }
+.search-form input::placeholder { color: rgba(255,255,255,.75); }
+.search-panel .x { color: #ffffff; }
+.search-panel .chip { border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.08); }
+.search-panel .chip:hover { border-color: #ffffff; background: rgba(255,255,255,.16); }
+.search-panel .result-list a { border-bottom-color: rgba(255,255,255,.25); color: #ffffff; }
+.search-panel .result-list .thumb { background: #ffffff; }
+.search-panel .see-all { background: #ffffff; color: var(--accent); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .search-panel .search-label, .search-panel .chip, .search-panel .search-empty,
+  .search-panel .r-meta b, .search-panel .r-meta .mono, .search-panel .result-list .price {
+    background-image: var(--holo-light); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: holo-shift 8s linear infinite;
+    filter: drop-shadow(1px 1px 0 rgba(90, 0, 20, .55));
+  }
+  .search-panel .chip { background-color: transparent; }
+}
+.search-panel .result-list a:hover b { filter: brightness(1.2); }
+@media (prefers-reduced-motion: reduce) {
+  .search-panel .search-label, .search-panel .chip, .search-panel .search-empty,
+  .search-panel .r-meta b, .search-panel .r-meta .mono, .search-panel .result-list .price { animation: none; }
+}
