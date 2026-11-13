@@ -81,4 +81,4 @@ Run `python3 -m http.server` in this folder and visit http://localhost:8000. Che
 ## Before taking real orders
 
 - Replace the drawn garments with product photos.
-- Replace the sample size chart measurements (in `app.js`, `SIZE_TABLES`) with the real ones.
+- Size measurements live in `SIZE_TABLES` in `app.js` (confirmed against the stock). If a new batch measures differently, update them there; setting `MEASUREMENTS_READY = false` hides all measurements and asks customers to message you on WhatsApp instead.

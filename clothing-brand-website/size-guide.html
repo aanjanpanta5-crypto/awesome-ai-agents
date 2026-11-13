@@ -56,12 +56,18 @@
           <h2>Measurements</h2>
           <p>Chest is measured flat, 2&nbsp;cm below the armpit. Between two sizes? Go down for a closer fit, or up if you like it roomy. "Best for body chest" is measured around the fullest part of your chest.</p>
         </div>
-        <div class="filters" role="group" aria-label="Units">
+        <div class="filters" role="group" aria-label="Units" id="unit-switch">
           <button class="chip" id="unit-cm" aria-pressed="true">cm</button>
           <button class="chip" id="unit-in" aria-pressed="false">in</button>
         </div>
       </div>
-            <h3 class="size-title">T-shirts</h3>
+      <div class="size-pending" id="size-pending">
+        <p><b>Exact measurements are on their way.</b> We're measuring every size of the first batch so the numbers here are right.</p>
+        <p>Until then, message us and we'll send you the chest, length and sleeve for the size you want. If you're between two sizes, tell us your usual size and we'll help you choose.</p>
+        <p><a class="btn btn-accent" href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask for measurements on WhatsApp</a></p>
+      </div>
+      <div id="size-tables" hidden>
+      <h3 class="size-title">T-shirts</h3>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Size</th><th>Chest (flat)</th><th>Body length</th><th>Sleeve</th><th>Best for body chest</th></tr></thead>
@@ -75,7 +81,7 @@
           <tbody id="size-body-hood"></tbody>
         </table>
       </div>
-      <p class="note"><span class="fill">[Sample measurements: replace with the real measurements of your stock before launch]</span></p>
+      </div>
     </div>
   </section>
 </main>

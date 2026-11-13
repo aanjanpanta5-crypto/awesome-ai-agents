@@ -870,3 +870,8 @@ header.site .search-btn:hover { border-color: var(--ink); }
 /* Keep the shimmer inside the blue / purple / magenta family: the colours sway gently
    instead of going all the way round the wheel (which passed through muddy green and brown). */
 @keyframes holo-hue { 0%, 100% { filter: hue-rotate(-22deg); } 50% { filter: hue-rotate(28deg); } }
+
+/* Size guide while real measurements are on their way */
+.size-pending { background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 10px; max-width: 720px; box-shadow: 5px 5px 0 var(--line); }
+.size-pending p { margin: 0; }
+.size-info a { color: var(--accent); }

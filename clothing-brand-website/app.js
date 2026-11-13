@@ -89,7 +89,10 @@
     window.addEventListener('hashchange', function () { active = fromHash(); syncFilters(); renderGrid(); });
   }
 
-  // Measurements for each size (also used by the size guide page)
+  // Measurements for each size (also used by the size guide page).
+  // MEASUREMENTS_READY: keep false until SIZE_TABLES holds the REAL measurements of your stock.
+  // While false, no numbers are shown anywhere; customers are asked to message you instead.
+  var MEASUREMENTS_READY = true;
   var SIZE_TABLES = {
     'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23]],
     'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64]]
@@ -102,6 +105,7 @@
   }
   // Text shown on a product card and in the bag once a size is picked
   function sizeText(p, size) {
+    if (!MEASUREMENTS_READY) return '';
     var id = p.cat === 'T-shirts' ? 'size-body-tee' : 'size-body-hood', rows = SIZE_TABLES[id] || [];
     for (var i = 0; i < rows.length; i++) if (rows[i][0] === size) {
       var fit = fitRange(id, rows[i]);
@@ -114,7 +118,8 @@
     var info = el.querySelector('[data-size-info]'), sel = el.querySelector('select');
     if (!info || !sel) return;
     var t = sel.value ? sizeText(byId[el.dataset.id], sel.value) : '';
-    info.innerHTML = t || 'Pick a size to see its measurements';
+    info.innerHTML = t || (MEASUREMENTS_READY ? 'Pick a size to see its measurements' :
+      'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>');
     info.classList.toggle('is-set', !!t);
   }
   function cardHTML(p) { return card(p); }
@@ -131,7 +136,8 @@
         var look = col[2] ? 'background:' + col[1] + ' url(' + col[2].replace('.jpg', '-thumb.jpg') + ') center 40%/cover' : 'background:' + col[1];
         return '<button class="sw' + (col[2] ? ' sw-img' : '') + '" data-sw="' + i + '" style="' + look + '" aria-label="' + esc(col[0]) + '" aria-pressed="' + (i === p.sel) + '" title="' + esc(col[0]) + '"></button>';
       }).join('') + '</div>' +
-      '<p class="size-info mono" data-size-info aria-live="polite">Pick a size to see its measurements</p>' +
+      '<p class="size-info mono" data-size-info aria-live="polite">' + (MEASUREMENTS_READY ? 'Pick a size to see its measurements' :
+        'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>') + '</p>' +
       '<div class="buy"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '">' +
       (p.sizes.length > 1 ? '<option value="">Select size</option>' : '') +
       p.sizes.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select>' +
@@ -444,7 +450,12 @@
   if (document.body.getAttribute('data-page') === 'thanks' && /session_id=/.test(location.search)) { bag = []; save(); }
   renderBag();
 
-  // Size guide
+  // Size guide: show the tables only once the real measurements are in
+  if ($('size-tables')) {
+    $('size-tables').hidden = !MEASUREMENTS_READY;
+    $('unit-switch').hidden = !MEASUREMENTS_READY;
+    $('size-pending').hidden = MEASUREMENTS_READY;
+  }
   if ($('size-body-tee')) {
   function renderSizes(unit) {
     Object.keys(SIZE_TABLES).forEach(function (id) {
