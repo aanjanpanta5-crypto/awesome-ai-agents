@@ -15,6 +15,8 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 | `privacy.html` | Privacy policy |
 | `terms.html` | Terms and conditions |
 | `thank-you.html` | Shown after a successful payment; empties the bag |
+| `women.html`, `perfume.html`, `bags.html` | Coming-soon pages for the women's line, limited perfume and bags |
+| `customisation.html` | Custom pieces: what's possible and how to request one on WhatsApp |
 | `help.html` | Help centre: delivery, returns, sizing, payment and care questions |
 | `404.html` | Shown when a page doesn't exist |
 

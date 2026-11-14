@@ -1070,3 +1070,22 @@ footer.site .logo-mark { animation: logo-roll 7s ease-in-out infinite, shine360 
 @media (prefers-reduced-motion: reduce) {
   .notice .marquee, header.site .logo span:not(.logo-mark), footer.site .logo span:not(.logo-mark), header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: none !important; }
 }
+
+/* ---------- Menu drawer: plain list ---------- */
+.menu-drawer { gap: 26px; }
+.menu-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.menu-list a { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; padding: 9px 2px; text-decoration: none; color: var(--ink);
+  font: 400 1.35rem/1.25 var(--body, inherit); letter-spacing: .01em; }
+.menu-list a:hover, .menu-list a:focus-visible { text-decoration: underline; text-underline-offset: 5px; }
+.menu-list-small a { font-size: 1rem; padding: 7px 2px; color: var(--muted); }
+.menu-note { font: 500 .66rem/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.menu-note.low { color: #e0102e; }
+
+/* ---------- Coming soon and customisation pages ---------- */
+.soon-wrap { max-width: 720px; display: grid; gap: 6px; }
+.soon-lead { font-size: 1.25rem; line-height: 1.5; margin: 0 0 8px; }
+.soon-wrap p { line-height: 1.65; }
+.soon-wrap a:not(.btn) { color: var(--accent); }
+.soon-wrap h2 { font-size: clamp(1.5rem, 4.5vw, 2rem); margin-top: 22px; }
+.soon-list { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; line-height: 1.6; }
+.soon-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
