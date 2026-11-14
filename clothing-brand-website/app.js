@@ -228,12 +228,14 @@
   var mScrim = document.createElement('div'); mScrim.className = 'search-scrim'; mScrim.hidden = true;
   var menu = document.createElement('nav');
   menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
-  var tile = function (href, label, note, low) { return '<a class="menu-tile" href="' + href + '"><span>' + label + '</span><small' + (low ? ' class="low"' : '') + '>' + note + '</small></a>'; };
+  var item = function (href, label, note, low) { return '<li><a href="' + href + '">' + label + (note ? ' <small class="menu-note' + (low ? ' low' : '') + '">' + note + '</small>' : '') + '</a></li>'; };
   menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
-    '<div class="menu-tiles">' + tile('shop.html', 'Shop all', '6 pieces') + tile('shop.html#t-shirts', 'T-shirts', '260 GSM and up') +
-    tile('shop.html#hoodies', 'Hoodies', '400+ GSM') + tile('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + '</div>' +
-    '<ul class="menu-links"><li><a href="help.html">Help centre</a></li><li><a href="size-guide.html">Size guide</a></li><li><a href="returns.html">Delivery &amp; returns</a></li>' +
-    '<li><a href="about.html">About us</a></li><li><a href="contact.html">Contact us</a></li><li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
+    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + '</ul>' +
+    '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
+    item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
+    item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
+    '<ul class="menu-list menu-list-small">' + item('help.html', 'Help centre') + item('size-guide.html', 'Size guide') + item('returns.html', 'Delivery &amp; returns') +
+    item('about.html', 'About us') + item('contact.html', 'Contact us') + '<li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
   document.body.appendChild(mScrim); document.body.appendChild(menu);
   function openMenu() { mScrim.hidden = false; menu.hidden = false; document.documentElement.classList.add('no-scroll'); $('close-menu').focus(); }
   function closeMenu() { mScrim.hidden = true; menu.hidden = true; document.documentElement.classList.remove('no-scroll'); mBtn.focus(); }
