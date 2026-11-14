@@ -1089,3 +1089,11 @@ footer.site .logo-mark { animation: logo-roll 7s ease-in-out infinite, shine360 
 .soon-wrap h2 { font-size: clamp(1.5rem, 4.5vw, 2rem); margin-top: 22px; }
 .soon-list { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; line-height: 1.6; }
 .soon-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+
+/* ---------- Shop page: clothes first ---------- */
+section.shop-top { padding-top: 18px; }
+.shop-top .filters { margin-bottom: 14px; }
+.shop-top .result-note:empty { display: none; }
+.shop-top .shop-search { margin: 40px 0 0; }
+.shop-tip { margin: 4px 0 0; color: var(--muted); font-size: .92rem; }
+.shop-tip a { color: var(--accent); }

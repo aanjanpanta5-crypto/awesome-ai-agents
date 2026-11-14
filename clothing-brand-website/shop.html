@@ -42,31 +42,20 @@
 </header>
 
 <main>
-  <div class="page-head">
+  <section id="shop" class="shop-top">
     <div class="wrap">
-      <span class="mono">First batch · Limited stock</span>
-      <h1>Shop</h1>
-      <p>Six pieces, black or white, S to L. We didn't make many, and once something sells out it might not come back.</p>
-    </div>
-  </div>
-  <section id="shop">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <h2>The collection</h2>
-          <p>Between sizes? Have a look at the <a href="size-guide.html">size guide</a> first.</p>
-        </div>
-        <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
-      </div>
+      <h1 class="sr-only">Shop</h1>
+      <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
+      <p class="result-note" id="result-note" aria-live="polite"></p>
+      <div class="grid" id="grid"></div>
       <form class="shop-search" id="shop-search" role="search">
         <label for="q" class="mono">Search the range</label>
         <div class="shop-search-box">
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
           <input id="q" name="q" type="search" placeholder="Search by name, colour or fabric" autocomplete="off" enterkeyhint="search">
         </div>
-        <p class="result-note" id="result-note" aria-live="polite"></p>
+        <p class="shop-tip">Between sizes? Have a look at the <a href="size-guide.html">size guide</a> first.</p>
       </form>
-      <div class="grid" id="grid"></div>
     </div>
   </section>
 </main>
