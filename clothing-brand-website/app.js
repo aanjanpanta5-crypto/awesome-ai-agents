@@ -72,6 +72,13 @@
   var PID = '';
   try { PID = new URLSearchParams(location.search).get('id') || ''; } catch (err) {}
   function productLink(p) { return 'product.html?id=' + encodeURIComponent(p.id); }
+  // Saved items and recently viewed, kept only in this browser
+  function readList(k) { try { var v = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(v) ? v : []; } catch (err) { return []; } }
+  function writeList(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (err) {} }
+  var SAVED = readList('acpanta-saved');
+  function isSaved(id) { return SAVED.indexOf(id) !== -1; }
+  var HEART = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>';
+  function saveBtn(p, cls) { return '<button type="button" class="' + cls + '" data-save aria-pressed="' + isSaved(p.id) + '" aria-label="' + (isSaved(p.id) ? 'Remove ' : 'Save ') + esc(p.name) + (isSaved(p.id) ? ' from saved items' : ' for later') + '">' + HEART + (cls === 'save-btn' ? '<span>' + (isSaved(p.id) ? 'Saved' : 'Save for later') + '</span>' : '') + '</button>'; }
   var query = '';
   try { query = new URLSearchParams(location.search).get('q') || ''; } catch (err) {}
 
@@ -184,7 +191,7 @@
     return '<article class="card" data-id="' + p.id + '">' +
       '<div class="art' + (c[2] ? ' has-photo' : '') + '"><a class="art-link" href="' + productLink(p) + '" aria-label="View ' + esc(p.name) + '"></a>' + badgeHTML(p) + artFor(p, p.sel) +
       '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button>' +
-      '<button type="button" class="share-btn-icon" data-share aria-label="Share ' + esc(p.name) + ' with a friend">' + SHARE_ICON + '</button></div>' +
+      '<button type="button" class="share-btn-icon" data-share aria-label="Share ' + esc(p.name) + ' with a friend">' + SHARE_ICON + '</button>' + saveBtn(p, 'save-btn-icon') + '</div>' +
       '<div class="card-top"><h3><a href="' + productLink(p) + '">' + p.name + '</a></h3><span class="price">' + money(p.price) + '</span></div>' +
       '<p class="spec mono">' + p.spec + '</p>' +
       (p.details ? '<details class="pdetails"><summary>Details</summary><ul>' + p.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></details>' : '') +
@@ -203,7 +210,8 @@
       (p.digital ? '<p class="batch-label mono">Digital gift card</p>' : '<p class="batch-label mono">Batch 01 · one of 185 pieces</p>') +
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
-      '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + buyHTML(p) +
+      '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + buyHTML(p) + saveBtn(p, 'save-btn') +
+      (p.digital ? '' : '<details class="size-finder"><summary>📏 Find my size</summary><div class="sf-body"><label>Your chest, measured around the fullest part<span class="sf-row"><input type="number" inputmode="decimal" min="20" max="160" step="0.5" data-sf-chest placeholder="e.g. 100"><select data-sf-unit aria-label="Unit"><option value="cm">cm</option><option value="in">in</option></select></span></label><p class="sf-out" data-sf-out aria-live="polite">Enter your chest to see your size.</p></div></details>') +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
       '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
       (p.digital ? '' : '<a class="wa-help" href="https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I\'m looking at the ' + p.name + ' and need sizing help.') + '" target="_blank" rel="noopener">💬 Need sizing help? Chat with us on WhatsApp</a>' +
@@ -219,11 +227,14 @@
   }
   function renderGrid() {
     if (!grid) return;
-    var list = grid.hasAttribute('data-related')
+    var list = grid.hasAttribute('data-saved')
+      ? SAVED.map(function (id) { return byId[id]; }).filter(Boolean)
+      : grid.hasAttribute('data-related')
       ? PRODUCTS.filter(function (p) { return p.id !== PID && !p.digital; }).sort(function (a, b) { var cur = byId[PID]; return cur ? (b.cat === cur.cat) - (a.cat === cur.cat) : 0; }).slice(0, 3)
       : grid.dataset.featured
       ? grid.dataset.featured.split(',').map(function (id) { return byId[id]; }).filter(Boolean)
       : PRODUCTS.filter(function (p) { return (active === 'All' || p.cat === active) && (!query || matches(p, query)); });
+    if (grid.hasAttribute('data-saved') && !list.length) { grid.innerHTML = '<div class="no-results"><p><b>Nothing saved yet.</b></p><p>Tap the ♡ on any piece to save it here for later.</p><p><a class="btn btn-accent" href="shop.html">Browse the shop</a></p></div>'; return; }
     grid.innerHTML = list.length ? list.map(card).join('') :
       '<div class="no-results"><p><b>No items match “' + esc(query) + '”' + (active !== 'All' ? ' in ' + esc(active) : '') + '.</b></p>' +
       '<p>Try “tee”, “black” or “jacket”, or <button class="link-btn" data-clear-search>show everything</button>.</p></div>';
@@ -234,6 +245,7 @@
     if (e.target.closest('[data-clear-search]')) { setQuery(''); active = 'All'; if (filters) syncFilters(); renderGrid(); if ($('q')) $('q').focus(); return; }
     var el = e.target.closest('.card'); if (!el) return;
     var p = byId[el.dataset.id];
+    if (e.target.closest('[data-save]')) { toggleSaved(p, el); return; }
     if (e.target.closest('[data-share]')) { shareProduct(p, el); return; }
     if (e.target.closest('[data-copy-link]')) { copyLink(p); return; }
     if (e.target.closest('[data-zoom]')) { openZoom(p, el); return; }
@@ -347,7 +359,7 @@
     '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
     item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
     item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
-    '<ul class="menu-list menu-list-small">' + item('shop.html#search', 'Search') + item('help.html', 'Help centre') + item('size-guide.html', 'Size guide') + item('care.html', 'Care guide') + item('returns.html', 'Delivery &amp; returns') +
+    '<ul class="menu-list menu-list-small">' + item('shop.html#search', 'Search') + '<li><a href="saved.html">Saved items <span id="saved-count"></span></a></li>' + item('help.html', 'Help centre') + item('size-guide.html', 'Size guide') + item('care.html', 'Care guide') + item('returns.html', 'Delivery &amp; returns') +
     item('about.html', 'About us') + item('contact.html', 'Contact us') + '<li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
   document.body.appendChild(mScrim); document.body.appendChild(menu);
   function openMenu() { mScrim.hidden = false; menu.hidden = false; document.documentElement.classList.add('no-scroll'); $('close-menu').focus(); }
@@ -486,7 +498,15 @@
     save(); renderBag();
     toast('Added ' + p.name + ' (' + p.colors[color][0] + ', ' + size + ')');
   }
+  // Bag emblem: only shown when there's room for the whole thing
+  function fitEmblem() {
+    var w = document.querySelector('.bag-watermark'); if (!w) return;
+    w.classList.remove('is-hidden');
+    if (w.clientHeight < 110) w.classList.add('is-hidden');
+  }
+  window.addEventListener('resize', fitEmblem);
   function renderBag() {
+    setTimeout(fitEmblem, 0);
     if (!$('bag-extra') && $('lines')) { var bx = document.createElement('div'); bx.id = 'bag-extra'; $('lines').parentNode.insertBefore(bx, $('lines').nextSibling); }
     var count = 0, sub = 0;
     bag.forEach(function (l) { count += l.qty; sub += l.qty * byId[l.id].price; });
@@ -518,7 +538,7 @@
     else return;
     save(); renderBag();
   });
-  function openBag() { $('scrim').hidden = false; $('drawer').hidden = false; $('close-bag').focus(); }
+  function openBag() { $('scrim').hidden = false; $('drawer').hidden = false; fitEmblem(); $('close-bag').focus(); }
   function closeBag() { $('scrim').hidden = true; $('drawer').hidden = true; $('open-bag').focus(); }
   $('open-bag').addEventListener('click', openBag);
   $('close-bag').addEventListener('click', closeBag);
@@ -797,6 +817,73 @@
         return '<figure class="look"><img src="' + esc(l.photo) + '" alt="' + esc(l.alt || ((l.name || 'A customer') + ' wearing ' + (p ? p.name : 'Acpanta'))) + '" loading="lazy" decoding="async">' +
           '<figcaption class="mono">' + esc(l.height) + ' · wears ' + esc(l.size) + (p ? ' · <a href="' + productLink(p) + '">' + esc(p.name) + '</a>' : '') + '</figcaption></figure>';
       }).join('');
+    }
+  }
+
+  // Saved items: toggle, refresh buttons, update the menu count, re-render the saved page
+  function toggleSaved(p, el) {
+    var i = SAVED.indexOf(p.id);
+    if (i === -1) SAVED.unshift(p.id); else SAVED.splice(i, 1);
+    writeList('acpanta-saved', SAVED);
+    [].forEach.call(document.querySelectorAll('.card[data-id="' + p.id + '"] [data-save]'), function (b) {
+      var on = isSaved(p.id);
+      b.setAttribute('aria-pressed', on);
+      b.setAttribute('aria-label', (on ? 'Remove ' : 'Save ') + p.name + (on ? ' from saved items' : ' for later'));
+      var t = b.querySelector('span'); if (t) t.textContent = on ? 'Saved' : 'Save for later';
+    });
+    toast(isSaved(p.id) ? 'Saved. Find it in Menu → Saved items' : 'Removed from saved items');
+    updateSavedCount();
+    if (grid && grid.hasAttribute('data-saved')) renderGrid();
+  }
+  function updateSavedCount() { var c = $('saved-count'); if (c) c.textContent = SAVED.length ? '(' + SAVED.length + ')' : ''; }
+  updateSavedCount();
+
+  // Find my size: compares body chest with each size's "fits chest" range
+  function sizeAdvice(p, chestCm) {
+    var boxy = p.cat !== 'T-shirts', order = ['S', 'M', 'L', 'XL'], pick = null, between = null;
+    for (var i = 0; i < order.length; i++) {
+      var r = FIT_CHEST[order[i]];
+      if (chestCm >= r[0] && chestCm <= r[1]) { pick = order[i]; break; }
+      if (i < order.length - 1 && chestCm > r[1] && chestCm < FIT_CHEST[order[i + 1]][0]) { between = [order[i], order[i + 1]]; break; }
+    }
+    if (pick) return '<b>We recommend ' + pick + '.</b> ' + (boxy ? 'That gives the relaxed, boxy fit. Size down for a closer, standard fit.' : 'True to size, with a clean everyday drape.');
+    if (between) return '<b>You\'re between ' + between[0] + ' and ' + between[1] + '.</b> Pick ' + between[0] + ' for a closer fit or ' + between[1] + (boxy ? ' for the full boxy look.' : ' for a relaxed fit.');
+    if (chestCm < FIT_CHEST.S[0]) return '<b>S is our smallest size</b> and will fit you loosely. <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a> if you\'re unsure.';
+    return '<b>XL is our largest size</b> and may be snug on you. <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a> and we\'ll help.';
+  }
+  document.addEventListener('input', function (e) {
+    var box = e.target.closest && e.target.closest('.size-finder'); if (!box) return;
+    var el = box.closest('.card'), p = el && byId[el.dataset.id]; if (!p) return;
+    var v = parseFloat(box.querySelector('[data-sf-chest]').value), unit = box.querySelector('[data-sf-unit]').value;
+    var out = box.querySelector('[data-sf-out]');
+    if (!v) { out.textContent = 'Enter your chest to see your size.'; return; }
+    var cm = unit === 'in' ? v * 2.54 : v;
+    out.innerHTML = sizeAdvice(p, cm);
+  });
+  document.addEventListener('change', function (e) { if (e.target.matches && e.target.matches('[data-sf-unit]')) e.target.closest('.size-finder').querySelector('[data-sf-chest]').dispatchEvent(new Event('input', { bubbles: true })); });
+
+  // Product page extras: recently viewed, and an Add to bag bar that stays on screen on phones
+  if (pdpEl && byId[PID]) {
+    var RV = readList('acpanta-recent').filter(function (id) { return id !== PID && byId[id]; });
+    if ($('recent-grid') && RV.length) {
+      $('recent').hidden = false;
+      $('recent-grid').innerHTML = RV.slice(0, 4).map(function (id) { return card(byId[id]); }).join('');
+      $('recent-grid').addEventListener('click', onCardClick);
+      $('recent-grid').addEventListener('change', onCardChange);
+    }
+    writeList('acpanta-recent', [PID].concat(RV).slice(0, 8));
+    var P1 = byId[PID], stick = document.createElement('div');
+    stick.className = 'sticky-buy'; stick.hidden = true;
+    stick.innerHTML = '<span class="sb-name"><b>' + esc(P1.name) + '</b><span class="price">' + money(P1.price) + '</span></span><button type="button" class="btn btn-accent" data-sticky-add' + (isSoldOut(P1) ? ' disabled>Sold out' : '>Add to bag') + '</button>';
+    document.body.appendChild(stick);
+    stick.addEventListener('click', function (e) {
+      if (!e.target.closest('[data-sticky-add]')) return;
+      var card0 = pdpEl.querySelector('.pdp'), sel = card0.querySelector('select');
+      if (sel && !sel.value && !P1.digital) { card0.querySelector('.buy').scrollIntoView({ behavior: 'smooth', block: 'center' }); sel.focus(); toast('Pick a size first'); return; }
+      card0.querySelector('[data-add]').click();
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { stick.hidden = es[0].isIntersecting || window.innerWidth > 820; }).observe(pdpEl.querySelector('.buy'));
     }
   }
 

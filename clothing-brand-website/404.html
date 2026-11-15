@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body data-page="notfound">
+<a class="skip-link" href="#main">Skip to content</a>
 
 <a class="notice mono" href="returns.html" aria-label="Free shipping on every order. 14-day returns."><span class="marquee" aria-hidden="true"><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span><span>Free shipping on every order · 14-day returns</span></span></a>
 
@@ -42,7 +43,7 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <div class="page-head">
     <div class="wrap">
       <span class="mono">Error 404</span>
@@ -66,8 +67,9 @@
 
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Shopping bag" role="dialog" aria-modal="true">
-  <div class="drawer-head"><h2>Your bag</h2><button class="x" id="close-bag" aria-label="Close bag">×</button></div>
+  <div class="drawer-head bag-head"><div class="bag-brand"><img src="logo.svg" alt="" class="bag-logo" width="44" height="25"><h2>Your bag</h2></div><button class="x" id="close-bag" aria-label="Close bag">✕</button></div>
   <div class="lines" id="lines"></div>
+  <div class="bag-watermark" aria-hidden="true"><img src="logo.svg" alt="" width="96" height="54"><span>Batch 01 · London</span></div>
   <div class="totals">
     <div class="row"><span>Subtotal</span><span id="subtotal">£0</span></div>
     <div class="row"><span>Shipping</span><span id="shipping">—</span></div>
