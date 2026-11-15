@@ -1401,3 +1401,7 @@ main:focus { outline: none; }
 .drawer .checkout:hover { background: #000 !important; transform: translateY(-1px); }
 .drawer .checkout:active { transform: translateY(1px); box-shadow: 0 2px 6px rgba(20,20,20,.2) !important; }
 .drawer .checkout:focus-visible { outline: 3px solid #7a0c24; outline-offset: 3px; }
+
+/* Payment logos under checkout */
+.pay-methods b { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 32px; padding: 4px 8px; background: #fff; }
+.pay-methods img { width: 100%; height: 100%; object-fit: contain; display: block; }
