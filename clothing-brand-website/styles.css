@@ -1243,3 +1243,5 @@ footer.site .soon { font: 500 .58rem/1 var(--mono); letter-spacing: .06em; text-
 .pdp-care { margin-top: 6px; }
 .pdp-care ul { margin: 6px 0 6px; padding-left: 1.1em; display: grid; gap: 4px; color: var(--ink); }
 .pdp-care p { margin: 0; }
+.legal-doc h3 { margin: 18px 0 4px; font-size: 1.05rem; }
+.legal-doc h3[id] { scroll-margin-top: 150px; }
