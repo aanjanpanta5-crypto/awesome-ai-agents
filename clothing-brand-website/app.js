@@ -313,7 +313,7 @@
     '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
     item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
     item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
-    '<ul class="menu-list menu-list-small">' + item('help.html', 'Help centre') + item('size-guide.html', 'Size guide') + item('returns.html', 'Delivery &amp; returns') +
+    '<ul class="menu-list menu-list-small">' + item('shop.html#search', 'Search') + item('help.html', 'Help centre') + item('size-guide.html', 'Size guide') + item('returns.html', 'Delivery &amp; returns') +
     item('about.html', 'About us') + item('contact.html', 'Contact us') + '<li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
   document.body.appendChild(mScrim); document.body.appendChild(menu);
   function openMenu() { mScrim.hidden = false; menu.hidden = false; document.documentElement.classList.add('no-scroll'); $('close-menu').focus(); }
@@ -324,69 +324,16 @@
   menu.addEventListener('click', function (e) { if (e.target.closest('a')) closeMenu(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
 
-  // Header search: a panel with live results, on every page
-  var SEARCH_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
+  // Header buttons: menu and bag. The only search box is at the top of the shop page.
   var openBagBtn = $('open-bag');
-  var sBtn = document.createElement('button');
-  sBtn.className = 'search-btn'; sBtn.id = 'open-search'; sBtn.type = 'button';
-  sBtn.setAttribute('aria-label', 'Search products');
-  sBtn.innerHTML = SEARCH_ICON + '<span>Search</span>';
   var actions = document.createElement('div'); actions.className = 'header-actions';
   openBagBtn.parentNode.insertBefore(actions, openBagBtn);
-  actions.appendChild(mBtn); actions.appendChild(sBtn); actions.appendChild(openBagBtn);
-
-  var sScrim = document.createElement('div'); sScrim.className = 'search-scrim'; sScrim.hidden = true;
-  var panel = document.createElement('div');
-  panel.className = 'search-panel'; panel.hidden = true;
-  panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-label', 'Search products');
-  panel.innerHTML = '<div class="wrap"><form class="search-form" id="search-form" role="search" action="shop.html">' + SEARCH_ICON +
-    '<label for="search-input" hidden>Search products</label>' +
-    '<input id="search-input" name="q" type="search" placeholder="Search tees, jackets, colours…" autocomplete="off" enterkeyhint="search">' +
-    '<button type="button" class="x" id="close-search" aria-label="Close search">×</button></form>' +
-    '<div class="search-results" id="search-results" aria-live="polite"></div></div>';
-  document.body.appendChild(sScrim); document.body.appendChild(panel);
-  var sInput = $('search-input'), sResults = $('search-results');
-  var SUGGEST = ['T-shirts', 'Hoodies', 'Zip hoodie', 'Sweatshirt', 'Black', 'White'];
-  function shopLink(q) { return 'shop.html?q=' + encodeURIComponent(q); }
-  function renderResults() {
-    var q = sInput.value.trim();
-    if (!q) {
-      sResults.innerHTML = '<p class="mono search-label">Popular searches</p><div class="suggest">' +
-        SUGGEST.map(function (t) { return '<button type="button" class="chip" data-suggest="' + t + '">' + t + '</button>'; }).join('') + '</div>';
-      return;
-    }
-    var found = searchProducts(q);
-    if (!found.length) {
-      sResults.innerHTML = '<p class="search-empty">No items match “' + esc(q) + '”. Try “tee”, “black” or “jacket”.</p>';
-      return;
-    }
-    sResults.innerHTML = '<p class="mono search-label">' + found.length + (found.length === 1 ? ' item' : ' items') + '</p><ul class="result-list">' +
-      found.slice(0, 6).map(function (p) {
-        return '<li><a href="' + productLink(p) + '"><span class="thumb">' + artFor(p, 0) + '</span>' +
-          '<span class="r-meta"><b>' + esc(p.name) + '</b><span class="mono">' + esc(p.cat) + ' · ' + (p.colors.length > 2 ? p.colors.length + ' ' + (p.variantLabel || 'colour').toLowerCase() + 's' : p.colors.map(function (c) { return c[0]; }).join(' / ')) + '</span></span>' +
-          '<span class="price">' + money(p.price) + '</span></a></li>';
-      }).join('') + '</ul>' +
-      (found.length > 1 ? '<a class="btn btn-accent see-all" href="' + shopLink(q) + '">See all ' + found.length + ' results</a>' : '');
-  }
-  function openSearch() { sScrim.hidden = false; panel.hidden = false; renderResults(); sInput.focus(); }
-  function closeSearch() { sScrim.hidden = true; panel.hidden = true; sBtn.focus(); }
-  sBtn.addEventListener('click', openSearch);
-  $('close-search').addEventListener('click', closeSearch);
-  sScrim.addEventListener('click', closeSearch);
-  sInput.addEventListener('input', renderResults);
-  sResults.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-suggest]'); if (!b) return;
-    sInput.value = b.dataset.suggest; renderResults(); sInput.focus();
-  });
-  $('search-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var q = sInput.value.trim(); if (!q) return;
-    if ($('q')) { setQuery(q); active = 'All'; if (filters) syncFilters(); renderGrid(); closeSearch(); $('grid').scrollIntoView({ behavior: 'smooth' }); }
-    else window.location.href = shopLink(q);
-  });
+  actions.appendChild(mBtn); actions.appendChild(openBagBtn);
+  // shop.html#search (from the menu) puts the cursor straight in the search box
+  if ($('q') && location.hash === '#search') { $('q').focus(); }
+  // '/' jumps to the search box on the shop page
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !panel.hidden) closeSearch();
-    if (e.key === '/' && panel.hidden && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
+    if (e.key === '/' && $('q') && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); $('q').focus(); }
   });
 
   // Zoom viewer: full-screen picture, tap/click to zoom, drag or move to look around, switch designs

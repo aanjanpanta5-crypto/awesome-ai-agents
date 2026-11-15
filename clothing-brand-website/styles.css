@@ -1202,3 +1202,9 @@ body::before { background: #f5f1ea; }
 .btn-outline, .hero .btn-ghost.btn-holo, .zoom-btn, .share-link { background: #fffdf9; }
 .review-form input:not([type=radio]):not([type=checkbox]), .review-form select, .review-form textarea, .card select, .pdp select { background: #fffdf9; }
 .card .art { background: var(--surface); }
+
+/* ---------- One search: the box at the top of the shop page ---------- */
+.shop-top .shop-search { margin: 0 0 14px; max-width: none; }
+.shop-top .shop-search-box { background: #fffdf9; min-height: 52px; }
+.shop-top .shop-search-box input { font-size: 16px; }
+.shop-top .shop-tip { margin-top: 26px; }

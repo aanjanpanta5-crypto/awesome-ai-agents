@@ -45,17 +45,17 @@
   <section id="shop" class="shop-top">
     <div class="wrap">
       <h1 class="sr-only">Shop</h1>
+      <form class="shop-search" id="shop-search" role="search">
+        <label for="q" class="mono" hidden>Search the range</label>
+        <div class="shop-search-box" id="search">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <input id="q" name="q" type="search" aria-label="Search the range" placeholder="Search by name, colour or fabric" autocomplete="off" enterkeyhint="search">
+        </div>
+      </form>
       <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
       <p class="result-note" id="result-note" aria-live="polite"></p>
       <div class="grid" id="grid"></div>
-      <form class="shop-search" id="shop-search" role="search">
-        <label for="q" class="mono">Search the range</label>
-        <div class="shop-search-box">
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-          <input id="q" name="q" type="search" placeholder="Search by name, colour or fabric" autocomplete="off" enterkeyhint="search">
-        </div>
-        <p class="shop-tip">Between sizes? Have a look at the <a href="size-guide.html">size guide</a> first.</p>
-      </form>
+      <p class="shop-tip">Between sizes? Have a look at the <a href="size-guide.html">size guide</a> first.</p>
     </div>
   </section>
 </main>
