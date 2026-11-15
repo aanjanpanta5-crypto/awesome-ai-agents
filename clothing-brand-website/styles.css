@@ -1415,3 +1415,16 @@ main:focus { outline: none; }
   animation: foil-sway 7s ease-in-out infinite alternate;
 }
 @media (prefers-reduced-motion: reduce) { .pay-trust > span:first-child { animation: none; } }
+
+/* Secure checkout tag: the foil slides across, the colours cycle, and the tag gently floats */
+.pay-trust > span:first-child {
+  background-size: 300% 100% !important;
+  animation: foil-slide 4s linear infinite, foil-cycle 6s linear infinite, tag-float 3s ease-in-out infinite alternate;
+}
+@keyframes foil-slide { from { background-position: 0% 50%; } to { background-position: 300% 50%; } }
+@keyframes foil-cycle { from { filter: hue-rotate(0deg) saturate(1.3); } to { filter: hue-rotate(360deg) saturate(1.3); } }
+@keyframes tag-float {
+  from { transform: perspective(400px) rotateX(8deg) rotateZ(-1.5deg) translateY(0); }
+  to   { transform: perspective(400px) rotateX(8deg) rotateZ(1deg) translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce) { .pay-trust > span:first-child { animation: none; } }
