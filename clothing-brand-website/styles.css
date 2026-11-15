@@ -1497,3 +1497,8 @@ footer.site .wrap.foot-pay { display: flex; flex-wrap: wrap; justify-content: fl
 .qty span { min-width: 22px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
 .qty .line-remove { width: auto !important; padding: 0 10px; font-size: .8rem; text-decoration: underline; background: transparent; border-color: transparent; color: var(--muted); }
 .qty .line-remove:hover { color: var(--accent); }
+
+/* Bag colour: pure white, so it reads as a clean, separate layer over the cream site */
+.drawer { background: #ffffff; }
+.drawer .xsell { background: #faf8f5; }
+.drawer .line .thumb { background: #f7f5f1; }
