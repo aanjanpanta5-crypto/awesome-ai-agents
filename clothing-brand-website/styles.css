@@ -1236,3 +1236,10 @@ footer.site .soon { font: 500 .58rem/1 var(--mono); letter-spacing: .06em; text-
 .fit-advice { display: block; }
 .fit-advice p { margin: 0 0 8px; }
 .fit-advice ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+
+/* ---------- Sold out + care ---------- */
+.add[disabled] { background: #d9d4cc !important; color: #6b665e !important; cursor: not-allowed; animation: none !important; box-shadow: none !important; }
+.notify-link { display: inline-block; margin-top: 8px; font-size: .72rem; letter-spacing: .04em; color: #e0102e; }
+.pdp-care { margin-top: 6px; }
+.pdp-care ul { margin: 6px 0 6px; padding-left: 1.1em; display: grid; gap: 4px; color: var(--ink); }
+.pdp-care p { margin: 0; }

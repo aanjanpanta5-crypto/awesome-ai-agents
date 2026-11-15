@@ -1,6 +1,6 @@
 /* Acpanta product catalogue. Shared by the website (app.js) and the Stripe checkout function,
    so the price a customer pays always comes from this file, never from the browser.
-   price: pounds (GBP). colors: [name, swatch hex, optional photo, photo description]. variantLabel: 'Colour' (default) or e.g. 'Design'. details: optional list shown under 'Details'. why: optional note explaining the price. model: optional fit note, e.g. 'Model is 6ft 1in and wears L'. stock: pieces in stock (update by hand as items sell).
+   price: pounds (GBP). colors: [name, swatch hex, optional photo, photo description]. variantLabel: 'Colour' (default) or e.g. 'Design'. details: optional list shown under 'Details'. why: optional note explaining the price. model: optional fit note, e.g. 'Model is 6ft 1in and wears L'. stock: 0 marks the whole product sold out. soldOut: optional list of sold-out sizes, e.g. ['XL']. stock: pieces in stock (update by hand as items sell).
    shape: drawing used for the product picture. print: 'logo' (small chest logo), 'graphic' (large front print) or none. */
 (function (root) {
   var SIZES = ['S', 'M', 'L', 'XL'];
