@@ -103,7 +103,9 @@ exports.handler = async (event) => {
   }
   const session = await res.json();
   if (!res.ok) {
-    console.error('Stripe error', session.error && session.error.message);
+    // Log Stripe's reason (never the key) so it shows in Netlify → Logs → Functions
+    const e = session.error || {};
+    console.error('Stripe error', res.status, e.type || '', e.code || '', e.message || '');
     return json(502, { error: 'We couldn’t start checkout. Please try again, or message us on WhatsApp.' });
   }
   return json(200, { url: session.url });
