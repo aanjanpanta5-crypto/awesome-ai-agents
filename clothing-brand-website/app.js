@@ -98,15 +98,15 @@
   // While false, no numbers are shown anywhere; customers are asked to message you instead.
   var MEASUREMENTS_READY = true;
   var SIZE_TABLES = {
-    'size-body-tee': [['S', 53, 69, 21], ['M', 56, 71, 22], ['L', 59, 73, 23]],
-    'size-body-hood': [['S', 57, 68, 60], ['M', 60, 70, 62], ['L', 63, 72, 64]]
+    'size-body-tee': [['S', 53, 71, 22], ['M', 56, 73, 23], ['L', 59, 75, 24], ['XL', 62, 77, 25]],
+    'size-body-hood': [['S', 58, 70, 60], ['M', 61, 72, 61], ['L', 64, 74, 62], ['XL', 67, 76, 63]]
   };
   // Rough body chest each size suits, worked out from the garment's flat chest width.
   // Tees sit closer; hoodies and sweatshirts are cut roomier.
-  function fitRange(tableId, row) {
-    var off = tableId === 'size-body-tee' ? [16, 8] : [24, 14];
-    return [2 * row[1] - off[0], 2 * row[1] - off[1]];
-  }
+  // Body chest each size fits (cm), from Acpanta's own size guide
+  var FIT_CHEST = { S: [91, 96], M: [99, 104], L: [107, 112], XL: [114, 119] };
+  function fitRange(tableId, row) { return FIT_CHEST[row[0]]; }
+
   // Text shown on a product card and in the bag once a size is picked
   function sizeText(p, size) {
     if (!MEASUREMENTS_READY) return '';
