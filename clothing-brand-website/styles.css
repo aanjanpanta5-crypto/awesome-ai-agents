@@ -1391,3 +1391,13 @@ main:focus { outline: none; }
 .bag-watermark { flex: 1 1 0; padding: 0; }
 .bag-watermark img, .bag-watermark span { flex: none; }
 .bag-watermark.is-hidden > * { visibility: hidden; }
+
+/* Bag checkout: solid matte black, to match the heavyweight look */
+.drawer .checkout, .drawer .checkout:hover {
+  background: #141414 !important; color: #F7F4EF !important; -webkit-text-fill-color: #F7F4EF;
+  animation: none !important; filter: none !important; border-radius: 4px;
+  box-shadow: 0 6px 16px rgba(20,20,20,.22) !important; transform: none;
+}
+.drawer .checkout:hover { background: #000 !important; transform: translateY(-1px); }
+.drawer .checkout:active { transform: translateY(1px); box-shadow: 0 2px 6px rgba(20,20,20,.2) !important; }
+.drawer .checkout:focus-visible { outline: 3px solid #7a0c24; outline-offset: 3px; }
