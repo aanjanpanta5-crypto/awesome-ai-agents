@@ -119,20 +119,34 @@
     </div>
   </section>
 
-  <section class="mill" id="weights">
-    <div class="wrap">
-      <div>
-        <span class="mono" style="color:var(--accent)">Choose your weight</span>
-        <h2 style="margin-top:10px">From 260 to 430 GSM.</h2>
-        <p>GSM is how much the fabric weighs, in grams per square metre. Bigger number, thicker garment. You notice it the moment you pick one up.</p>
-        <p><a class="btn btn-accent" href="shop.html">Shop the collection</a></p>
+  <section class="gsm" id="weights" aria-labelledby="gsm-heading">
+    <div class="wrap gsm-wrap">
+      <div class="section-head gsm-head">
+        <div>
+          <span class="mono" style="color:var(--accent)">Interactive weight guide</span>
+          <h2 id="gsm-heading" style="margin-top:10px">Feel the weight before it arrives.</h2>
+          <p>Slide to compare a typical 150&nbsp;GSM high-street tee with Acpanta's heavyweight fabrics. GSM is grams per square metre: the bigger the number, the thicker the fabric.</p>
+        </div>
       </div>
-      <ol class="steps">
-        <li><span class="n">T</span><div><b>Premium Logo Tee</b><span>260 GSM · everyday heavyweight · £22</span></div></li>
-        <li><span class="n">S</span><div><b>Heavyweight Sweatshirt</b><span>320 GSM · 5 left · £35</span></div></li>
-        <li><span class="n">B</span><div><b>Premium Boxy Hoodie</b><span>400+ GSM · back print or plain · £50</span></div></li>
-        <li><span class="n">H</span><div><b>Heavyweight Logo Hoodie</b><span>430 GSM · our heaviest · £42</span></div></li>
-      </ol>
+      <div class="gsm-steps" role="group" aria-label="Choose a fabric weight" id="gsm-steps"></div>
+      <input type="range" id="gsm-slider" class="gsm-range" min="0" max="4" step="1" value="1" aria-label="Fabric weight" aria-describedby="gsm-title">
+      <div class="gsm-card" aria-live="polite">
+        <div class="gsm-main">
+          <div class="gsm-badge-row"><span class="gsm-tag mono" id="gsm-tag"></span><span class="price" id="gsm-price"></span></div>
+          <h3 id="gsm-title"></h3>
+          <p id="gsm-desc"></p>
+          <div class="gsm-meter">
+            <div class="gsm-meter-label mono"><span>Fabric weight</span><span id="gsm-x"></span></div>
+            <div class="gsm-track"><div class="gsm-fill" id="gsm-fill"></div></div>
+          </div>
+        </div>
+        <div class="gsm-specs">
+          <div><span class="mono">Drape &amp; structure</span><b id="gsm-drape"></b></div>
+          <div><span class="mono">Season &amp; warmth</span><b id="gsm-warmth"></b></div>
+          <div><span class="mono">Fabric</span><b id="gsm-fabric"></b></div>
+          <a class="btn btn-accent gsm-cta" id="gsm-cta" href="shop.html"></a>
+        </div>
+      </div>
     </div>
   </section>
 
