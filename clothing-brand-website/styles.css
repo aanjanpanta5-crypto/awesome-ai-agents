@@ -1477,3 +1477,10 @@ footer.site .wrap.foot-pay { display: flex; flex-wrap: wrap; justify-content: fl
 .track-note { font-size: .72rem; color: var(--muted); }
 .review-ask { margin: 24px 0; padding: 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface, #fffdf9); }
 .review-ask h2 { margin-top: 0 !important; }
+
+/* Shop sort, delivery estimate */
+.sort-row { display: flex; justify-content: flex-end; margin: 4px 0 10px; }
+.sort-box { display: inline-flex; align-items: center; gap: 8px; font-size: .78rem; }
+.sort-box select { min-height: 40px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 4px; background: #fff; font: inherit; color: var(--ink); text-transform: none; letter-spacing: 0; }
+.eta-line { font-size: .9rem; margin: 6px 0 0; }
+#bag-extra .eta-line { text-align: center; font-size: .82rem; color: var(--muted); }

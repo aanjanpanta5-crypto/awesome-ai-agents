@@ -18,6 +18,8 @@
 <meta name="theme-color" content="#0b0b0b">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -54,6 +56,7 @@
         </div>
       </form>
       <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
+      <div class="sort-row"><label class="sort-box mono" for="sort">Sort by <select id="sort"><option value="featured">Featured</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option><option value="weight">Heaviest fabric first</option></select></label></div>
       <p class="result-note" id="result-note" aria-live="polite"></p>
       <div class="grid" id="grid"></div>
       <p class="shop-tip">Between sizes? Have a look at the <a href="size-guide.html">size guide</a> first.</p>
