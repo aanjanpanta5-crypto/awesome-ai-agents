@@ -62,6 +62,9 @@
   }
   function searchProducts(q) { return PRODUCTS.filter(function (p) { return matches(p, q); }); }
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var PID = '';
+  try { PID = new URLSearchParams(location.search).get('id') || ''; } catch (err) {}
+  function productLink(p) { return 'product.html?id=' + encodeURIComponent(p.id); }
   var query = '';
   try { query = new URLSearchParams(location.search).get('q') || ''; } catch (err) {}
 
@@ -122,16 +125,12 @@
       'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>');
     info.classList.toggle('is-set', !!t);
   }
-  function cardHTML(p) { return card(p); }
-  function card(p) {
+  function cardHTML(p, el) { return el && el.classList.contains('pdp') ? pdpHTML(p) : card(p); }
+  function badgeHTML(p) { return badgeFor(p) ? '<span class="badge mono' + (/^Only/.test(badgeFor(p)) ? '' : ' holo') + '">' + badgeFor(p) + '</span>' : ''; }
+  // Colour/design swatches, size measurements, size picker and Add to bag (product cards and product pages)
+  function buyHTML(p) {
     var c = p.colors[p.sel];
-    return '<article class="card" data-id="' + p.id + '">' +
-      '<div class="art' + (c[2] ? ' has-photo' : '') + '" data-zoom>' + (badgeFor(p) ? '<span class="badge mono' + (/^Only/.test(badgeFor(p)) ? '' : ' holo') + '">' + badgeFor(p) + '</span>' : '') + artFor(p, p.sel) +
-      '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div>' +
-      '<div class="card-top"><h3>' + p.name + '</h3><span class="price">' + money(p.price) + '</span></div>' +
-      '<p class="spec mono">' + p.spec + '</p>' +
-      (p.details ? '<details class="pdetails"><summary>Details</summary><ul>' + p.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></details>' : '') +
-      '<p class="variant-name mono">' + (p.variantLabel || 'Colour') + ': <b>' + esc(c[0]) + '</b></p>' +
+    return '<p class="variant-name mono">' + (p.variantLabel || 'Colour') + ': <b>' + esc(c[0]) + '</b></p>' +
       '<div class="swatches" role="group" aria-label="' + (p.variantLabel || 'Colour') + '">' + p.colors.map(function (col, i) {
         var look = col[2] ? 'background:' + col[1] + ' url(' + col[2].replace('.jpg', '-thumb.jpg') + ') center 40%/cover' : 'background:' + col[1];
         return '<button class="sw' + (col[2] ? ' sw-img' : '') + '" data-sw="' + i + '" style="' + look + '" aria-label="' + esc(col[0]) + '" aria-pressed="' + (i === p.sel) + '" title="' + esc(col[0]) + '"></button>';
@@ -141,11 +140,41 @@
       '<div class="buy"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '">' +
       (p.sizes.length > 1 ? '<option value="">Select size</option>' : '') +
       p.sizes.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select>' +
-      '<button class="add" data-add>Add to bag</button></div></article>';
+      '<button class="add" data-add>Add to bag</button></div>';
+  }
+  function card(p) {
+    var c = p.colors[p.sel];
+    return '<article class="card" data-id="' + p.id + '">' +
+      '<div class="art' + (c[2] ? ' has-photo' : '') + '"><a class="art-link" href="' + productLink(p) + '" aria-label="View ' + esc(p.name) + '"></a>' + badgeHTML(p) + artFor(p, p.sel) +
+      '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div>' +
+      '<div class="card-top"><h3><a href="' + productLink(p) + '">' + p.name + '</a></h3><span class="price">' + money(p.price) + '</span></div>' +
+      '<p class="spec mono">' + p.spec + '</p>' +
+      (p.details ? '<details class="pdetails"><summary>Details</summary><ul>' + p.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></details>' : '') +
+      buyHTML(p) + '<a class="view-link mono" href="' + productLink(p) + '">View details</a></article>';
+  }
+  // Product page: big picture, all details, size picker and Add to bag
+  function pdpHTML(p) {
+    var c = p.colors[p.sel];
+    var details = (p.details || p.spec.split(' · ').concat(['Unisex fit'])).concat(['Sizes ' + p.sizes.join(', ')]);
+    return '<article class="card pdp" data-id="' + p.id + '">' +
+      '<div class="pdp-media"><div class="art' + (c[2] ? ' has-photo' : '') + '" data-zoom>' + badgeHTML(p) + artFor(p, p.sel) +
+      '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div></div>' +
+      '<div class="pdp-info">' +
+      '<nav class="crumbs mono" aria-label="Breadcrumb"><a href="shop.html">Shop</a> / <a href="shop.html#' + slug(p.cat) + '">' + esc(p.cat) + '</a></nav>' +
+      '<h1>' + esc(p.name) + '</h1>' +
+      '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
+      '<p class="spec mono">' + p.spec + '</p>' + buyHTML(p) +
+      '<p class="pdp-guide"><a href="size-guide.html">Size guide</a> · <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a></p>' +
+      '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
+      '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>' +
+      '<p class="pdp-care">Care: wash inside out at 30°C and don\'t tumble dry. Always check the care label. <a href="help.html#h-care">More care tips</a></p>' +
+      '</div></article>';
   }
   function renderGrid() {
     if (!grid) return;
-    var list = grid.dataset.featured
+    var list = grid.hasAttribute('data-related')
+      ? PRODUCTS.filter(function (p) { return p.id !== PID; }).sort(function (a, b) { var cur = byId[PID]; return cur ? (b.cat === cur.cat) - (a.cat === cur.cat) : 0; }).slice(0, 3)
+      : grid.dataset.featured
       ? grid.dataset.featured.split(',').map(function (id) { return byId[id]; }).filter(Boolean)
       : PRODUCTS.filter(function (p) { return (active === 'All' || p.cat === active) && (!query || matches(p, query)); });
     grid.innerHTML = list.length ? list.map(card).join('') :
@@ -154,7 +183,7 @@
     var note = $('result-note');
     if (note) note.textContent = query ? list.length + (list.length === 1 ? ' item' : ' items') + ' for “' + query + '”' + (active !== 'All' ? ' in ' + active : '') : '';
   }
-  if (grid) grid.addEventListener('click', function (e) {
+  function onCardClick(e) {
     if (e.target.closest('[data-clear-search]')) { setQuery(''); active = 'All'; if (filters) syncFilters(); renderGrid(); if ($('q')) $('q').focus(); return; }
     var el = e.target.closest('.card'); if (!el) return;
     var p = byId[el.dataset.id];
@@ -163,7 +192,7 @@
     if (sw) {
       var size = el.querySelector('select').value;
       p.sel = +sw.dataset.sw;
-      el.outerHTML = card(p);
+      el.outerHTML = cardHTML(p, el);
       var fresh = document.querySelector('.card[data-id="' + p.id + '"]');
       fresh.querySelector('select').value = size;
       refreshSize(fresh);
@@ -175,7 +204,8 @@
       if (!sel.value) { sel.classList.add('need-size'); sel.addEventListener('change', function () { sel.classList.remove('need-size'); }, { once: true }); sel.focus(); toast('Pick a size first'); return; }
       addToBag(p, p.sel, sel.value);
     }
-  });
+  }
+  if (grid) grid.addEventListener('click', onCardClick);
   // Hologram shine and tilt on product pictures, following the mouse or finger
   var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (grid && !calm) {
@@ -198,10 +228,27 @@
   }
 
   // Show a size's measurements as soon as it is picked
-  if (grid) grid.addEventListener('change', function (e) {
+  function onCardChange(e) {
     var el = e.target.closest('.card');
     if (el && e.target.tagName === 'SELECT') refreshSize(el);
-  });
+  }
+  if (grid) grid.addEventListener('change', onCardChange);
+
+  // Product page (product.html?id=...)
+  var pdpEl = $('pdp');
+  if (pdpEl) {
+    var P0 = byId[PID];
+    if (!P0) {
+      pdpEl.innerHTML = '<div class="pdp-missing"><h1>We can\'t find that piece</h1><p>It may have sold out or moved. Have a look at everything we have.</p><p><a class="btn btn-accent" href="shop.html">Shop all</a></p></div>';
+    } else {
+      pdpEl.innerHTML = pdpHTML(P0);
+      document.title = P0.name + ' · Acpanta';
+      var md = document.querySelector('meta[name="description"]');
+      if (md) md.setAttribute('content', P0.name + ' by Acpanta. ' + P0.spec + '. ' + money(P0.price) + ', free UK delivery and 14-day returns.');
+      pdpEl.addEventListener('click', onCardClick);
+      pdpEl.addEventListener('change', onCardChange);
+    }
+  }
 
   // Shop page search box
   function setQuery(q) {
@@ -283,7 +330,7 @@
     }
     sResults.innerHTML = '<p class="mono search-label">' + found.length + (found.length === 1 ? ' item' : ' items') + '</p><ul class="result-list">' +
       found.slice(0, 6).map(function (p) {
-        return '<li><a href="' + shopLink(p.name) + '"><span class="thumb">' + artFor(p, 0) + '</span>' +
+        return '<li><a href="' + productLink(p) + '"><span class="thumb">' + artFor(p, 0) + '</span>' +
           '<span class="r-meta"><b>' + esc(p.name) + '</b><span class="mono">' + esc(p.cat) + ' · ' + (p.colors.length > 2 ? p.colors.length + ' ' + (p.variantLabel || 'colour').toLowerCase() + 's' : p.colors.map(function (c) { return c[0]; }).join(' / ')) + '</span></span>' +
           '<span class="price">' + money(p.price) + '</span></a></li>';
       }).join('') + '</ul>' +
@@ -364,7 +411,7 @@
     var p = Z.p, card = Z.card;
     if (p && card && document.body.contains(card) && p.sel !== Z.i) {
       var size = card.querySelector('select').value;
-      p.sel = Z.i; card.outerHTML = cardHTML(p);
+      p.sel = Z.i; card.outerHTML = cardHTML(p, card);
       card = document.querySelector('.card[data-id="' + p.id + '"]');
       card.querySelector('select').value = size;
       refreshSize(card);

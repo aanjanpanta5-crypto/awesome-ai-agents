@@ -1111,3 +1111,50 @@ section.shop-top { padding-top: 18px; }
 @media (pointer: coarse) { .motto blockquote p { animation: holo-hue 8s linear infinite; } }
 @media (prefers-reduced-motion: reduce) { .motto blockquote p { animation: none; } }
 @media (max-width: 760px) { .motto .wrap { grid-template-columns: 1fr; } }
+
+/* ---------- Product pages ---------- */
+.card .art { position: relative; }
+.art-link { position: absolute; inset: 0; z-index: 1; }
+.card .art .badge, .card .art .zoom-btn { z-index: 2; }
+.card-top h3 a { color: inherit; text-decoration: none; }
+.card-top h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.view-link { display: inline-block; margin-top: 10px; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+section.pdp-wrap { padding-top: 22px; }
+.pdp { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(20px, 4vw, 56px); align-items: start; border: 0; padding: 0; background: none; box-shadow: none; }
+.pdp:hover { transform: none; box-shadow: none; }
+.pdp-media .art { aspect-ratio: 1; border-radius: 10px; cursor: zoom-in; }
+.pdp-info { display: grid; gap: 10px; }
+.pdp-info h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1; }
+.crumbs { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.crumbs a { color: inherit; }
+.pdp-price .price { font-size: 1.3rem; }
+.pdp .buy { margin-top: 4px; }
+.pdp .add { flex: 1; min-height: 52px; font-size: 1rem; }
+.pdp-guide { margin: 0; font-size: .92rem; }
+.pdp-guide a, .pdp-care a { color: var(--accent); }
+.pdp-h { font-size: 1.4rem; margin: 18px 0 0; }
+.pdp-list { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; line-height: 1.5; }
+.pdp-perks { list-style: none; margin: 14px 0 0; padding: 14px 0 0; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .74rem; letter-spacing: .05em; text-transform: uppercase; }
+.pdp-perks li::before { content: "✓ "; color: var(--accent); }
+.pdp-care { margin: 6px 0 0; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+.pdp-missing { padding: 40px 0; }
+.related { border-top: 1px solid var(--line); }
+@media (max-width: 820px) { .pdp { grid-template-columns: 1fr; } }
+
+/* ---------- Our story: black page ---------- */
+body[data-page="about"] main { background: #0b0b0b; color: #f2f2f2; }
+body[data-page="about"] main .page-head,
+body[data-page="about"] main .motto,
+body[data-page="about"] main .mill { background: #0b0b0b; border-color: #262626; }
+body[data-page="about"] main p,
+body[data-page="about"] main .steps span:not(.n) { color: #c9c9c9; }
+body[data-page="about"] main .page-head p { color: #d6d6d6; }
+body[data-page="about"] main b, body[data-page="about"] main .steps b { color: #ffffff; }
+body[data-page="about"] main .steps li { border-color: #262626; }
+body[data-page="about"] .motto blockquote { background: #141414; border-left-color: #e0102e; }
+body[data-page="about"] .motto blockquote footer { color: #9a9a9a; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  body[data-page="about"] .page-head h1, body[data-page="about"] .mill h2,
+  body[data-page="about"] .motto blockquote p { background-image: var(--holo-light); }
+  body[data-page="about"] main .motto blockquote p { color: transparent; -webkit-text-fill-color: transparent; }
+}
