@@ -498,7 +498,15 @@
     save(); renderBag();
     toast('Added ' + p.name + ' (' + p.colors[color][0] + ', ' + size + ')');
   }
+  // Bag emblem: only shown when there's room for the whole thing
+  function fitEmblem() {
+    var w = document.querySelector('.bag-watermark'); if (!w) return;
+    w.classList.remove('is-hidden');
+    if (w.clientHeight < 110) w.classList.add('is-hidden');
+  }
+  window.addEventListener('resize', fitEmblem);
   function renderBag() {
+    setTimeout(fitEmblem, 0);
     if (!$('bag-extra') && $('lines')) { var bx = document.createElement('div'); bx.id = 'bag-extra'; $('lines').parentNode.insertBefore(bx, $('lines').nextSibling); }
     var count = 0, sub = 0;
     bag.forEach(function (l) { count += l.qty; sub += l.qty * byId[l.id].price; });
@@ -530,7 +538,7 @@
     else return;
     save(); renderBag();
   });
-  function openBag() { $('scrim').hidden = false; $('drawer').hidden = false; $('close-bag').focus(); }
+  function openBag() { $('scrim').hidden = false; $('drawer').hidden = false; fitEmblem(); $('close-bag').focus(); }
   function closeBag() { $('scrim').hidden = true; $('drawer').hidden = true; $('open-bag').focus(); }
   $('open-bag').addEventListener('click', openBag);
   $('close-bag').addEventListener('click', closeBag);
