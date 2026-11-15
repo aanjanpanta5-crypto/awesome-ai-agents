@@ -191,11 +191,12 @@
       '<nav class="crumbs mono" aria-label="Breadcrumb"><a href="shop.html">Shop</a> / <a href="shop.html#' + slug(p.cat) + '">' + esc(p.cat) + '</a></nav>' +
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
-      '<p class="spec mono">' + p.spec + '</p>' + buyHTML(p) +
+      '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + buyHTML(p) +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
       '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
       '<p class="pdp-guide"><a href="size-guide.html">Size guide</a> · <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a></p>' +
       '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
+      (p.why ? '<p class="pdp-why">' + esc(p.why) + '</p>' : '') +
       '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>' +
       '<p class="pdp-care">Care: wash inside out at 30°C and don\'t tumble dry. Always check the care label. <a href="help.html#h-care">More care tips</a></p>' +
       '</div></article>';
@@ -558,7 +559,8 @@
         return '<article class="review-card"><div class="review-top">' + stars(r.rating) + '<span class="sr-only">' + r.rating + ' out of 5 stars</span>' +
           (r.verified ? '<span class="verified mono">✓ Verified buyer</span>' : '') + '</div>' +
           '<p class="review-text">' + esc(r.text) + '</p>' +
-          '<p class="review-meta mono">' + esc(r.name || 'Customer') + (r.product ? ' · ' + esc(r.product) : '') + (when ? ' · ' + when : '') + '</p></article>';
+          '<p class="review-meta mono">' + esc(r.name || 'Customer') + (r.product ? ' · ' + esc(r.product) : '') + (when ? ' · ' + when : '') + '</p>' +
+          (r.height || r.size ? '<p class="review-fit mono">' + (r.height ? 'Height ' + esc(r.height) : '') + (r.height && r.size ? ' · ' : '') + (r.size ? 'Wears size ' + esc(r.size) : '') + '</p>' : '') + '</article>';
       }).join('');
     }
   }
@@ -586,6 +588,27 @@
         .then(function () { btn.disabled = false; });
     });
   }
+
+  // Other forms (drop alerts, custom inquiries): send to Netlify Forms and show a message
+  [].forEach.call(document.querySelectorAll('form[data-nf-ajax]'), function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = form.querySelector('.form-msg'), btn = form.querySelector('button[type=submit]');
+      msg.className = 'form-msg';
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var hasFile = form.querySelector('input[type=file]');
+      btn.disabled = true; msg.textContent = 'Sending…';
+      fetch('/', hasFile ? { method: 'POST', body: new FormData(form) } :
+        { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
+        .then(function (r) { if (!r.ok) throw new Error('bad'); })
+        .then(function () { form.reset(); msg.className = 'form-msg ok'; msg.textContent = form.getAttribute('data-ok') || 'Thank you, that’s sent.'; })
+        .catch(function () {
+          msg.className = 'form-msg err';
+          msg.innerHTML = 'Sorry, that didn’t send. Please try again, or message us on <a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a>.';
+        })
+        .then(function () { btn.disabled = false; });
+    });
+  });
 
   // Mark the current page in the menu
   var page = document.body.getAttribute('data-page');
