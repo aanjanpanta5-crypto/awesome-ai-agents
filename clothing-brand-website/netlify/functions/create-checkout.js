@@ -65,8 +65,13 @@ exports.handler = async (event) => {
   params.append('mode', 'payment');
   params.append('success_url', `${site}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`);
   params.append('cancel_url', `${site}/shop.html`);
-  params.append('shipping_address_collection[allowed_countries][0]', 'GB');
+  // Discount box for gift card and referral codes (created in Stripe as promotion codes)
+  params.append('allow_promotion_codes', 'true');
   params.append('phone_number_collection[enabled]', 'true');
+  // Gift-card-only orders are emailed, so they skip the delivery address
+  const physical = items.some((item) => !(byId[item.id] && byId[item.id].digital));
+  if (physical) {
+  params.append('shipping_address_collection[allowed_countries][0]', 'GB');
   params.append('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
   params.append('shipping_options[0][shipping_rate_data][display_name]', 'Free UK delivery');
   params.append('shipping_options[0][shipping_rate_data][fixed_amount][amount]', '0');
@@ -75,6 +80,7 @@ exports.handler = async (event) => {
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '2');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'business_day');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '4');
+  }
   params.append('custom_text[submit][message]', 'Free UK delivery. 14 days to return. See acpanta.com/returns.html');
 
   let res;

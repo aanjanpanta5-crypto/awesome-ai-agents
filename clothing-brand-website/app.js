@@ -11,7 +11,8 @@
     zip: '<path d="M60 44 L80 34 Q78 14 100 12 Q122 14 120 34 L140 44 L168 74 L172 160 L154 162 L140 90 L140 176 L60 176 L60 90 L46 162 L28 160 L32 74 Z"/><path d="M80 34 Q100 58 120 34" fill="none" class="st"/><path d="M100 46 L100 176" fill="none" class="st"/><path d="M68 128 L88 128 L92 154" fill="none" class="st"/><path d="M132 128 L112 128 L108 154" fill="none" class="st"/>',
     boxy: '<path d="M54 46 L78 34 Q76 12 100 10 Q124 12 122 34 L146 46 L176 78 L180 156 L160 158 L148 96 L148 168 L52 168 L52 96 L40 158 L20 156 L24 78 Z"/><path d="M78 34 Q100 60 122 34" fill="none" class="st"/><rect x="74" y="120" width="52" height="28" fill="none" class="st"/>'
   };
-  var LOGO_AT = { tee: [100, 64, 38], hood: [100, 80, 38], boxy: [100, 82, 40], zip: [124, 76, 24], sweat: [100, 66, 38] };
+  SHAPES.gift = '<rect x="22" y="52" width="156" height="96" rx="10"/><path d="M22 124 L178 124" fill="none" class="st"/>';
+  var LOGO_AT = { gift: [100, 86, 60], tee: [100, 64, 38], hood: [100, 80, 38], boxy: [100, 82, 40], zip: [124, 76, 24], sweat: [100, 66, 38] };
   function printMark(shape, print, dark) {
     var at = LOGO_AT[shape] || [100, 78, 36];
     var img = function (file, cx, cy, w) { var h = w * 0.558; return '<image href="' + file + '" x="' + (cx - w / 2) + '" y="' + (cy - h / 2) + '" width="' + w + '" height="' + h + '" stroke="none"/>'; };
@@ -162,14 +163,15 @@
   // Colour/design swatches, size measurements, size picker and Add to bag (product cards and product pages)
   function buyHTML(p) {
     var c = p.colors[p.sel];
-    return '<p class="variant-name mono">' + (p.variantLabel || 'Colour') + ': <b>' + esc(c[0]) + '</b></p>' +
-      '<div class="swatches" role="group" aria-label="' + (p.variantLabel || 'Colour') + '">' + p.colors.map(function (col, i) {
+    return (p.digital ? '' : '<p class="variant-name mono">' + (p.variantLabel || 'Colour') + ': <b>' + esc(c[0]) + '</b></p>') +
+      '<div' + (p.digital ? ' hidden' : '') + ' class="swatches" role="group" aria-label="' + (p.variantLabel || 'Colour') + '">' + p.colors.map(function (col, i) {
         var look = col[2] ? 'background:' + col[1] + ' url(' + col[2].replace('.jpg', '-thumb.jpg') + ') center 40%/cover' : 'background:' + col[1];
         return '<button class="sw' + (col[2] ? ' sw-img' : '') + '" data-sw="' + i + '" style="' + look + '" aria-label="' + esc(col[0]) + '" aria-pressed="' + (i === p.sel) + '" title="' + esc(col[0]) + '"></button>';
       }).join('') + '</div>' +
+      (p.digital ? '<p class="size-info mono">Emailed to you within 1 working day. Valid for 12 months.</p>' :
       '<p class="size-info mono" data-size-info aria-live="polite">' + (MEASUREMENTS_READY ? 'Pick a size to see its measurements' :
-        'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>') + '</p>' +
-      '<div class="buy"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '">' +
+        'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>') + '</p>') +
+      '<div class="buy' + (p.digital ? ' buy-digital' : '') + '"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '"' + (p.digital ? ' hidden' : '') + '>' +
       (p.sizes.length > 1 ? '<option value="">Select size</option>' : '') +
       p.sizes.map(function (s) { var left = sizeLeft(p, s); return sizeSoldOut(p, s) ? '<option value="' + s + '" disabled>' + s + ' (sold out)</option>' : '<option value="' + s + '">' + s + (left !== null && left <= 5 ? ' (' + left + ' left)' : '') + '</option>'; }).join('') + '</select>' +
       (isSoldOut(p) ? '<button class="add" data-add disabled aria-disabled="true">Sold out</button>' : '<button class="add" data-add>Add to bag</button>') + '</div>' +
@@ -191,31 +193,34 @@
   // Product page: big picture, all details, size picker and Add to bag
   function pdpHTML(p) {
     var c = p.colors[p.sel];
-    var details = (p.details || p.spec.split(' · ').concat(['Unisex fit'])).concat(['Sizes ' + p.sizes.join(', ')]);
+    var details = p.digital ? ['A code for ' + money(p.price) + ' to spend at acpanta.com', 'Emailed to you within 1 working day of your order', 'Valid for 12 months from purchase', 'Enter the code in the discount box at checkout', 'Spend less than its value? Message us and we\'ll send a new code for the balance', 'Can\'t be exchanged for cash. Unused cards can be cancelled within 14 days for a full refund']
+      : (p.details || p.spec.split(' · ').concat(['Unisex fit'])).concat(['Sizes ' + p.sizes.join(', ')]);
     return '<article class="card pdp" data-id="' + p.id + '">' +
       '<div class="pdp-media"><div class="art' + (c[2] ? ' has-photo' : '') + '" data-zoom>' + badgeHTML(p) + artFor(p, p.sel) +
       '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div></div>' +
       '<div class="pdp-info">' +
       '<nav class="crumbs mono" aria-label="Breadcrumb"><a href="shop.html">Shop</a> / <a href="shop.html#' + slug(p.cat) + '">' + esc(p.cat) + '</a></nav>' +
-      '<p class="batch-label mono">Batch 01 · one of 185 pieces</p>' +
+      (p.digital ? '<p class="batch-label mono">Digital gift card</p>' : '<p class="batch-label mono">Batch 01 · one of 185 pieces</p>') +
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
       '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + buyHTML(p) +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
       '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
-      '<a class="wa-help" href="https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I\'m looking at the ' + p.name + ' and need sizing help.') + '" target="_blank" rel="noopener">💬 Need sizing help? Chat with us on WhatsApp</a>' +
-      '<p class="pdp-guide"><a href="size-guide.html">Size guide</a></p>' +
+      (p.digital ? '' : '<a class="wa-help" href="https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I\'m looking at the ' + p.name + ' and need sizing help.') + '" target="_blank" rel="noopener">💬 Need sizing help? Chat with us on WhatsApp</a>' +
+      '<p class="pdp-guide"><a href="size-guide.html">Size guide</a></p>') +
       '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
       (p.why ? '<p class="pdp-why">' + esc(p.why) + '</p>' : '') +
+      (p.digital ? '<ul class="pdp-perks mono"><li>Emailed, no delivery needed</li><li>Valid 12 months</li><li>Secure checkout by Stripe</li></ul>' :
       '<p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
-      '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>' +
-      '<div class="pdp-care"><h2 class="pdp-h">Care</h2><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>' +
+      '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
+      (p.digital ? '' :
+      '<div class="pdp-care"><h2 class="pdp-h">Care</h2><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>') +
       '</div></article>';
   }
   function renderGrid() {
     if (!grid) return;
     var list = grid.hasAttribute('data-related')
-      ? PRODUCTS.filter(function (p) { return p.id !== PID; }).sort(function (a, b) { var cur = byId[PID]; return cur ? (b.cat === cur.cat) - (a.cat === cur.cat) : 0; }).slice(0, 3)
+      ? PRODUCTS.filter(function (p) { return p.id !== PID && !p.digital; }).sort(function (a, b) { var cur = byId[PID]; return cur ? (b.cat === cur.cat) - (a.cat === cur.cat) : 0; }).slice(0, 3)
       : grid.dataset.featured
       ? grid.dataset.featured.split(',').map(function (id) { return byId[id]; }).filter(Boolean)
       : PRODUCTS.filter(function (p) { return (active === 'All' || p.cat === active) && (!query || matches(p, query)); });
@@ -472,7 +477,7 @@
     $('lines').innerHTML = bag.length ? bag.map(function (l, i) {
       var p = byId[l.id], c = p.colors[l.color];
       return '<div class="line"><div class="thumb">' + artFor(p, l.color) + '</div><div class="meta"><b>' + p.name + '</b>' +
-        '<span class="mono" style="color:var(--muted)">' + c[0] + ' · ' + l.size + '</span>' +
+        '<span class="mono" style="color:var(--muted)">' + (p.digital ? 'Emailed gift card' : c[0] + ' · ' + l.size) + '</span>' +
         '<span class="line-size mono">' + sizeText(p, l.size) + '</span>' +
         '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
@@ -730,9 +735,9 @@
       'sweatshirt': ['Reshape while damp and dry flat, so the cuffs and hem keep their shape']
     };
     var carePick = $('care-pick');
-    carePick.innerHTML = PRODUCTS.map(function (p) { return '<button type="button" class="chip" data-care="' + p.id + '">' + esc(p.name) + '</button>'; }).join('');
+    carePick.innerHTML = PRODUCTS.filter(function (p) { return !p.digital; }).map(function (p) { return '<button type="button" class="chip" data-care="' + p.id + '">' + esc(p.name) + '</button>'; }).join('');
     var showCare = function (id) {
-      var p = byId[id] || PRODUCTS[0];
+      var p = (byId[id] && !byId[id].digital) ? byId[id] : PRODUCTS[0];
       [].forEach.call(carePick.children, function (b) { b.setAttribute('aria-pressed', b.dataset.care === p.id); });
       $('care-title').textContent = p.name;
       $('care-spec').textContent = p.spec;
@@ -742,6 +747,34 @@
     };
     carePick.addEventListener('click', function (e) { var b = e.target.closest('[data-care]'); if (b) showCare(b.dataset.care); });
     showCare(PID);
+  }
+
+  // Referral prompt (thank-you page). Create the code in Stripe first, then set REFERRAL_READY = true.
+  var REFERRAL_CODE = 'FRIEND10', REFERRAL_READY = false;
+  if ($('refer')) {
+    var shopUrl = new URL('shop.html', location.href).href;
+    var rText = REFERRAL_READY ? 'I just got something from Acpanta, heavyweight tees and hoodies made in London. Use code ' + REFERRAL_CODE + ' for 10% off your first order: ' : 'I just got something from Acpanta, heavyweight tees and hoodies made in London. Have a look: ';
+    $('refer-code').hidden = !REFERRAL_READY;
+    $('refer-code').innerHTML = 'Your friend gets <b>10% off</b> their first order with code <b class="code">' + REFERRAL_CODE + '</b>';
+    $('refer-wa').href = 'https://wa.me/?text=' + encodeURIComponent(rText + shopUrl);
+    $('refer-copy').addEventListener('click', function () {
+      var t = rText + shopUrl, done = function () { toast('Copied. Paste it to a friend'); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function () { window.prompt('Copy this:', t); });
+      else window.prompt('Copy this:', t);
+    });
+  }
+
+  // "Worn in London" lookbook (home page): real customer photos from lookbook.js, hidden until there are some
+  if ($('lookbook')) {
+    var LOOK = (window.ACPANTA_LOOKBOOK || []).filter(function (l) { return l && l.photo && l.permission; });
+    if (LOOK.length) {
+      $('lookbook').hidden = false;
+      $('lookbook-grid').innerHTML = LOOK.map(function (l) {
+        var p = byId[l.product];
+        return '<figure class="look"><img src="' + esc(l.photo) + '" alt="' + esc(l.alt || ((l.name || 'A customer') + ' wearing ' + (p ? p.name : 'Acpanta'))) + '" loading="lazy" decoding="async">' +
+          '<figcaption class="mono">' + esc(l.height) + ' · wears ' + esc(l.size) + (p ? ' · <a href="' + productLink(p) + '">' + esc(p.name) + '</a>' : '') + '</figcaption></figure>';
+      }).join('');
+    }
   }
 
   // Mark the current page in the menu
