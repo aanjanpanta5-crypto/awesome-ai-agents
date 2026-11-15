@@ -82,6 +82,12 @@
         </div>
       </div>
 
+      <div class="bulk-box" id="bulk">
+        <h2>Bulk &amp; custom orders (20+ pieces)</h2>
+        <p>For stylists, teams, events and independent brands in London and across the UK. Tell us the pieces, quantities, colours and your design, and we'll come back with a quote and timing.</p>
+        <p><a class="btn btn-accent" href="#enquire" id="bulk-start">Start a bulk enquiry</a> <a class="btn btn-outline" href="https://wa.me/447448795690?text=Hi%20Acpanta%2C%20I%27d%20like%20a%20quote%20for%20a%20bulk%20order%20(20%2B%20pieces)." target="_blank" rel="noopener">Ask on WhatsApp</a></p>
+      </div>
+
       <h2 id="enquire">Send us your idea</h2>
       <form class="custom-form review-form" name="custom-enquiry" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="Thank you! We’ll reply with a price and timing, usually within a day." action="customisation.html#enquire">
         <input type="hidden" name="form-name" value="custom-enquiry">
@@ -90,7 +96,8 @@
           <label>Your name<input name="name" required maxlength="60" autocomplete="name"></label>
           <label>Email or WhatsApp number<input name="contact" required maxlength="120"></label>
           <label>Which piece?<select name="piece" required><option value="">Choose one</option><option>Premium Logo Tee</option><option>Printed Tee</option><option>Heavyweight Logo Hoodie</option><option>Premium Boxy Hoodie</option><option>Zip Hoodie</option><option>Heavyweight Sweatshirt</option><option>Not sure yet</option></select></label>
-          <label>How many?<input name="quantity" type="number" min="1" max="500" value="1" required></label>
+          <label>How many?<input name="quantity" type="number" min="1" max="2000" value="1" required></label>
+          <label class="rv-wide bulk-tick"><input type="checkbox" name="bulk" value="yes"> This is a bulk order (20+ pieces)</label>
           <label>Colour<select name="colour"><option>Black</option><option>White</option><option>Not sure yet</option></select></label>
           <label>Print position<select name="position"><option>Front</option><option>Back</option><option>Sleeve</option><option>More than one</option></select></label>
           <label class="rv-wide">Your idea<textarea name="idea" required minlength="5" maxlength="1500" rows="5" placeholder="Initials, a name, a date, or describe your design. Sizes too, if you know them."></textarea></label>

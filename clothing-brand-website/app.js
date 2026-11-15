@@ -214,7 +214,7 @@
       '<p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
       '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
       (p.digital ? '' :
-      '<div class="pdp-care"><h2 class="pdp-h">Care</h2><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>') +
+      '<div class="pdp-care"><h2 class="pdp-h">Care</h2><p class="care-icons" aria-label="Care: wash at 30 degrees inside out, do not tumble dry, do not iron the print"><span aria-hidden="true"><b class="ci">30°</b> Wash inside out</span><span aria-hidden="true"><b class="ci ci-x">⊠</b> No tumble dry</span><span aria-hidden="true"><b class="ci ci-x">✕</b> Don\'t iron the print</span></p><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>') +
       '</div></article>';
   }
   function renderGrid() {
@@ -292,6 +292,23 @@
     } else {
       pdpEl.innerHTML = pdpHTML(P0);
       document.title = P0.name + ' · Acpanta';
+      // Product data for Google (price, stock, brand)
+      try {
+        var ld = document.createElement('script'); ld.type = 'application/ld+json';
+        var c0 = P0.colors[0], url0 = 'https://acpanta.com/product.html?id=' + P0.id;
+        ld.textContent = JSON.stringify({
+          '@context': 'https://schema.org', '@type': 'Product', name: P0.name, sku: P0.id,
+          brand: { '@type': 'Brand', name: 'Acpanta' },
+          description: P0.name + ' by Acpanta. ' + P0.spec + '.',
+          image: c0[2] ? 'https://acpanta.com/' + c0[2] : 'https://acpanta.com/og-image.jpg',
+          url: url0,
+          offers: { '@type': 'Offer', url: url0, priceCurrency: 'GBP', price: P0.price.toFixed(2),
+            availability: isSoldOut(P0) ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+            itemCondition: 'https://schema.org/NewCondition',
+            seller: { '@type': 'Organization', name: 'Acpanta' } }
+        });
+        document.head.appendChild(ld);
+      } catch (err) {}
       var md = document.querySelector('meta[name="description"]');
       if (md) md.setAttribute('content', P0.name + ' by Acpanta. ' + P0.spec + '. ' + money(P0.price) + ', free UK delivery and 14-day returns.');
       pdpEl.addEventListener('click', onCardClick);
@@ -676,6 +693,12 @@
     $('gsm-cta').addEventListener('click', function (e) { if (this.classList.contains('is-base')) { e.preventDefault(); showGsm(1); gsmSlider.focus(); } });
     showGsm(1);
   }
+
+  // Bulk enquiry shortcut: tick the bulk box and set 20 pieces
+  if ($('bulk-start')) $('bulk-start').addEventListener('click', function () {
+    var f = document.querySelector('.custom-form'); if (!f) return;
+    f.elements.bulk.checked = true; if (+f.elements.quantity.value < 20) f.elements.quantity.value = 20;
+  });
 
   // Customisation previewer: garment, colour, view, placement and text, then hand off to WhatsApp or the form
   if ($('cz-preview')) {
