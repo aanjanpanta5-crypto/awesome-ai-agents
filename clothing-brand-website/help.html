@@ -18,6 +18,8 @@
 <meta name="theme-color" content="#0b0b0b">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -52,7 +54,7 @@
   </div>
   <section>
     <div class="wrap help-wrap">
-      <nav class="help-topics" aria-label="Help topics"><a href="#h-delivery">Delivery</a><a href="#h-returns">Returns</a><a href="#h-sizing">Sizing</a><a href="#h-orders">Orders &amp; payment</a><a href="#h-care">Care</a></nav>
+      <nav class="help-topics" aria-label="Help topics"><a href="#h-delivery">Delivery</a><a href="track.html">Track my order</a><a href="#h-returns">Returns</a><a href="#h-sizing">Sizing</a><a href="#h-orders">Orders &amp; payment</a><a href="#h-care">Care</a></nav>
 
       <h2 id="h-delivery">Delivery</h2>
 <details class="faq"><summary>How much is delivery?</summary><div>Nothing. Delivery is free on every order.</div></details>
@@ -96,11 +98,12 @@
   <div class="wrap">
     <div><a class="logo" href="./" aria-label="Acpanta home"><img class="logo-mark" src="logo.svg" alt="" width="80" height="44"><span>Acpanta</span></a><p style="opacity:.75;max-width:30ch">Heavy tees and hoodies, made in small batches and posted from London.</p></div>
     <div><h4>Shop</h4><ul><li><a href="shop.html">Everything</a></li><li><a href="women.html">Women <small class="soon">Coming soon</small></a></li><li><a href="shop.html">Men</a></li><li><a href="shop.html#t-shirts">T-shirts</a></li><li><a href="shop.html#hoodies">Hoodies</a></li><li><a href="shop.html#sweatshirts">Sweatshirts</a></li><li><a href="perfume.html">Limited perfume <small class="soon">Coming soon</small></a></li><li><a href="bags.html">Bags <small class="soon">Coming soon</small></a></li><li><a href="customisation.html">Customisation</a></li></ul></div>
-    <div><h4>Help</h4><ul><li><a href="help.html">Help centre</a></li><li><a href="returns.html#delivery">Delivery</a></li><li><a href="returns.html#returns">Returns</a></li><li><a href="size-guide.html">Size guide</a></li><li><a href="care.html">Care guide</a></li><li><a href="contact.html">Contact us</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="help.html">Help centre</a></li><li><a href="returns.html#delivery">Delivery</a></li><li><a href="track.html">Track your order</a></li><li><a href="returns.html#returns">Returns</a></li><li><a href="size-guide.html">Size guide</a></li><li><a href="care.html">Care guide</a></li><li><a href="contact.html">Contact us</a></li></ul></div>
     <div><h4>About Acpanta</h4><ul><li><a href="about.html">About us</a></li><li><a href="./#reviews">Customer reviews</a></li><li><a href="terms.html">Terms &amp; conditions</a></li><li><a href="privacy.html">Privacy policy</a></li></ul></div>
     <div><h4>Follow us</h4><ul><li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:aanjan.panta5@gmail.com">Email us</a></li></ul></div>
   </div>
-  <div class="wrap legal mono">© 2026 Acpanta · acpanta.com</div>
+  <div class="wrap foot-pay" aria-label="We accept Visa, Mastercard, Amex, Apple Pay and Google Pay"><img src="brand/pay/visa.svg" alt="" width="34" height="22"><img src="brand/pay/mastercard.svg" alt="" width="34" height="22"><img src="brand/pay/americanexpress.svg" alt="" width="34" height="22"><img src="brand/pay/applepay.svg" alt="" width="34" height="22"><img src="brand/pay/googlepay.svg" alt="" width="34" height="22"></div>
+  <div class="wrap legal mono">© 2026 Acpanta. All rights reserved. · acpanta.com</div>
 </footer>
 
 <div class="scrim" id="scrim" hidden></div>
@@ -115,7 +118,7 @@
     <div class="row big"><span>Total</span><span id="total">£0</span></div>
     <button class="btn btn-accent checkout" id="checkout">Checkout</button>
     <p class="form-msg" id="checkout-msg" role="status"></p>
-    <p class="pay-trust mono"><span>🔒 Secure checkout by Stripe</span><span class="pay-methods"><b><img src="brand/pay/visa.svg" alt="Visa" width="34" height="22"></b><b><img src="brand/pay/mastercard.svg" alt="Mastercard" width="34" height="22"></b><b><img src="brand/pay/americanexpress.svg" alt="Amex" width="34" height="22"></b><b><img src="brand/pay/applepay.svg" alt="Apple Pay" width="34" height="22"></b><b><img src="brand/pay/googlepay.svg" alt="Google Pay" width="34" height="22"></b></span></p>
+    <p class="pay-trust mono"><span class="secure-tag"><svg class="secure-lock" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3H9zm3 3.5a1.5 1.5 0 0 1 .8 2.77V18h-1.6v-1.73A1.5 1.5 0 0 1 12 13.5z"/></svg><span>Secure checkout by <b>Stripe</b></span></span><span class="pay-methods"><b><img src="brand/pay/visa.svg" alt="Visa" width="34" height="22"></b><b><img src="brand/pay/mastercard.svg" alt="Mastercard" width="34" height="22"></b><b><img src="brand/pay/americanexpress.svg" alt="Amex" width="34" height="22"></b><b><img src="brand/pay/applepay.svg" alt="Apple Pay" width="34" height="22"></b><b><img src="brand/pay/googlepay.svg" alt="Google Pay" width="34" height="22"></b></span></p>
   </div>
 </aside>
 <div class="toast" id="toast" hidden role="status"></div>

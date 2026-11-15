@@ -68,6 +68,13 @@ exports.handler = async (event) => {
   // Discount box for gift card and referral codes (created in Stripe as promotion codes)
   params.append('allow_promotion_codes', 'true');
   params.append('phone_number_collection[enabled]', 'true');
+  // Optional gift note, shown on the Stripe payment page; we print it and pack it with the order
+  params.append('custom_fields[0][key]', 'giftnote');
+  params.append('custom_fields[0][label][type]', 'custom');
+  params.append('custom_fields[0][label][custom]', 'Gift note (optional)');
+  params.append('custom_fields[0][type]', 'text');
+  params.append('custom_fields[0][optional]', 'true');
+  params.append('custom_fields[0][text][maximum_length]', '200');
   // Gift-card-only orders are emailed, so they skip the delivery address
   const physical = items.some((item) => !(byId[item.id] && byId[item.id].digital));
   if (physical) {

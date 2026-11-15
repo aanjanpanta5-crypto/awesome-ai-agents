@@ -87,6 +87,16 @@
   var cats = ['All'].concat(PRODUCTS.map(function (p) { return p.cat; }).filter(function (c, i, a) { return a.indexOf(c) === i; }));
   var slug = function (c) { return c.toLowerCase().replace(/[^a-z]+/g, '-'); };
   var active = 'All';
+  var sortBy = 'featured';
+  function gsmOf(p) { var m = /(\d+)\+? GSM/.exec(p.spec + ' ' + (p.details || []).join(' ')); return m ? +m[1] : 0; }
+  function sortList(list) {
+    if (sortBy === 'featured') return list;
+    return list.slice().sort(function (x, y) {
+      if (sortBy === 'price-asc') return x.price - y.price;
+      if (sortBy === 'price-desc') return y.price - x.price;
+      return gsmOf(y) - gsmOf(x);
+    });
+  }
   function fromHash() {
     var h = (location.hash || '').slice(1);
     for (var i = 0; i < cats.length; i++) if (slug(cats[i]) === h) return cats[i];
@@ -167,6 +177,12 @@
   }
   function cardHTML(p, el) { return el && el.classList.contains('pdp') ? pdpHTML(p) : card(p); }
   function badgeHTML(p) { return badgeFor(p) ? '<span class="badge mono' + (/^Only/.test(badgeFor(p)) ? '' : ' holo') + '">' + badgeFor(p) + '</span>' : ''; }
+  // Estimated delivery dates: post in 1-2 working days, then 2-4 working days with Royal Mail (weekends skipped)
+  function addWorkingDays(d, n) { d = new Date(d); while (n > 0) { d.setDate(d.getDate() + 1); if (d.getDay() % 6) n--; } return d; }
+  function etaText() {
+    var now = new Date(), f = function (d) { return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }); };
+    return 'Estimated delivery: <b>' + f(addWorkingDays(now, 3)) + ' – ' + f(addWorkingDays(now, 6)) + '</b>';
+  }
   // Colour/design swatches, size measurements, size picker and Add to bag (product cards and product pages)
   function buyHTML(p) {
     var c = p.colors[p.sel];
@@ -233,6 +249,7 @@
       (p.why ? '<p class="pdp-why">' + esc(p.why) + '</p>' : '') +
       (p.digital ? '<ul class="pdp-perks mono"><li>Emailed, no delivery needed</li><li>Valid 12 months</li><li>Secure checkout by Stripe</li></ul>' :
       '<p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
+      '<p class="eta-line">🗓️ ' + etaText() + '</p>' +
       '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
       (p.digital ? '' :
       '<div class="pdp-care"><h2 class="pdp-h">Care</h2><p class="care-icons" aria-label="Care: wash at 30 degrees inside out, do not tumble dry, do not iron the print"><span aria-hidden="true"><b class="ci">30°</b> Wash inside out</span><span aria-hidden="true"><b class="ci ci-x">⊠</b> No tumble dry</span><span aria-hidden="true"><b class="ci ci-x">✕</b> Don\'t iron the print</span></p><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>') +
@@ -246,7 +263,7 @@
       ? PRODUCTS.filter(function (p) { return p.id !== PID && !p.digital; }).sort(function (a, b) { var cur = byId[PID]; return cur ? (b.cat === cur.cat) - (a.cat === cur.cat) : 0; }).slice(0, 3)
       : grid.dataset.featured
       ? grid.dataset.featured.split(',').map(function (id) { return byId[id]; }).filter(Boolean)
-      : PRODUCTS.filter(function (p) { return (active === 'All' || p.cat === active) && (!query || matches(p, query)); });
+      : sortList(PRODUCTS.filter(function (p) { return (active === 'All' || p.cat === active) && (!query || matches(p, query)); }));
     if (grid.hasAttribute('data-saved') && !list.length) { grid.innerHTML = '<div class="no-results"><p><b>Nothing saved yet.</b></p><p>Tap the ♡ on any piece to save it here for later.</p><p><a class="btn btn-accent" href="shop.html">Browse the shop</a></p></div>'; return; }
     grid.innerHTML = list.length ? list.map(card).join('') :
       '<div class="no-results"><p><b>No items match “' + esc(query) + '”' + (active !== 'All' ? ' in ' + esc(active) : '') + '.</b></p>' +
@@ -333,6 +350,12 @@
             seller: { '@type': 'Organization', name: 'Acpanta' } }
         });
         document.head.appendChild(ld);
+        var bc = document.createElement('script'); bc.type = 'application/ld+json';
+        bc.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Shop', item: 'https://acpanta.com/shop.html' },
+          { '@type': 'ListItem', position: 2, name: P0.cat, item: 'https://acpanta.com/shop.html#' + slug(P0.cat) },
+          { '@type': 'ListItem', position: 3, name: P0.name, item: url0 }] });
+        document.head.appendChild(bc);
       } catch (err) {}
       var md = document.querySelector('meta[name="description"]');
       if (md) md.setAttribute('content', P0.name + ' by Acpanta. ' + P0.spec + '. ' + money(P0.price) + ', free UK delivery and 14-day returns.');
@@ -529,13 +552,15 @@
       return '<div class="line"><div class="thumb">' + artFor(p, l.color) + '</div><div class="meta"><b>' + p.name + '</b>' +
         '<span class="mono" style="color:var(--muted)">' + (p.digital ? 'Emailed gift card' : c[0] + ' · ' + l.size) + '</span>' +
         '<span class="line-size mono">' + sizeText(p, l.size) + '</span>' +
-        '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
+        '<div class="qty"><button type="button" data-dec="' + i + '" aria-label="Remove one ' + esc(p.name) + '">−</button><span aria-live="polite" aria-label="Quantity ' + l.qty + '">' + l.qty + '</span><button type="button" data-inc="' + i + '" aria-label="Add one more ' + esc(p.name) + '"' + (l.qty >= 20 ? ' disabled' : '') + '>+</button>' +
+        '<button type="button" class="line-remove" data-remove="' + i + '" aria-label="Remove ' + esc(p.name) + ' from bag">Remove</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
     }).join('') : '<p class="empty">Your bag is empty. Pick a size on any piece and add it here.</p>';
     var extra = $('bag-extra');
     if (extra) {
       var tee = byId['logo-tee'], hasTee = bag.some(function (l) { return l.id === 'logo-tee'; });
       extra.innerHTML = '<p class="batch-note mono">First batch: just 185 pieces in total</p><p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
+        (bag.some(function (l) { return byId[l.id] && !byId[l.id].digital; }) ? '<p class="eta-line">🗓️ ' + etaText() + '</p>' : '') +
         (bag.length && tee && !hasTee && !isSoldOut(tee) ? '<a class="xsell" href="' + productLink(tee) + '"><span class="xsell-art">' + artFor(tee, 0) + '</span><span><b>Complete the look</b><span>' + esc(tee.name) + ' · 260 GSM · ' + money(tee.price) + '</span></span><span class="xsell-go">View →</span></a>' : '');
     }
     $('subtotal').textContent = money(sub);
@@ -545,13 +570,14 @@
     $('checkout-msg').textContent = '';
   }
   $('lines').addEventListener('click', function (e) {
-    var inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]');
-    if (inc) bag[+inc.dataset.inc].qty++;
+    var inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]'), rm = e.target.closest('[data-remove]');
+    if (inc) { var l = bag[+inc.dataset.inc]; if (l.qty < 20) l.qty++; }
     else if (dec) { var i = +dec.dataset.dec; if (--bag[i].qty <= 0) bag.splice(i, 1); }
+    else if (rm) bag.splice(+rm.dataset.remove, 1);
     else return;
     save(); renderBag();
   });
-  function openBag() { $('scrim').hidden = false; $('drawer').hidden = false; fitEmblem(); $('close-bag').focus(); }
+  function openBag() { $('scrim').hidden = false; $('drawer').hidden = false; $('toast').hidden = true; fitEmblem(); $('close-bag').focus(); }
   function closeBag() { $('scrim').hidden = true; $('drawer').hidden = true; $('open-bag').focus(); }
   $('open-bag').addEventListener('click', openBag);
   $('close-bag').addEventListener('click', closeBag);
@@ -872,11 +898,28 @@
     if (!v) { out.textContent = 'Enter your chest to see your size.'; return; }
     var cm = unit === 'in' ? v * 2.54 : v;
     out.innerHTML = sizeAdvice(p, cm);
+    // Remember it on this device, and pick the recommended size if none is chosen yet
+    try { localStorage.setItem('acpanta-chest', JSON.stringify({ v: v, unit: unit })); } catch (err) {}
+    var rec = /We recommend (S|M|L|XL)\./.exec(out.textContent), sel = el.querySelector('select[id^="size-"]');
+    if (rec && sel && !sel.value) {
+      var opt = sel.querySelector('option[value="' + rec[1] + '"]');
+      if (opt && !opt.disabled) { sel.value = rec[1]; sel.dispatchEvent(new Event('change', { bubbles: true })); }
+    }
   });
   document.addEventListener('change', function (e) { if (e.target.matches && e.target.matches('[data-sf-unit]')) e.target.closest('.size-finder').querySelector('[data-sf-chest]').dispatchEvent(new Event('input', { bubbles: true })); });
 
   // Product page extras: recently viewed, and an Add to bag bar that stays on screen on phones
   if (pdpEl && byId[PID]) {
+    // Fill Find my size from last time, so the recommended size is ready
+    try {
+      var saved = JSON.parse(localStorage.getItem('acpanta-chest') || 'null'), sf = pdpEl.querySelector('.size-finder');
+      if (saved && sf && saved.v) {
+        sf.querySelector('[data-sf-unit]').value = saved.unit === 'in' ? 'in' : 'cm';
+        var ci = sf.querySelector('[data-sf-chest]'); ci.value = saved.v;
+        ci.dispatchEvent(new Event('input', { bubbles: true }));
+        sf.querySelector('summary').textContent = '📏 Find my size · using your saved chest size';
+      }
+    } catch (err) {}
     var RV = readList('acpanta-recent').filter(function (id) { return id !== PID && byId[id]; });
     if ($('recent-grid') && RV.length) {
       $('recent').hidden = false;
@@ -907,10 +950,19 @@
   });
 
   var tt;
+  // Welcome back: remind returning visitors what's still in their bag (once per visit)
+  try {
+    if (bag.length && !sessionStorage.getItem('acpanta-welcome') && document.body.getAttribute('data-page') !== 'thanks') {
+      sessionStorage.setItem('acpanta-welcome', '1');
+      var n = bag.reduce(function (s, l) { return s + l.qty; }, 0);
+      setTimeout(function () { if ($('drawer').hidden) toast('Welcome back! ' + n + (n === 1 ? ' item is' : ' items are') + ' still in your bag.'); }, 900);
+    }
+  } catch (err) {}
+  if ($('sort')) $('sort').addEventListener('change', function () { sortBy = this.value; renderGrid(); });
   function toast(msg) { var t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(tt); tt = setTimeout(function () { t.hidden = true; }, 2200); }
 })();
 
-/* Count-up stats: starts once when the section is 40% visible. */
+/* Count-up stats: starts once as the section scrolls into view. */
 (function () {
   var DURATION = 1600;   // ms each number takes to count up
   var STAGGER = 250;     // ms delay between one stat and the next
@@ -965,15 +1017,14 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce || !('IntersectionObserver' in window)) return; // final values are already in place
 
-  // Start state: numbers at 0, bars empty
-  items.forEach(function (it) {
-    it.num.textContent = format(0, it.decimals);
-    it.bar.style.transform = 'scaleX(0)';
-  });
+  // The real numbers stay in place until the count-up starts, so screenshots, search engines
+  // and anyone who never scrolls there always see 430 / 185 / 14, never 0
 
   // Animate one stat with requestAnimationFrame
   function run(it) {
     var start = null;
+    it.num.textContent = format(0, it.decimals);
+    it.bar.style.transform = 'scaleX(0)';
     function frame(now) {
       if (start === null) start = now;
       var t = Math.min(1, (now - start) / DURATION);
@@ -994,7 +1045,7 @@
       observer.disconnect();
       items.forEach(function (it, i) { setTimeout(function () { run(it); }, i * STAGGER); });
     });
-  }, { threshold: 0.4 });
+  }, { threshold: 0, rootMargin: '0px 0px -15% 0px' }); // starts as the section's top comes into view, before the numbers do
   observer.observe(section);
 })();
 
@@ -1020,4 +1071,41 @@
   wa.setAttribute('aria-label', 'Not sure on size? Ask us on WhatsApp');
   wa.innerHTML = '<span class="acp-wa-dot" aria-hidden="true"></span><svg class="acp-wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C7 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6L5.5 21l4-2.1c.8.2 1.6.3 2.5.3 5 0 9-3.6 9-8s-4-8-9-8z"/></svg><span class="acp-wa-text">Not sure on size? Ask us</span>';
   document.body.appendChild(wa);
+})();
+
+// Track your order page: opens Royal Mail tracking, or asks us on WhatsApp
+(function () {
+  var form = document.getElementById('track-form');
+  if (!form) return;
+  var input = document.getElementById('track-number'), msg = document.getElementById('track-msg');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var n = input.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (n.length < 8) { msg.textContent = 'Please enter the tracking number from your posting email.'; input.focus(); return; }
+    msg.textContent = 'Opening Royal Mail tracking for ' + n + '…';
+    window.open('https://www.royalmail.com/track-your-item#/tracking-results/' + encodeURIComponent(n), '_blank', 'noopener');
+  });
+  var ask = document.getElementById('track-order'), wa = document.getElementById('track-wa');
+  function setWa() {
+    var t = 'Hi Acpanta, could you send me my tracking link?' + (ask.value.trim() ? ' My order: ' + ask.value.trim() : '');
+    wa.href = 'https://wa.me/447448795690?text=' + encodeURIComponent(t);
+  }
+  ask.addEventListener('input', setWa); setWa();
+  document.getElementById('track-ask').addEventListener('submit', function (e) { e.preventDefault(); wa.click(); });
+})();
+
+// Business details for Google on the home page (name, logo, social profiles, search box)
+(function () {
+  if (document.body.getAttribute('data-page') !== 'home') return;
+  try {
+    var ld = document.createElement('script'); ld.type = 'application/ld+json';
+    ld.textContent = JSON.stringify([
+      { '@context': 'https://schema.org', '@type': 'Organization', name: 'Acpanta', url: 'https://acpanta.com/',
+        logo: 'https://acpanta.com/logo.png', sameAs: ['https://www.instagram.com/acpanta9'],
+        address: { '@type': 'PostalAddress', addressLocality: 'London', addressCountry: 'GB' } },
+      { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Acpanta', url: 'https://acpanta.com/',
+        potentialAction: { '@type': 'SearchAction', target: 'https://acpanta.com/shop.html?q={search_term_string}', 'query-input': 'required name=search_term_string' } }
+    ]);
+    document.head.appendChild(ld);
+  } catch (err) {}
 })();
