@@ -1158,3 +1158,16 @@ body[data-page="about"] .motto blockquote footer { color: #9a9a9a; }
   body[data-page="about"] .motto blockquote p { background-image: var(--holo-light); }
   body[data-page="about"] main .motto blockquote p { color: transparent; -webkit-text-fill-color: transparent; }
 }
+
+/* ---------- Share with a friend ---------- */
+.share-btn-icon { position: absolute; top: 10px; right: 10px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 0; display: grid; place-items: center;
+  background: rgba(255,255,255,.92); color: #141414; box-shadow: 0 2px 8px rgba(0,0,0,.18); cursor: pointer; }
+.share-btn-icon:hover, .share-btn-icon:focus-visible { background: #ffffff; outline: 2px solid #8a5cff; outline-offset: 1px; }
+.share-box { margin-top: 6px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.share-title { margin: 0 0 10px; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.share-links { display: flex; flex-wrap: wrap; gap: 8px; border-radius: 8px; transition: box-shadow .3s ease; }
+.share-links.flash { box-shadow: 0 0 0 3px #8a5cff; }
+.share-link { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); font: 600 .88rem/1 var(--body); text-decoration: none; cursor: pointer; }
+.share-link:hover, .share-link:focus-visible { border-color: var(--ink); }
+.share-native { background: #0b0b0b; color: #ffffff; border-color: #0b0b0b; }

@@ -24,6 +24,7 @@
     return '<svg viewBox="0 0 200 200" aria-hidden="true"><g fill="' + color + '" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round">' +
       SHAPES[shape].replace(/class="st"/g, 'stroke="' + (dark ? '#8a8a8a' : '#b9b9b9') + '" stroke-width="2" stroke-dasharray="4 3"') + printMark(shape, print, dark) + '</g></svg>';
   }
+  var SHARE_ICON = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/></svg>';
   var ZOOM_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M11 8v6M8 11h6"/></svg>';
 
   // Product picture: the real photo when a variant has one, otherwise the drawing
@@ -125,6 +126,32 @@
       'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>');
     info.classList.toggle('is-set', !!t);
   }
+  // Sharing: phone share menu where available, otherwise WhatsApp / Facebook / X / email / copy link
+  function shareInfo(p) {
+    var url = new URL(productLink(p), location.href).href;
+    return { url: url, title: p.name + ' · Acpanta', text: p.name + ' from Acpanta, ' + money(p.price) + '. Have a look:' };
+  }
+  function shareLinksHTML(p) {
+    var s = shareInfo(p), u = encodeURIComponent(s.url), t = encodeURIComponent(s.text);
+    return '<a class="share-link" href="https://wa.me/?text=' + t + '%20' + u + '" target="_blank" rel="noopener">WhatsApp</a>' +
+      '<a class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=' + u + '" target="_blank" rel="noopener">Facebook</a>' +
+      '<a class="share-link" href="https://twitter.com/intent/tweet?text=' + t + '&url=' + u + '" target="_blank" rel="noopener">X</a>' +
+      '<a class="share-link" href="mailto:?subject=' + encodeURIComponent(s.title) + '&body=' + t + '%20' + u + '">Email</a>' +
+      '<button type="button" class="share-link" data-copy-link>Copy link</button>';
+  }
+  function copyLink(p) {
+    var url = shareInfo(p).url;
+    var done = function () { toast('Link copied. Paste it to a friend'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { window.prompt('Copy this link:', url); });
+    else window.prompt('Copy this link:', url);
+  }
+  function shareProduct(p, el) {
+    var s = shareInfo(p);
+    if (navigator.share) { navigator.share({ title: s.title, text: s.text, url: s.url }).catch(function () {}); return; }
+    var pdpShare = el && el.querySelector('.share-links');
+    if (pdpShare) { pdpShare.classList.add('flash'); setTimeout(function () { pdpShare.classList.remove('flash'); }, 900); pdpShare.querySelector('a').focus(); return; }
+    copyLink(p);
+  }
   function cardHTML(p, el) { return el && el.classList.contains('pdp') ? pdpHTML(p) : card(p); }
   function badgeHTML(p) { return badgeFor(p) ? '<span class="badge mono' + (/^Only/.test(badgeFor(p)) ? '' : ' holo') + '">' + badgeFor(p) + '</span>' : ''; }
   // Colour/design swatches, size measurements, size picker and Add to bag (product cards and product pages)
@@ -146,7 +173,8 @@
     var c = p.colors[p.sel];
     return '<article class="card" data-id="' + p.id + '">' +
       '<div class="art' + (c[2] ? ' has-photo' : '') + '"><a class="art-link" href="' + productLink(p) + '" aria-label="View ' + esc(p.name) + '"></a>' + badgeHTML(p) + artFor(p, p.sel) +
-      '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div>' +
+      '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button>' +
+      '<button type="button" class="share-btn-icon" data-share aria-label="Share ' + esc(p.name) + ' with a friend">' + SHARE_ICON + '</button></div>' +
       '<div class="card-top"><h3><a href="' + productLink(p) + '">' + p.name + '</a></h3><span class="price">' + money(p.price) + '</span></div>' +
       '<p class="spec mono">' + p.spec + '</p>' +
       (p.details ? '<details class="pdetails"><summary>Details</summary><ul>' + p.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></details>' : '') +
@@ -164,6 +192,8 @@
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
       '<p class="spec mono">' + p.spec + '</p>' + buyHTML(p) +
+      '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
+      '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
       '<p class="pdp-guide"><a href="size-guide.html">Size guide</a> · <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a></p>' +
       '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
       '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>' +
@@ -187,6 +217,8 @@
     if (e.target.closest('[data-clear-search]')) { setQuery(''); active = 'All'; if (filters) syncFilters(); renderGrid(); if ($('q')) $('q').focus(); return; }
     var el = e.target.closest('.card'); if (!el) return;
     var p = byId[el.dataset.id];
+    if (e.target.closest('[data-share]')) { shareProduct(p, el); return; }
+    if (e.target.closest('[data-copy-link]')) { copyLink(p); return; }
     if (e.target.closest('[data-zoom]')) { openZoom(p, el); return; }
     var sw = e.target.closest('[data-sw]');
     if (sw) {
