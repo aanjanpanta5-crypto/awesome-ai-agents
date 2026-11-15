@@ -68,7 +68,7 @@ The site is hosted on Netlify (free plan) because checkout needs a server functi
 
 1. Sign up at netlify.com with your GitHub account.
 2. **Add new site > Import an existing project > GitHub**, and pick `awesome-ai-agents`. Netlify reads `netlify.toml`, so leave the build settings as they are. Set the branch to deploy (for example `main`, after merging).
-3. Add your Stripe key: **Site configuration > Environment variables > Add a variable**. Name: `STRIPE_SECRET_KEY`. Value: your secret key from Stripe (**Developers > API keys**). Never put this key in the code or share it in chat.
+3. Add your Stripe key: **Site configuration > Environment variables > Add a variable**. Name: `STRIPE_SECRET_KEY` (the checkout also accepts `Anjan`). Value: your secret key from Stripe (**Developers > API keys**). Never put this key in the code or share it in chat.
    - Start with your **test** key (`sk_test_...`) and pay with Stripe's test card `4242 4242 4242 4242`, any future date and any CVC.
    - When everything works, replace it with your **live** key (`sk_live_...`) and redeploy.
    - Safer option: create a **restricted key** in Stripe with write access to Checkout Sessions only, and use that instead.
