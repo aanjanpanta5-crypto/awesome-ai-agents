@@ -63,6 +63,25 @@
         <li><b>We reply with a price and timing</b> before you pay anything. Custom pieces take longer than our usual delivery.</li>
         <li><b>You approve it, pay, and we make it</b> for you.</li>
       </ol>
+      <h2>Preview your piece</h2>
+      <div class="cz" id="cz-builder">
+        <div class="cz-stage"><div class="cz-preview" id="cz-preview" role="img" aria-label="Preview of your custom piece"></div><p class="cz-caption mono" id="cz-caption" aria-live="polite"></p></div>
+        <div class="cz-controls">
+          <div class="cz-group"><span class="mono">Garment</span><div class="cz-chips"><button type="button" class="chip" data-cz-piece="tee">260 GSM Tee</button><button type="button" class="chip" data-cz-piece="hood">430 GSM Hoodie</button></div></div>
+          <div class="cz-group"><span class="mono">Colour</span><div class="cz-chips"><button type="button" class="chip" data-cz-colour="Black">Black</button><button type="button" class="chip" data-cz-colour="White">White</button></div></div>
+          <div class="cz-group"><span class="mono">View</span><div class="cz-chips"><button type="button" class="chip" data-cz-view="front">Front</button><button type="button" class="chip" data-cz-view="back">Back</button></div></div>
+          <div class="cz-group"><span class="mono">Placement</span><div class="cz-chips" id="cz-place"></div></div>
+          <label class="cz-group"><span class="mono">Your text</span><input id="cz-text" maxlength="24" placeholder="Initials, a name or a date" value=""></label>
+          <div class="cz-row">
+            <label class="cz-group"><span class="mono">Size</span><select id="cz-size"><option value="">Not sure</option><option>S</option><option>M</option><option>L</option><option>XL</option></select></label>
+            <label class="cz-group"><span class="mono">Quantity</span><input id="cz-qty" type="number" min="1" max="500" value="1"></label>
+          </div>
+          <a class="btn btn-accent" id="cz-wa" href="https://wa.me/447448795690" target="_blank" rel="noopener">💬 Send this design on WhatsApp</a>
+          <button type="button" class="btn btn-outline" id="cz-to-form">Or fill in the form below</button>
+          <p class="cz-note">The preview is a guide. We'll confirm the exact size and position of your print, plus the price and timing, before you pay.</p>
+        </div>
+      </div>
+
       <h2 id="enquire">Send us your idea</h2>
       <form class="custom-form review-form" name="custom-enquiry" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="Thank you! We’ll reply with a price and timing, usually within a day." action="customisation.html#enquire">
         <input type="hidden" name="form-name" value="custom-enquiry">

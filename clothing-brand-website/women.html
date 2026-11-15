@@ -52,6 +52,20 @@
     <div class="wrap soon-wrap">
       <p class="soon-lead">Our women's collection is on its way, cut and finished with the same care as the rest of the range.</p>
       <p>Until then, every tee and hoodie we sell now is unisex. Check the <a href="size-guide.html">size guide</a> for the fit, or ask us on <a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a> which size to pick.</p>
+      <form class="waitlist-form review-form" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="You're on the waitlist. We'll message you 24 hours before the public release." action="women.html">
+        <input type="hidden" name="form-name" value="waitlist">
+        <input type="hidden" name="collection" value="Women">
+        <p class="hp" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <h2>Join the waitlist</h2>
+        <p class="review-form-note">Get early access to the women's collection: we'll message you <b>24 hours before</b> it goes on public sale.</p>
+        <div class="drop-row">
+          <label class="sr-only" for="wl-contact">Email or WhatsApp number</label>
+          <input id="wl-contact" name="contact" required maxlength="120" placeholder="Email or WhatsApp number" autocomplete="email">
+          <button class="btn btn-accent" type="submit">Join the waitlist</button>
+        </div>
+        <label class="rv-consent"><input type="checkbox" name="consent" value="yes" required> Yes, Acpanta can message me about this launch and new drops. I can unsubscribe any time.</label>
+        <p class="form-msg" role="status"></p>
+      </form>
       <p class="soon-actions"><a class="btn btn-accent" href="shop.html">Shop the unisex range</a> <a class="btn btn-outline" href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Follow @acpanta9 for the launch</a></p>
     </div>
   </section>
