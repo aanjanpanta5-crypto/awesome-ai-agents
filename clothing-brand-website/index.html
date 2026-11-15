@@ -107,6 +107,8 @@
         <div class="rv-grid">
           <label>First name and initial<input name="name" required maxlength="40" autocomplete="name" placeholder="e.g. Sam T."></label>
           <label>Which piece did you buy?<select name="product" required><option value="">Choose one</option><option>Premium Logo Tee</option><option>Printed Tee</option><option>Heavyweight Logo Hoodie</option><option>Premium Boxy Hoodie</option><option>Zip Hoodie</option><option>Heavyweight Sweatshirt</option></select></label>
+          <label>Your height <small>Optional, helps others with fit</small><input name="height" maxlength="20" placeholder="e.g. 5ft 10in or 178 cm"></label>
+          <label>Size you bought<select name="size"><option value="">Choose</option><option>S</option><option>M</option><option>L</option></select></label>
           <label class="rv-wide">Email you used at checkout<input type="email" name="email" required maxlength="120" autocomplete="email" placeholder="So we can find your order"><small>Never shown on the site.</small></label>
           <label class="rv-wide">Your review<textarea name="review" required minlength="10" maxlength="1000" rows="5" placeholder="Fit, feel, quality, delivery..."></textarea></label>
         </div>
@@ -142,6 +144,18 @@
       </div>
       <div class="join-cta">
         <a class="btn btn-accent" href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Follow @acpanta9 on Instagram</a>
+        <form class="drop-form" name="drop-alerts" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="You’re on the list. We’ll let you know before the next drop." action="./#follow-ig">
+          <input type="hidden" name="form-name" value="drop-alerts">
+          <p class="hp" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+          <p class="drop-title"><b>Get drop alerts</b><span>Hear about new pieces and restocks first. No spam, unsubscribe any time.</span></p>
+          <div class="drop-row">
+            <label class="sr-only" for="drop-contact">Email or WhatsApp number</label>
+            <input id="drop-contact" name="contact" required maxlength="120" placeholder="Email or WhatsApp number" autocomplete="email">
+            <button class="btn btn-accent" type="submit">Notify me</button>
+          </div>
+          <label class="drop-consent"><input type="checkbox" name="consent" value="yes" required> Yes, Acpanta can message me about new drops. I can unsubscribe any time.</label>
+          <p class="form-msg" role="status"></p>
+        </form>
       </div>
     </div>
   </section>
@@ -173,7 +187,7 @@
 <footer class="site">
   <div class="wrap">
     <div><a class="logo" href="./" aria-label="Acpanta home"><img class="logo-mark" src="logo.svg" alt="" width="80" height="44"><span>Acpanta</span></a><p style="opacity:.75;max-width:30ch">Heavy tees and hoodies, made in small batches and posted from London.</p></div>
-    <div><h4>Shop</h4><ul><li><a href="shop.html">Everything</a></li><li><a href="women.html">Women</a></li><li><a href="shop.html">Men</a></li><li><a href="shop.html#t-shirts">T-shirts</a></li><li><a href="shop.html#hoodies">Hoodies</a></li><li><a href="shop.html#sweatshirts">Sweatshirts</a></li><li><a href="perfume.html">Limited perfume</a></li><li><a href="bags.html">Bags</a></li><li><a href="customisation.html">Customisation</a></li></ul></div>
+    <div><h4>Shop</h4><ul><li><a href="shop.html">Everything</a></li><li><a href="women.html">Women <small class="soon">Coming soon</small></a></li><li><a href="shop.html">Men</a></li><li><a href="shop.html#t-shirts">T-shirts</a></li><li><a href="shop.html#hoodies">Hoodies</a></li><li><a href="shop.html#sweatshirts">Sweatshirts</a></li><li><a href="perfume.html">Limited perfume <small class="soon">Coming soon</small></a></li><li><a href="bags.html">Bags <small class="soon">Coming soon</small></a></li><li><a href="customisation.html">Customisation</a></li></ul></div>
     <div><h4>Help</h4><ul><li><a href="help.html">Help centre</a></li><li><a href="returns.html#delivery">Delivery</a></li><li><a href="returns.html#returns">Returns</a></li><li><a href="size-guide.html">Size guide</a></li><li><a href="contact.html">Contact us</a></li></ul></div>
     <div><h4>About Acpanta</h4><ul><li><a href="about.html">About us</a></li><li><a href="./#reviews">Customer reviews</a></li><li><a href="terms.html">Terms &amp; conditions</a></li><li><a href="privacy.html">Privacy policy</a></li></ul></div>
     <div><h4>Follow us</h4><ul><li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:aanjan.panta5@gmail.com">Email us</a></li></ul></div>
@@ -192,6 +206,7 @@
     <div class="row big"><span>Total</span><span id="total">£0</span></div>
     <button class="btn btn-accent checkout" id="checkout">Checkout</button>
     <p class="form-msg" id="checkout-msg" role="status"></p>
+    <p class="pay-trust mono"><span>🔒 Secure checkout by Stripe</span><span class="pay-methods"><b>Visa</b><b>Mastercard</b><b>Amex</b><b>Apple Pay</b><b>Google Pay</b></span></p>
   </div>
 </aside>
 <div class="toast" id="toast" hidden role="status"></div>

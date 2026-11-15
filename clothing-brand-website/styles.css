@@ -1208,3 +1208,27 @@ body::before { background: #f5f1ea; }
 .shop-top .shop-search-box { background: #fffdf9; min-height: 52px; }
 .shop-top .shop-search-box input { font-size: 16px; }
 .shop-top .shop-tip { margin-top: 26px; }
+
+/* ---------- Checklist batch: coming soon, trust line, fit advice, drop alerts, custom form ---------- */
+footer.site .soon { font: 500 .58rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-left: 4px; }
+.pay-trust { margin: 8px 0 0; display: grid; gap: 6px; font-size: .66rem; color: var(--muted); text-align: center; }
+.pay-methods { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.pay-methods b { font-weight: 500; border: 1px solid var(--line); border-radius: 4px; padding: 2px 6px; background: #fffdf9; color: var(--ink); }
+.pdp-why { margin: 10px 0 0; padding: 12px 14px; border-left: 3px solid #8a5cff; background: rgba(255,255,255,.55); line-height: 1.6; font-size: .95rem; }
+.pdp-model { margin: 0; color: var(--muted); font-size: .74rem; }
+.review-fit { margin: 0; color: var(--muted); font-size: .68rem; }
+.fit-advice { margin: 0 0 22px; padding: 16px 18px 16px 34px; display: grid; gap: 8px; line-height: 1.6; background: rgba(255,255,255,.5); border: 1px solid var(--line); border-radius: 10px; }
+.fit-advice a { color: var(--accent); }
+.join-cta { display: grid; gap: 16px; }
+.drop-form { display: grid; gap: 10px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 16px; }
+.drop-title { margin: 0; display: grid; gap: 2px; color: #ffffff; }
+.drop-title span { font-size: .9rem; opacity: .8; }
+.drop-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.drop-row input { flex: 1 1 200px; min-height: 48px; border-radius: 6px; border: 1px solid rgba(255,255,255,.3); background: #fffdf9; color: #1d1b18; padding: 0 12px; font: inherit; }
+.drop-consent { display: flex; gap: 8px; align-items: flex-start; font-size: .82rem; line-height: 1.5; color: rgba(255,255,255,.82); }
+.drop-consent input { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+.join .drop-form .form-msg { margin: 0; }
+.join .drop-form .form-msg.ok { color: #9ff0c8; }
+.join .drop-form .form-msg.err, .join .drop-form .form-msg.err a { color: #ff9aa8; }
+.custom-form { margin-top: 8px; }
+.custom-form input[type=file] { padding: 10px; min-height: auto; }
