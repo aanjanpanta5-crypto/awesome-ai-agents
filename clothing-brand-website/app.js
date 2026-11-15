@@ -35,7 +35,8 @@
   }
   // Sold out: stock 0 for the whole product, or a size listed in soldOut (e.g. soldOut: ['XL'])
   function isSoldOut(p) { return typeof p.stock === 'number' && p.stock <= 0; }
-  function sizeSoldOut(p, s) { return isSoldOut(p) || (p.soldOut || []).indexOf(s) !== -1; }
+  function sizeLeft(p, s) { return p.sizeStock && typeof p.sizeStock[s] === 'number' ? p.sizeStock[s] : null; }
+  function sizeSoldOut(p, s) { return isSoldOut(p) || (p.soldOut || []).indexOf(s) !== -1 || sizeLeft(p, s) === 0; }
   function badgeFor(p) {
     if (isSoldOut(p)) return 'Sold out';
     if (typeof p.stock === 'number' && p.stock <= 5) return 'Only ' + p.stock + ' left';
@@ -170,7 +171,7 @@
         'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>') + '</p>' +
       '<div class="buy"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '">' +
       (p.sizes.length > 1 ? '<option value="">Select size</option>' : '') +
-      p.sizes.map(function (s) { return sizeSoldOut(p, s) ? '<option value="' + s + '" disabled>' + s + ' (sold out)</option>' : '<option>' + s + '</option>'; }).join('') + '</select>' +
+      p.sizes.map(function (s) { var left = sizeLeft(p, s); return sizeSoldOut(p, s) ? '<option value="' + s + '" disabled>' + s + ' (sold out)</option>' : '<option value="' + s + '">' + s + (left !== null && left <= 5 ? ' (' + left + ' left)' : '') + '</option>'; }).join('') + '</select>' +
       (isSoldOut(p) ? '<button class="add" data-add disabled aria-disabled="true">Sold out</button>' : '<button class="add" data-add>Add to bag</button>') + '</div>' +
       (isSoldOut(p) || (p.soldOut || []).length ? '<a class="notify-link mono" href="https://wa.me/447448795690?text=' +
         encodeURIComponent('Hi Acpanta, please tell me when the ' + p.name + ' is back' + (isSoldOut(p) ? '' : ' in ' + p.soldOut.join('/')) + '.') +
@@ -201,7 +202,8 @@
       '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + buyHTML(p) +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
       '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
-      '<p class="pdp-guide"><a href="size-guide.html">Size guide</a> · <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a></p>' +
+      '<a class="wa-help" href="https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I\'m looking at the ' + p.name + ' and need sizing help.') + '" target="_blank" rel="noopener">💬 Need sizing help? Chat with us on WhatsApp</a>' +
+      '<p class="pdp-guide"><a href="size-guide.html">Size guide</a></p>' +
       '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
       (p.why ? '<p class="pdp-why">' + esc(p.why) + '</p>' : '') +
       '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>' +
@@ -461,6 +463,7 @@
     toast('Added ' + p.name + ' (' + p.colors[color][0] + ', ' + size + ')');
   }
   function renderBag() {
+    if (!$('bag-extra') && $('lines')) { var bx = document.createElement('div'); bx.id = 'bag-extra'; $('lines').parentNode.insertBefore(bx, $('lines').nextSibling); }
     var count = 0, sub = 0;
     bag.forEach(function (l) { count += l.qty; sub += l.qty * byId[l.id].price; });
     $('bag-count').textContent = count;
@@ -472,6 +475,12 @@
         '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
     }).join('') : '<p class="empty">Your bag is empty. Pick a size on any piece and add it here.</p>';
+    var extra = $('bag-extra');
+    if (extra) {
+      var tee = byId['logo-tee'], hasTee = bag.some(function (l) { return l.id === 'logo-tee'; });
+      extra.innerHTML = '<p class="batch-note mono">First batch: just 185 pieces in total</p>' +
+        (bag.length && tee && !hasTee && !isSoldOut(tee) ? '<a class="xsell" href="' + productLink(tee) + '"><span class="xsell-art">' + artFor(tee, 0) + '</span><span><b>Complete the look</b><span>' + esc(tee.name) + ' · 260 GSM · ' + money(tee.price) + '</span></span><span class="xsell-go">View →</span></a>' : '');
+    }
     $('subtotal').textContent = money(sub);
     $('shipping').textContent = sub === 0 ? '—' : 'Free';
     $('total').textContent = money(sub);
@@ -659,6 +668,52 @@
     gsmSteps.addEventListener('click', function (e) { var b = e.target.closest('[data-gi]'); if (b) showGsm(+b.dataset.gi); });
     $('gsm-cta').addEventListener('click', function (e) { if (this.classList.contains('is-base')) { e.preventDefault(); showGsm(1); gsmSlider.focus(); } });
     showGsm(1);
+  }
+
+  // Customisation previewer: garment, colour, view, placement and text, then hand off to WhatsApp or the form
+  if ($('cz-preview')) {
+    var CZ = { piece: 'tee', colour: 'Black', view: 'front', place: 'chest', text: 'YOUR TEXT' };
+    var CZ_PIECES = { tee: { name: 'Premium Logo Tee', gsm: '260 GSM', shape: 'tee' }, hood: { name: 'Heavyweight Logo Hoodie', gsm: '430 GSM', shape: 'hood' } };
+    var CZ_PLACES = { front: { chest: ['Centre chest', 100, 70, 13], left: ['Left chest', 122, 66, 8] }, back: { big: ['Oversized back print', 100, 106, 22], upper: ['Upper back', 100, 66, 11] } };
+    var czDraw = function () {
+      var g = CZ_PIECES[CZ.piece], places = CZ_PLACES[CZ.view];
+      if (!places[CZ.place]) CZ.place = Object.keys(places)[0];
+      var pl = places[CZ.place], dark = CZ.colour === 'Black';
+      var t = esc((CZ.text || 'YOUR TEXT').slice(0, 24));
+      var fs = pl[3] * (t.length > 10 ? 10 / t.length : 1);
+      var svg = art(g.shape, dark ? '#1c1c1c' : '#f3f3f1', '');
+      if (CZ.view === 'back') svg = svg.replace(/<path d="M8\d 3\d Q100 \d+ 1\d\d 3\d"[^>]*\/>/, '').replace(/<rect x="78" y="128"[^>]*\/>/, '');
+      svg = svg.replace('</g></svg>', '</g><text x="' + pl[1] + '" y="' + pl[2] + '" text-anchor="middle" dominant-baseline="middle" font-family="Big Shoulders Display, sans-serif" font-weight="800" font-size="' + fs.toFixed(1) + '" fill="' + (dark ? '#ffffff' : '#141414') + '" letter-spacing=".5">' + t + '</text></svg>');
+      $('cz-preview').innerHTML = svg;
+      $('cz-caption').textContent = g.name + ' (' + g.gsm + ') · ' + CZ.colour + ' · ' + (CZ.view === 'front' ? 'Front' : 'Back') + ' · ' + pl[0];
+      $('cz-place').innerHTML = Object.keys(places).map(function (k) { return '<button type="button" class="chip" data-cz-place="' + k + '" aria-pressed="' + (k === CZ.place) + '">' + places[k][0] + '</button>'; }).join('');
+      [].forEach.call(document.querySelectorAll('[data-cz-piece]'), function (b) { b.setAttribute('aria-pressed', b.dataset.czPiece === CZ.piece); });
+      [].forEach.call(document.querySelectorAll('[data-cz-colour]'), function (b) { b.setAttribute('aria-pressed', b.dataset.czColour === CZ.colour); });
+      [].forEach.call(document.querySelectorAll('[data-cz-view]'), function (b) { b.setAttribute('aria-pressed', b.dataset.czView === CZ.view); });
+      var size = $('cz-size').value, qty = $('cz-qty').value || 1;
+      var msg = 'Hi Acpanta, I\'d like a custom piece:\n• ' + g.name + ' (' + g.gsm + '), ' + CZ.colour + '\n• ' + (CZ.view === 'front' ? 'Front' : 'Back') + ': ' + pl[0] + '\n• Text: ' + (CZ.text || '(my own design)') + '\n• Size: ' + (size || 'not sure yet') + '\n• Quantity: ' + qty;
+      $('cz-wa').href = 'https://wa.me/447448795690?text=' + encodeURIComponent(msg);
+    };
+    $('cz-builder').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-cz-piece],[data-cz-colour],[data-cz-view],[data-cz-place]'); if (!b) return;
+      if (b.dataset.czPiece) CZ.piece = b.dataset.czPiece;
+      if (b.dataset.czColour) CZ.colour = b.dataset.czColour;
+      if (b.dataset.czView) { CZ.view = b.dataset.czView; CZ.place = Object.keys(CZ_PLACES[CZ.view])[0]; }
+      if (b.dataset.czPlace) CZ.place = b.dataset.czPlace;
+      czDraw();
+    });
+    $('cz-text').addEventListener('input', function () { CZ.text = this.value.trim(); czDraw(); });
+    $('cz-size').addEventListener('change', czDraw); $('cz-qty').addEventListener('input', czDraw);
+    // Copy the design into the enquiry form below
+    $('cz-to-form').addEventListener('click', function () {
+      var f = document.querySelector('.custom-form'); if (!f) return;
+      var g = CZ_PIECES[CZ.piece], pl = CZ_PLACES[CZ.view][CZ.place];
+      f.elements.piece.value = g.name; f.elements.colour.value = CZ.colour; f.elements.quantity.value = $('cz-qty').value || 1;
+      f.elements.position.value = CZ.view === 'front' ? 'Front' : 'Back';
+      f.elements.idea.value = (CZ.view === 'front' ? 'Front' : 'Back') + ', ' + pl[0] + '. Text: ' + (CZ.text || '(my own design)') + '. Size: ' + ($('cz-size').value || 'not sure yet') + '.';
+      $('enquire').scrollIntoView({ behavior: 'smooth' }); setTimeout(function () { f.elements.name.focus(); }, 500);
+    });
+    czDraw();
   }
 
   // Mark the current page in the menu

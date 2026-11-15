@@ -52,6 +52,20 @@
     <div class="wrap soon-wrap">
       <p class="soon-lead">We're working on a limited Acpanta perfume, made in a small batch like everything else we do.</p>
       <p>It isn't on sale yet. New things go up on Instagram first, so follow us to hear when it lands.</p>
+      <form class="waitlist-form review-form" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="You're on the waitlist. We'll message you 24 hours before the public release." action="perfume.html">
+        <input type="hidden" name="form-name" value="waitlist">
+        <input type="hidden" name="collection" value="Limited perfume">
+        <p class="hp" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <h2>Join the waitlist</h2>
+        <p class="review-form-note">Get early access to the limited perfume: we'll message you <b>24 hours before</b> it goes on public sale.</p>
+        <div class="drop-row">
+          <label class="sr-only" for="wl-contact">Email or WhatsApp number</label>
+          <input id="wl-contact" name="contact" required maxlength="120" placeholder="Email or WhatsApp number" autocomplete="email">
+          <button class="btn btn-accent" type="submit">Join the waitlist</button>
+        </div>
+        <label class="rv-consent"><input type="checkbox" name="consent" value="yes" required> Yes, Acpanta can message me about this launch and new drops. I can unsubscribe any time.</label>
+        <p class="form-msg" role="status"></p>
+      </form>
       <p class="soon-actions"><a class="btn btn-accent" href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Follow @acpanta9 for the launch</a></p>
     </div>
   </section>

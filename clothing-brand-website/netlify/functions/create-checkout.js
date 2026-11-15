@@ -49,7 +49,7 @@ exports.handler = async (event) => {
     const p = byId[item && item.id];
     const color = p && p.colors[item.color];
     const qty = Number(item && item.qty);
-    if (!p || !color || !p.sizes.includes(item.size) || (p.soldOut || []).includes(item.size) || !Number.isInteger(qty) || qty < 1 || qty > MAX_QTY || (typeof p.stock === 'number' && qty > p.stock)) {
+    if (!p || !color || !p.sizes.includes(item.size) || (p.soldOut || []).includes(item.size) || (p.sizeStock && typeof p.sizeStock[item.size] === 'number' && qty > p.sizeStock[item.size]) || !Number.isInteger(qty) || qty < 1 || qty > MAX_QTY || (typeof p.stock === 'number' && qty > p.stock)) {
       return json(400, { error: 'Something in your bag is no longer available. Please remove it and try again.' });
     }
     const base = `line_items[${i}]`;
