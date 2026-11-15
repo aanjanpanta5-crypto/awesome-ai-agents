@@ -618,6 +618,49 @@
     });
   });
 
+  // Interactive weight guide (home page): compare a typical 150 GSM tee with Acpanta fabrics
+  if ($('gsm-slider')) {
+    var GSM = [
+      { gsm: 150, label: 'Typical tee', tag: '150 GSM · Typical high-street tee', title: 'A typical high-street T-shirt',
+        desc: 'The thin, lightweight jersey most fast-fashion tees use. It tends to cling, and collars can stretch and lose their shape after a few washes.',
+        drape: 'Thin and clingy', warmth: 'Warm weather only', fabric: 'Lightweight jersey', base: true },
+      { gsm: 260, id: 'logo-tee', label: 'Tee', desc: 'Roughly 70% heavier than a typical tee. It holds a clean shape around the collar and shoulders without feeling stiff.',
+        drape: 'Clean and structured', warmth: 'All year, on its own or layered' },
+      { gsm: 320, id: 'sweatshirt', label: 'Sweatshirt', desc: 'Over twice the weight of a typical tee. Solid and warm, with a relaxed drape that keeps its shape.',
+        drape: 'Relaxed, holds its shape', warmth: 'Spring, autumn and cool evenings' },
+      { gsm: 400, id: 'boxy-hoodie', label: 'Boxy Hoodie', plus: true, desc: 'More than 2.5 times a typical tee. Cut wide for a boxy drape, pre-shrunk and bio-washed.',
+        drape: 'Wide, boxy drape', warmth: 'Autumn and winter' },
+      { gsm: 430, id: 'logo-hoodie', label: 'Logo Hoodie', desc: 'Our heaviest piece, nearly three times a typical tee. You feel it the moment you pick it up.',
+        drape: 'Heavy, solid structure', warmth: 'Winter and cold days' }
+    ];
+    var gsmSteps = $('gsm-steps'), gsmSlider = $('gsm-slider');
+    gsmSteps.innerHTML = GSM.map(function (g, i) {
+      return '<button type="button" class="gsm-step" data-gi="' + i + '" aria-pressed="false">' + g.gsm + (g.plus ? '+' : '') + ' GSM<span>' + g.label + '</span></button>';
+    }).join('');
+    var showGsm = function (i) {
+      var g = GSM[i], p = g.id && byId[g.id], x = g.gsm / 150;
+      gsmSlider.value = i;
+      gsmSlider.setAttribute('aria-valuetext', g.gsm + (g.plus ? '+' : '') + ' GSM, ' + (p ? p.name : g.title));
+      [].forEach.call(gsmSteps.children, function (b, k) { b.setAttribute('aria-pressed', k === i); });
+      $('gsm-tag').textContent = g.tag || (g.gsm + (g.plus ? '+' : '') + ' GSM · ' + (p ? p.cat.replace(/s$/, '') : ''));
+      $('gsm-price').textContent = p ? money(p.price) : 'For comparison';
+      $('gsm-title').textContent = p ? p.name : g.title;
+      $('gsm-desc').textContent = g.desc;
+      $('gsm-x').textContent = g.base ? 'Baseline' : (x.toFixed(1) + (g.plus ? '×+' : '×') + ' a typical tee');
+      $('gsm-fill').style.width = Math.round(g.gsm / 430 * 100) + '%';
+      $('gsm-drape').textContent = g.drape;
+      $('gsm-warmth').textContent = g.warmth;
+      $('gsm-fabric').textContent = g.fabric || (g.gsm + (g.plus ? '+' : '') + ' GSM heavyweight cotton');
+      var cta = $('gsm-cta');
+      if (p) { cta.href = productLink(p); cta.textContent = 'Shop the ' + p.name + ' →'; cta.classList.remove('is-base'); }
+      else { cta.href = '#weights'; cta.textContent = 'Compare with our 260 GSM tee →'; cta.classList.add('is-base'); }
+    };
+    gsmSlider.addEventListener('input', function () { showGsm(+gsmSlider.value); });
+    gsmSteps.addEventListener('click', function (e) { var b = e.target.closest('[data-gi]'); if (b) showGsm(+b.dataset.gi); });
+    $('gsm-cta').addEventListener('click', function (e) { if (this.classList.contains('is-base')) { e.preventDefault(); showGsm(1); gsmSlider.focus(); } });
+    showGsm(1);
+  }
+
   // Mark the current page in the menu
   var page = document.body.getAttribute('data-page');
   [].forEach.call(document.querySelectorAll('nav.main a[data-page]'), function (a) {
