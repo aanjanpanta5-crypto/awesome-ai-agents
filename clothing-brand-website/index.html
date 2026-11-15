@@ -57,6 +57,16 @@
     </div>
   </div>
 
+  <section class="batch-strip" aria-label="Batch 01 stock">
+    <div class="wrap">
+      <div class="acp-batch-widget" id="batch-bar" data-total="185" hidden>
+        <div class="acp-batch-header"><span>Batch 01 · London</span><span data-batch-count></span></div>
+        <div class="acp-progress-track" role="progressbar" aria-label="Pieces left in Batch 01" aria-valuemin="0" aria-valuemax="185"><div class="acp-progress-fill" data-batch-fill></div></div>
+        <div class="acp-batch-sub">Our first batch is just 185 pieces across every style. We update this count as pieces sell.</div>
+      </div>
+    </div>
+  </section>
+
   <section class="gsm" id="weights" aria-labelledby="gsm-heading">
     <div class="wrap gsm-wrap">
       <div class="section-head gsm-head">
@@ -166,19 +176,20 @@
   <section class="join" id="follow-ig">
     <div class="wrap">
       <div>
-        <h2>New stock goes up on Instagram first</h2>
-        <p>Follow us to see new pieces and restocks before anyone else. Questions? Message us there or on WhatsApp.</p>
+        <span class="acp-vip-eyebrow">Private list</span>
+        <h2>Get Batch 02 before Instagram.</h2>
+        <p>Join the London drop list for early access to new heavyweight cuts and restocks, before we post them on Instagram. No spam.</p>
       </div>
       <div class="join-cta">
         <a class="btn btn-accent" href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Follow @acpanta9 on Instagram</a>
-        <form class="drop-form" name="drop-alerts" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="You’re on the list. We’ll let you know before the next drop." action="./#follow-ig">
+        <form class="drop-form" name="drop-alerts" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="You’re on the list. Watch your inbox or WhatsApp before the next drop." action="./#follow-ig">
           <input type="hidden" name="form-name" value="drop-alerts">
           <p class="hp" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
-          <p class="drop-title"><b>Get drop alerts</b><span>Hear about new pieces and restocks first. No spam, unsubscribe any time.</span></p>
+          <p class="drop-title"><b>Join the list</b><span>Early access to Batch 02 and restocks. Unsubscribe any time.</span></p>
           <div class="drop-row">
             <label class="sr-only" for="drop-contact">Email or WhatsApp number</label>
             <input id="drop-contact" name="contact" required maxlength="120" placeholder="Email or WhatsApp number" autocomplete="email">
-            <button class="btn btn-accent" type="submit">Notify me</button>
+            <button class="btn btn-accent" type="submit">Join list</button>
           </div>
           <label class="drop-consent"><input type="checkbox" name="consent" value="yes" required> Yes, Acpanta can message me about new drops. I can unsubscribe any time.</label>
           <p class="form-msg" role="status"></p>

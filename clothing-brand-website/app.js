@@ -197,6 +197,19 @@
       (p.details ? '<details class="pdetails"><summary>Details</summary><ul>' + p.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></details>' : '') +
       buyHTML(p) + '<a class="view-link mono" href="' + productLink(p) + '">View details</a></article>';
   }
+  // Fit note and quick facts, shown just above Add to bag (only facts already in products.js)
+  function fitBoxHTML(p) {
+    if (p.digital) return '';
+    var boxy = p.shape === 'boxy';
+    var gsm = (p.spec.match(/\d+\+? GSM/) || [])[0];
+    var pills = [gsm ? gsm + ' heavyweight' : 'Heavyweight'];
+    if ((p.details || []).some(function (d) { return /pre-shrunk/i.test(d); })) pills.push('Pre-shrunk');
+    pills.push('Free UK shipping');
+    return '<div class="acp-fit-box"><div><strong>Fit note:</strong> ' + (boxy ?
+      'Boxy, wide cut. Take your normal size for a relaxed drape, or size down for a closer fit.' :
+      'Unisex fit. Take your usual size, or use Find my size below.') + '</div>' +
+      '<div class="acp-care-pills">' + pills.map(function (t) { return '<span class="acp-pill">' + esc(t) + '</span>'; }).join('') + '</div></div>';
+  }
   // Product page: big picture, all details, size picker and Add to bag
   function pdpHTML(p) {
     var c = p.colors[p.sel];
@@ -210,7 +223,7 @@
       (p.digital ? '<p class="batch-label mono">Digital gift card</p>' : '<p class="batch-label mono">Batch 01 · one of 185 pieces</p>') +
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
-      '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + buyHTML(p) + saveBtn(p, 'save-btn') +
+      '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + fitBoxHTML(p) + buyHTML(p) + saveBtn(p, 'save-btn') +
       (p.digital ? '' : '<details class="size-finder"><summary>📏 Find my size</summary><div class="sf-body"><label>Your chest, measured around the fullest part<span class="sf-row"><input type="number" inputmode="decimal" min="20" max="160" step="0.5" data-sf-chest placeholder="e.g. 100"><select data-sf-unit aria-label="Unit"><option value="cm">cm</option><option value="in">in</option></select></span></label><p class="sf-out" data-sf-out aria-live="polite">Enter your chest to see your size.</p></div></details>') +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
       '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
@@ -983,4 +996,28 @@
     });
   }, { threshold: 0.4 });
   observer.observe(section);
+})();
+
+// Batch 01 stock bar (home page) and floating WhatsApp size helper (every page)
+(function () {
+  var PRODUCTS = window.ACPANTA_PRODUCTS || [];
+  var bar = document.getElementById('batch-bar');
+  if (bar) {
+    // Pieces left = the stock numbers in products.js, so keep those up to date as pieces sell
+    var total = Number(bar.getAttribute('data-total')) || 185, left = 0;
+    PRODUCTS.forEach(function (p) { if (!p.digital && typeof p.stock === 'number') left += p.stock; });
+    left = Math.max(0, Math.min(total, left));
+    bar.querySelector('[data-batch-count]').textContent = left + ' / ' + total + ' pieces left';
+    bar.querySelector('[data-batch-fill]').style.width = Math.round(left / total * 100) + '%';
+    bar.querySelector('.acp-progress-track').setAttribute('aria-valuenow', left);
+    bar.hidden = false;
+  }
+  if (document.body.getAttribute('data-page') === 'contact') return;
+  var wa = document.createElement('a');
+  wa.className = 'acp-wa-float';
+  wa.href = 'https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I have a quick question about sizing.');
+  wa.target = '_blank'; wa.rel = 'noopener';
+  wa.setAttribute('aria-label', 'Not sure on size? Ask us on WhatsApp');
+  wa.innerHTML = '<span class="acp-wa-dot" aria-hidden="true"></span><svg class="acp-wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C7 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6L5.5 21l4-2.1c.8.2 1.6.3 2.5.3 5 0 9-3.6 9-8s-4-8-9-8z"/></svg><span class="acp-wa-text">Not sure on size? Ask us</span>';
+  document.body.appendChild(wa);
 })();
