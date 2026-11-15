@@ -19,6 +19,7 @@ The website for Acpanta (acpanta.com): a clothing shop with T-shirts, tops, oute
 | `customisation.html` | Custom pieces: what's possible and how to request one on WhatsApp |
 | `product.html` | One page per product (`product.html?id=logo-tee` etc.), filled in from `products.js` |
 | `care.html` | Care guide: pick a piece to see how to wash and dry it |
+| `saved.html` | Saved items (the ♡ on products), kept in the shopper's browser |
 | `help.html` | Help centre: delivery, returns, sizing, payment and care questions |
 | `404.html` | Shown when a page doesn't exist |
 
