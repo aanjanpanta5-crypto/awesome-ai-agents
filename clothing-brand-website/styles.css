@@ -1097,3 +1097,17 @@ section.shop-top { padding-top: 18px; }
 .shop-top .shop-search { margin: 40px 0 0; }
 .shop-tip { margin: 4px 0 0; color: var(--muted); font-size: .92rem; }
 .shop-tip a { color: var(--accent); }
+
+/* ---------- Our story: motto ---------- */
+.motto { border-bottom: 1px solid var(--line); }
+.motto .wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
+.motto blockquote { margin: 0; }
+.motto blockquote p { margin: 0; font: 800 clamp(2.4rem, 8vw, 4.6rem)/0.95 var(--display); text-transform: uppercase; letter-spacing: .01em; }
+.motto blockquote footer { margin-top: 16px; color: var(--muted); }
+.motto-copy p { margin: 0 0 12px; font-size: 1.08rem; line-height: 1.7; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .motto blockquote p { background-image: var(--holo-dark); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: holo-shift 9s linear infinite; }
+}
+@media (pointer: coarse) { .motto blockquote p { animation: holo-hue 8s linear infinite; } }
+@media (prefers-reduced-motion: reduce) { .motto blockquote p { animation: none; } }
+@media (max-width: 760px) { .motto .wrap { grid-template-columns: 1fr; } }
