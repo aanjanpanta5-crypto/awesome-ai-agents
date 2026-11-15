@@ -1,6 +1,6 @@
 // Creates a Stripe Checkout page for the items in the customer's bag.
 // Prices always come from products.js on the server, never from the browser.
-// Needs the STRIPE_SECRET_KEY (or Anjan) environment variable, set in Netlify (never in this code).
+// Needs the stripe (or STRIPE_SECRET_KEY / Anjan) environment variable, set in Netlify (never in this code).
 const PRODUCTS = require('../../products.js');
 
 const byId = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
@@ -17,7 +17,8 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return json(405, { error: 'Use POST.' });
 
   // The owner's Netlify variable may be named STRIPE_SECRET_KEY or Anjan
-  const key = (process.env.STRIPE_SECRET_KEY || process.env.Anjan || process.env.ANJAN || '').trim();
+  // Checked in order: stripe (current key), then older names
+  const key = (process.env.stripe || process.env.STRIPE_SECRET_KEY || process.env.Anjan || process.env.ANJAN || '').trim();
   if (!key) return json(503, { error: 'Payments are not switched on yet. Please message us on WhatsApp to order.' });
 
   let items;
