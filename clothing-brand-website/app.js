@@ -910,7 +910,7 @@
   function toast(msg) { var t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(tt); tt = setTimeout(function () { t.hidden = true; }, 2200); }
 })();
 
-/* Count-up stats: starts once when the section is 40% visible. */
+/* Count-up stats: starts once as the section scrolls into view. */
 (function () {
   var DURATION = 1600;   // ms each number takes to count up
   var STAGGER = 250;     // ms delay between one stat and the next
@@ -965,15 +965,14 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce || !('IntersectionObserver' in window)) return; // final values are already in place
 
-  // Start state: numbers at 0, bars empty
-  items.forEach(function (it) {
-    it.num.textContent = format(0, it.decimals);
-    it.bar.style.transform = 'scaleX(0)';
-  });
+  // The real numbers stay in place until the count-up starts, so screenshots, search engines
+  // and anyone who never scrolls there always see 430 / 185 / 14, never 0
 
   // Animate one stat with requestAnimationFrame
   function run(it) {
     var start = null;
+    it.num.textContent = format(0, it.decimals);
+    it.bar.style.transform = 'scaleX(0)';
     function frame(now) {
       if (start === null) start = now;
       var t = Math.min(1, (now - start) / DURATION);
@@ -994,7 +993,7 @@
       observer.disconnect();
       items.forEach(function (it, i) { setTimeout(function () { run(it); }, i * STAGGER); });
     });
-  }, { threshold: 0.4 });
+  }, { threshold: 0, rootMargin: '0px 0px -15% 0px' }); // starts as the section's top comes into view, before the numbers do
   observer.observe(section);
 })();
 
