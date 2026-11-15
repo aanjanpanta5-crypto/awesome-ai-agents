@@ -1405,3 +1405,13 @@ main:focus { outline: none; }
 /* Payment logos under checkout */
 .pay-methods b { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 32px; padding: 4px 8px; background: #fff; }
 .pay-methods img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* Secure checkout line: holographic foil tag, same as the site's other foil tags */
+.pay-trust > span:first-child {
+  justify-self: center; width: max-content; max-width: 100%; padding: 5px 12px;
+  background: var(--foil); color: #141414; font-weight: 500; letter-spacing: .08em; border-radius: 4px;
+  box-shadow: var(--foil-edge), 2px 3px 0 #141414, 3px 6px 12px rgba(20,0,60,.15);
+  transform: perspective(400px) rotateX(8deg) rotateZ(-1deg);
+  animation: foil-sway 7s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) { .pay-trust > span:first-child { animation: none; } }
