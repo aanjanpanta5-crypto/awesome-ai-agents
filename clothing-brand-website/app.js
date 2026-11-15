@@ -197,6 +197,7 @@
       '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div></div>' +
       '<div class="pdp-info">' +
       '<nav class="crumbs mono" aria-label="Breadcrumb"><a href="shop.html">Shop</a> / <a href="shop.html#' + slug(p.cat) + '">' + esc(p.cat) + '</a></nav>' +
+      '<p class="batch-label mono">Batch 01 · one of 185 pieces</p>' +
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
       '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + buyHTML(p) +
@@ -206,8 +207,9 @@
       '<p class="pdp-guide"><a href="size-guide.html">Size guide</a></p>' +
       '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
       (p.why ? '<p class="pdp-why">' + esc(p.why) + '</p>' : '') +
+      '<p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
       '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>' +
-      '<div class="pdp-care"><h2 class="pdp-h">Care</h2><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="help.html#h-care">More care tips</a></p></div>' +
+      '<div class="pdp-care"><h2 class="pdp-h">Care</h2><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>' +
       '</div></article>';
   }
   function renderGrid() {
@@ -323,7 +325,7 @@
     '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
     item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
     item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
-    '<ul class="menu-list menu-list-small">' + item('shop.html#search', 'Search') + item('help.html', 'Help centre') + item('size-guide.html', 'Size guide') + item('returns.html', 'Delivery &amp; returns') +
+    '<ul class="menu-list menu-list-small">' + item('shop.html#search', 'Search') + item('help.html', 'Help centre') + item('size-guide.html', 'Size guide') + item('care.html', 'Care guide') + item('returns.html', 'Delivery &amp; returns') +
     item('about.html', 'About us') + item('contact.html', 'Contact us') + '<li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
   document.body.appendChild(mScrim); document.body.appendChild(menu);
   function openMenu() { mScrim.hidden = false; menu.hidden = false; document.documentElement.classList.add('no-scroll'); $('close-menu').focus(); }
@@ -478,7 +480,7 @@
     var extra = $('bag-extra');
     if (extra) {
       var tee = byId['logo-tee'], hasTee = bag.some(function (l) { return l.id === 'logo-tee'; });
-      extra.innerHTML = '<p class="batch-note mono">First batch: just 185 pieces in total</p>' +
+      extra.innerHTML = '<p class="batch-note mono">First batch: just 185 pieces in total</p><p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
         (bag.length && tee && !hasTee && !isSoldOut(tee) ? '<a class="xsell" href="' + productLink(tee) + '"><span class="xsell-art">' + artFor(tee, 0) + '</span><span><b>Complete the look</b><span>' + esc(tee.name) + ' · 260 GSM · ' + money(tee.price) + '</span></span><span class="xsell-go">View →</span></a>' : '');
     }
     $('subtotal').textContent = money(sub);
@@ -714,6 +716,32 @@
       $('enquire').scrollIntoView({ behavior: 'smooth' }); setTimeout(function () { f.elements.name.focus(); }, 500);
     });
     czDraw();
+  }
+
+  // Care guide (care.html): pick a piece, get its care steps
+  if ($('care-pick')) {
+    var CARE_BASE = ['Wash cold, at 30°C max', 'Turn it inside out before washing', 'Wash with similar colours', 'Never tumble dry', 'Line dry or dry flat, away from direct heat', 'Always check the care label'];
+    var CARE_EXTRA = {
+      'logo-tee': ['Iron inside out on a low heat, never directly on the logo'],
+      'printed-tee': ['Iron inside out on a low heat, never directly on the print', 'Avoid harsh stain removers on the printed area'],
+      'logo-hoodie': ['Heavy pieces hold water: reshape while damp and dry it flat or over a thick hanger so it keeps its length', 'Iron inside out, never directly on the logo'],
+      'boxy-hoodie': ['It\'s pre-shrunk, but hot washes and tumble drying can still change the fit', 'Dry it flat to keep the boxy shape', 'Iron inside out, never directly on the back print'],
+      'zip-hoodie': ['Close the zip before washing, so it doesn\'t snag the fabric', 'Iron inside out, never directly on the logo'],
+      'sweatshirt': ['Reshape while damp and dry flat, so the cuffs and hem keep their shape']
+    };
+    var carePick = $('care-pick');
+    carePick.innerHTML = PRODUCTS.map(function (p) { return '<button type="button" class="chip" data-care="' + p.id + '">' + esc(p.name) + '</button>'; }).join('');
+    var showCare = function (id) {
+      var p = byId[id] || PRODUCTS[0];
+      [].forEach.call(carePick.children, function (b) { b.setAttribute('aria-pressed', b.dataset.care === p.id); });
+      $('care-title').textContent = p.name;
+      $('care-spec').textContent = p.spec;
+      $('care-list').innerHTML = CARE_BASE.concat(CARE_EXTRA[p.id] || []).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+      $('care-shop').href = productLink(p);
+      try { history.replaceState(null, '', 'care.html?id=' + p.id); } catch (err) {}
+    };
+    carePick.addEventListener('click', function (e) { var b = e.target.closest('[data-care]'); if (b) showCare(b.dataset.care); });
+    showCare(PID);
   }
 
   // Mark the current page in the menu
