@@ -552,7 +552,8 @@
       return '<div class="line"><div class="thumb">' + artFor(p, l.color) + '</div><div class="meta"><b>' + p.name + '</b>' +
         '<span class="mono" style="color:var(--muted)">' + (p.digital ? 'Emailed gift card' : c[0] + ' · ' + l.size) + '</span>' +
         '<span class="line-size mono">' + sizeText(p, l.size) + '</span>' +
-        '<div class="qty"><button data-dec="' + i + '" aria-label="Decrease quantity">−</button><span>' + l.qty + '</span><button data-inc="' + i + '" aria-label="Increase quantity">+</button></div></div>' +
+        '<div class="qty"><button type="button" data-dec="' + i + '" aria-label="Remove one ' + esc(p.name) + '">−</button><span aria-live="polite" aria-label="Quantity ' + l.qty + '">' + l.qty + '</span><button type="button" data-inc="' + i + '" aria-label="Add one more ' + esc(p.name) + '"' + (l.qty >= 20 ? ' disabled' : '') + '>+</button>' +
+        '<button type="button" class="line-remove" data-remove="' + i + '" aria-label="Remove ' + esc(p.name) + ' from bag">Remove</button></div></div>' +
         '<span class="price">' + money(p.price * l.qty) + '</span></div>';
     }).join('') : '<p class="empty">Your bag is empty. Pick a size on any piece and add it here.</p>';
     var extra = $('bag-extra');
@@ -569,13 +570,14 @@
     $('checkout-msg').textContent = '';
   }
   $('lines').addEventListener('click', function (e) {
-    var inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]');
-    if (inc) bag[+inc.dataset.inc].qty++;
+    var inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]'), rm = e.target.closest('[data-remove]');
+    if (inc) { var l = bag[+inc.dataset.inc]; if (l.qty < 20) l.qty++; }
     else if (dec) { var i = +dec.dataset.dec; if (--bag[i].qty <= 0) bag.splice(i, 1); }
+    else if (rm) bag.splice(+rm.dataset.remove, 1);
     else return;
     save(); renderBag();
   });
-  function openBag() { $('scrim').hidden = false; $('drawer').hidden = false; fitEmblem(); $('close-bag').focus(); }
+  function openBag() { $('scrim').hidden = false; $('drawer').hidden = false; $('toast').hidden = true; fitEmblem(); $('close-bag').focus(); }
   function closeBag() { $('scrim').hidden = true; $('drawer').hidden = true; $('open-bag').focus(); }
   $('open-bag').addEventListener('click', openBag);
   $('close-bag').addEventListener('click', closeBag);
@@ -953,7 +955,7 @@
     if (bag.length && !sessionStorage.getItem('acpanta-welcome') && document.body.getAttribute('data-page') !== 'thanks') {
       sessionStorage.setItem('acpanta-welcome', '1');
       var n = bag.reduce(function (s, l) { return s + l.qty; }, 0);
-      setTimeout(function () { toast('Welcome back! ' + n + (n === 1 ? ' item is' : ' items are') + ' still in your bag.'); }, 900);
+      setTimeout(function () { if ($('drawer').hidden) toast('Welcome back! ' + n + (n === 1 ? ' item is' : ' items are') + ' still in your bag.'); }, 900);
     }
   } catch (err) {}
   if ($('sort')) $('sort').addEventListener('change', function () { sortBy = this.value; renderGrid(); });

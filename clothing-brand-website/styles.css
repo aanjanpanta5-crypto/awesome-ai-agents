@@ -1484,3 +1484,16 @@ footer.site .wrap.foot-pay { display: flex; flex-wrap: wrap; justify-content: fl
 .sort-box select { min-height: 40px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 4px; background: #fff; font: inherit; color: var(--ink); text-transform: none; letter-spacing: 0; }
 .eta-line { font-size: .9rem; margin: 6px 0 0; }
 #bag-extra .eta-line { text-align: center; font-size: .82rem; color: var(--muted); }
+
+/* Bag fix: never squash the items. The whole bag scrolls when it's full,
+   and the emblem only fills spare space. Bigger quantity buttons and a Remove link. */
+.drawer { overflow-y: auto; overscroll-behavior: contain; }
+.drawer .lines { flex: none !important; overflow: visible; min-height: auto; }
+.drawer .drawer-head, #bag-extra, .drawer .totals { flex: none; }
+.bag-watermark { flex: 1 1 0 !important; min-height: 0; }
+.qty { gap: 10px; flex-wrap: wrap; }
+.qty button { width: 40px !important; height: 40px !important; font-size: 1.15rem; border-radius: 6px; cursor: pointer; touch-action: manipulation; }
+.qty button:disabled { opacity: .4; cursor: not-allowed; }
+.qty span { min-width: 22px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+.qty .line-remove { width: auto !important; padding: 0 10px; font-size: .8rem; text-decoration: underline; background: transparent; border-color: transparent; color: var(--muted); }
+.qty .line-remove:hover { color: var(--accent); }
