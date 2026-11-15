@@ -33,7 +33,11 @@
     if (c[2]) return '<img src="' + c[2] + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" loading="lazy" decoding="async">';
     return art(p.shape, c[1], p.print);
   }
+  // Sold out: stock 0 for the whole product, or a size listed in soldOut (e.g. soldOut: ['XL'])
+  function isSoldOut(p) { return typeof p.stock === 'number' && p.stock <= 0; }
+  function sizeSoldOut(p, s) { return isSoldOut(p) || (p.soldOut || []).indexOf(s) !== -1; }
   function badgeFor(p) {
+    if (isSoldOut(p)) return 'Sold out';
     if (typeof p.stock === 'number' && p.stock <= 5) return 'Only ' + p.stock + ' left';
     if (typeof p.stock === 'number' && p.stock <= 20) return 'Limited \u00b7 ' + p.stock + ' pieces';
     return p.badge || '';
@@ -166,8 +170,11 @@
         'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>') + '</p>' +
       '<div class="buy"><label class="mono" for="size-' + p.id + '" hidden>Size</label><select id="size-' + p.id + '">' +
       (p.sizes.length > 1 ? '<option value="">Select size</option>' : '') +
-      p.sizes.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select>' +
-      '<button class="add" data-add>Add to bag</button></div>';
+      p.sizes.map(function (s) { return sizeSoldOut(p, s) ? '<option value="' + s + '" disabled>' + s + ' (sold out)</option>' : '<option>' + s + '</option>'; }).join('') + '</select>' +
+      (isSoldOut(p) ? '<button class="add" data-add disabled aria-disabled="true">Sold out</button>' : '<button class="add" data-add>Add to bag</button>') + '</div>' +
+      (isSoldOut(p) || (p.soldOut || []).length ? '<a class="notify-link mono" href="https://wa.me/447448795690?text=' +
+        encodeURIComponent('Hi Acpanta, please tell me when the ' + p.name + ' is back' + (isSoldOut(p) ? '' : ' in ' + p.soldOut.join('/')) + '.') +
+        '" target="_blank" rel="noopener">' + (isSoldOut(p) ? 'Sold out. Tell me when it\'s back' : (p.soldOut.join(', ') + ' sold out. Tell me when it\'s back')) + '</a>' : '');
   }
   function card(p) {
     var c = p.colors[p.sel];
@@ -198,7 +205,7 @@
       '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
       (p.why ? '<p class="pdp-why">' + esc(p.why) + '</p>' : '') +
       '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>' +
-      '<p class="pdp-care">Care: wash inside out at 30°C and don\'t tumble dry. Always check the care label. <a href="help.html#h-care">More care tips</a></p>' +
+      '<div class="pdp-care"><h2 class="pdp-h">Care</h2><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="help.html#h-care">More care tips</a></p></div>' +
       '</div></article>';
   }
   function renderGrid() {
@@ -447,6 +454,7 @@
   } catch (err) { bag = []; }
   function save() { try { localStorage.setItem('acpanta-bag', JSON.stringify(bag)); } catch (err) {} }
   function addToBag(p, color, size) {
+    if (sizeSoldOut(p, size)) { toast('Sorry, that size is sold out'); return; }
     var hit = bag.find(function (l) { return l.id === p.id && l.color === color && l.size === size; });
     if (hit) hit.qty++; else bag.push({ id: p.id, color: color, size: size, qty: 1 });
     save(); renderBag();
