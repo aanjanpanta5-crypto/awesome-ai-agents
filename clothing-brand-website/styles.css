@@ -1232,3 +1232,7 @@ footer.site .soon { font: 500 .58rem/1 var(--mono); letter-spacing: .06em; text-
 .join .drop-form .form-msg.err, .join .drop-form .form-msg.err a { color: #ff9aa8; }
 .custom-form { margin-top: 8px; }
 .custom-form input[type=file] { padding: 10px; min-height: auto; }
+
+.fit-advice { display: block; }
+.fit-advice p { margin: 0 0 8px; }
+.fit-advice ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
