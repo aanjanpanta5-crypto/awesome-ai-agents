@@ -1467,3 +1467,13 @@ main:focus { outline: none; }
 /* Footer: copyright line with payment logos */
 footer.site .wrap.foot-pay { display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center; gap: 6px; padding-block: 4px 14px; }
 .foot-pay img { width: 46px; height: 30px; padding: 4px 7px; background: #fff; border-radius: 4px; object-fit: contain; }
+
+/* Track your order + review request */
+.track-form { display: grid; gap: 8px; margin: 8px 0 4px; }
+.track-form label { font-weight: 600; }
+.track-form .drop-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.track-form input { flex: 1 1 220px; min-height: 48px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 4px; background: #fff; font: inherit; color: var(--ink); }
+.track-form .btn { min-height: 48px; }
+.track-note { font-size: .72rem; color: var(--muted); }
+.review-ask { margin: 24px 0; padding: 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface, #fffdf9); }
+.review-ask h2 { margin-top: 0 !important; }

@@ -1020,3 +1020,24 @@
   wa.innerHTML = '<span class="acp-wa-dot" aria-hidden="true"></span><svg class="acp-wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C7 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6L5.5 21l4-2.1c.8.2 1.6.3 2.5.3 5 0 9-3.6 9-8s-4-8-9-8z"/></svg><span class="acp-wa-text">Not sure on size? Ask us</span>';
   document.body.appendChild(wa);
 })();
+
+// Track your order page: opens Royal Mail tracking, or asks us on WhatsApp
+(function () {
+  var form = document.getElementById('track-form');
+  if (!form) return;
+  var input = document.getElementById('track-number'), msg = document.getElementById('track-msg');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var n = input.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (n.length < 8) { msg.textContent = 'Please enter the tracking number from your posting email.'; input.focus(); return; }
+    msg.textContent = 'Opening Royal Mail tracking for ' + n + '…';
+    window.open('https://www.royalmail.com/track-your-item#/tracking-results/' + encodeURIComponent(n), '_blank', 'noopener');
+  });
+  var ask = document.getElementById('track-order'), wa = document.getElementById('track-wa');
+  function setWa() {
+    var t = 'Hi Acpanta, could you send me my tracking link?' + (ask.value.trim() ? ' My order: ' + ask.value.trim() : '');
+    wa.href = 'https://wa.me/447448795690?text=' + encodeURIComponent(t);
+  }
+  ask.addEventListener('input', setWa); setWa();
+  document.getElementById('track-ask').addEventListener('submit', function (e) { e.preventDefault(); wa.click(); });
+})();
