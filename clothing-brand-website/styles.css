@@ -1503,3 +1503,8 @@ footer.site .wrap.foot-pay { display: flex; flex-wrap: wrap; justify-content: fl
 .drawer { background: #ffffff; }
 .drawer .xsell { background: #faf8f5; }
 .drawer .line .thumb { background: #f7f5f1; }
+
+/* Nothing may ever poke out sideways (rotated foil tags, long tags on big system fonts) */
+html, body { overflow-x: clip; }
+/* About tagline: its own line, wraps nicely on small screens */
+.page-head .tagline-tag { display: block; width: auto; min-width: 0; justify-self: center; margin-top: 10px; white-space: normal; overflow-wrap: break-word; text-align: center; line-height: 1.6; }
