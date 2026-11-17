@@ -220,7 +220,7 @@
     var gsm = (p.spec.match(/\d+\+? GSM/) || [])[0];
     var pills = [gsm ? gsm + ' heavyweight' : 'Heavyweight'];
     if ((p.details || []).some(function (d) { return /pre-shrunk/i.test(d); })) pills.push('Pre-shrunk');
-    pills.push('Free UK shipping');
+    pills.push('Complimentary UK delivery');
     return '<div class="acp-fit-box"><div><strong>Fit note:</strong> ' + (boxy ?
       'Boxy, wide cut. Take your normal size for a relaxed drape, or size down for a closer fit.' :
       'Unisex fit. Take your usual size, or use Find my size below.') + '</div>' +
@@ -250,7 +250,7 @@
       (p.digital ? '<ul class="pdp-perks mono"><li>Emailed, no delivery needed</li><li>Valid 12 months</li><li>Secure checkout by Stripe</li></ul>' :
       '<p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
       '<p class="eta-line">🗓️ ' + etaText() + '</p>' +
-      '<ul class="pdp-perks mono"><li>Free UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
+      '<ul class="pdp-perks mono"><li>Complimentary UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
       (p.digital ? '' :
       '<div class="pdp-care"><h2 class="pdp-h">Care</h2><p class="care-icons" aria-label="Care: wash at 30 degrees inside out, do not tumble dry, do not iron the print"><span aria-hidden="true"><b class="ci">30°</b> Wash inside out</span><span aria-hidden="true"><b class="ci ci-x">⊠</b> No tumble dry</span><span aria-hidden="true"><b class="ci ci-x">✕</b> Don\'t iron the print</span></p><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>') +
       '</div></article>';
@@ -688,7 +688,7 @@
         .then(function (r) { if (!r.ok) throw new Error('bad'); })
         .then(function () {
           rForm.reset(); msg.className = 'form-msg ok';
-          msg.textContent = 'Thank you! We’ll check it against your order and post it here soon.';
+          msg.textContent = 'Thank you. We’ll check it against your order and post it here soon.';
         })
         .catch(function () {
           msg.className = 'form-msg err';
@@ -964,7 +964,7 @@
     if (bag.length && !sessionStorage.getItem('acpanta-welcome') && document.body.getAttribute('data-page') !== 'thanks') {
       sessionStorage.setItem('acpanta-welcome', '1');
       var n = bag.reduce(function (s, l) { return s + l.qty; }, 0);
-      setTimeout(function () { if ($('drawer').hidden) toast('Welcome back! ' + n + (n === 1 ? ' item is' : ' items are') + ' still in your bag.'); }, 900);
+      setTimeout(function () { if ($('drawer').hidden) toast('Welcome back. ' + n + (n === 1 ? ' item is' : ' items are') + ' still in your bag.'); }, 900);
     }
   } catch (err) {}
   if ($('sort')) $('sort').addEventListener('change', function () { sortBy = this.value; renderGrid(); });
