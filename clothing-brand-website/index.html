@@ -23,7 +23,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Jost:wght@400;500;600&family=Big+Shoulders+Display:wght@600;800&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body data-page="home">
@@ -68,6 +68,28 @@
         <div class="acp-batch-sub">Our first batch is just 185 pieces across every style. We update this count as pieces sell.</div>
       </div>
     </div>
+  </section>
+
+  <section class="rs" id="looks" aria-roledescription="carousel" aria-label="Shop the look">
+    <div class="rs-stage" tabindex="0" aria-label="Looks, use the arrow keys to browse">
+      <header class="rs-head">
+        <h2 class="rs-title">Batch <em>01</em> Men</h2>
+        <p class="rs-sub">Six looks, styled head to toe in Acpanta</p>
+      </header>
+      <div class="rs-pill" aria-live="polite"></div>
+      <div class="rs-track"></div>
+      <nav class="rs-nav" aria-label="Look navigation">
+        <button type="button" class="rs-btn rs-prev" aria-label="Previous look"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="rs-btn rs-next" aria-label="Next look"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <span class="rs-counter"><b class="rs-cur">01</b> / <span class="rs-tot">06</span></span>
+        <span class="rs-bar"><i></i></span>
+      </nav>
+    </div>
+    <aside class="rs-panel" aria-live="polite">
+      <div class="rs-panel-head"><h3 class="rs-panel-title">In this look</h3><span class="rs-count"></span></div>
+      <div class="rs-list"></div>
+      <a class="rs-cta" href="shop.html">Shop the look</a>
+    </aside>
   </section>
 
   <section class="craft" id="craft">
@@ -222,5 +244,6 @@
 <script src="reviews.js"></script>
 <script src="lookbook.js"></script>
 <script src="app.js"></script>
+<script src="looks.js"></script>
 </body>
 </html>

@@ -34,6 +34,7 @@
     if (c[2]) return '<picture><source srcset="' + c[2].replace(/\.jpg$/, '.webp') + '" type="image/webp"><img src="' + c[2] + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" loading="lazy" decoding="async"></picture>';
     return art(p.shape, c[1], p.print);
   }
+  window.ACPANTA_ART = artFor; // used by the Shop the look slider (looks.js)
   // Sold out: stock 0 for the whole product, or a size listed in soldOut (e.g. soldOut: ['XL'])
   function isSoldOut(p) { return typeof p.stock === 'number' && p.stock <= 0; }
   function sizeLeft(p, s) { return p.sizeStock && typeof p.sizeStock[s] === 'number' ? p.sizeStock[s] : null; }
