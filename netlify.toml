@@ -4,6 +4,9 @@
   base = "clothing-brand-website"
   publish = "."
   functions = "netlify/functions"
+  edge_functions = "netlify/edge-functions"
+  # Makes products.json (for product share previews) and feed.xml (Google Shopping) from products.js
+  command = "node tools/build.js"
 
 [functions]
   node_bundler = "esbuild"
