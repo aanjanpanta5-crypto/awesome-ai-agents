@@ -34,6 +34,7 @@
     if (c[2]) return '<picture><source srcset="' + c[2].replace(/\.jpg$/, '.webp') + '" type="image/webp"><img src="' + c[2] + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" loading="lazy" decoding="async"></picture>';
     return art(p.shape, c[1], p.print);
   }
+  window.ACPANTA_ART = artFor; // used by the Shop the look slider (looks.js)
   // Sold out: stock 0 for the whole product, or a size listed in soldOut (e.g. soldOut: ['XL'])
   function isSoldOut(p) { return typeof p.stock === 'number' && p.stock <= 0; }
   function sizeLeft(p, s) { return p.sizeStock && typeof p.sizeStock[s] === 'number' ? p.sizeStock[s] : null; }
@@ -399,7 +400,7 @@
   menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
   var item = function (href, label, note, low) { return '<li><a href="' + href + '">' + label + (note ? ' <small class="menu-note' + (low ? ' low' : '') + '">' + note + '</small>' : '') + '</a></li>'; };
   menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
-    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
+    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + item('looks.html', 'Shop the look', 'Batch 01 Men') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
     '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
     item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
     item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
@@ -531,7 +532,7 @@
     // Only keep bag lines that match a real product, colour and size (ignores anything tampered with)
     bag = JSON.parse(localStorage.getItem('acpanta-bag') || '[]').filter(function (l) {
       var p = l && byId[l.id];
-      return p && p.colors[l.color] && p.sizes.indexOf(l.size) !== -1 && l.qty === Math.floor(l.qty) && l.qty >= 1 && l.qty <= 20;
+      return p && Number.isInteger(l.color) && p.colors[l.color] && p.sizes.indexOf(l.size) !== -1 && l.qty === Math.floor(l.qty) && l.qty >= 1 && l.qty <= 20;
     });
   } catch (err) { bag = []; }
   function save() { try { localStorage.setItem('acpanta-bag', JSON.stringify(bag)); } catch (err) {} }

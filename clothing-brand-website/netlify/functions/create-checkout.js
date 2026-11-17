@@ -48,7 +48,8 @@ exports.handler = async (event) => {
   let i = 0;
   for (const item of items) {
     const p = byId[item && item.id];
-    const color = p && p.colors[item.color];
+    // Colour must be a real index into the product's colour list (never a property name like "constructor")
+    const color = p && Number.isInteger(item.color) && item.color >= 0 && item.color < p.colors.length ? p.colors[item.color] : null;
     const qty = Number(item && item.qty);
     if (!p || !color || !p.sizes.includes(item.size) || (p.soldOut || []).includes(item.size) || (p.sizeStock && typeof p.sizeStock[item.size] === 'number' && qty > p.sizeStock[item.size]) || !Number.isInteger(qty) || qty < 1 || qty > MAX_QTY || (typeof p.stock === 'number' && qty > p.stock)) {
       return json(400, { error: 'Something in your bag is no longer available. Please remove it and try again.' });

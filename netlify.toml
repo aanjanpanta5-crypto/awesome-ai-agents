@@ -18,6 +18,13 @@
   status = 200
   force = true
 
+# Build scripts are for deploys only, not for visitors
+[[redirects]]
+  from = "/tools/*"
+  to = "/404"
+  status = 404
+  force = true
+
 # Keep the checkout function's source out of the public site
 [[redirects]]
   from = "/netlify/*"
