@@ -217,8 +217,7 @@
   function fitBoxHTML(p) {
     if (p.digital) return '';
     var boxy = p.shape === 'boxy';
-    var gsm = (p.spec.match(/\d+\+? GSM/) || [])[0];
-    var pills = [gsm ? gsm + ' heavyweight' : 'Heavyweight'];
+    var pills = ['Premium weight · Perfect drape'];
     if ((p.details || []).some(function (d) { return /pre-shrunk/i.test(d); })) pills.push('Pre-shrunk');
     pills.push('Complimentary UK delivery');
     return '<div class="acp-fit-box"><div><strong>Fit note:</strong> ' + (boxy ?
@@ -771,7 +770,7 @@
   // Customisation previewer: garment, colour, view, placement and text, then hand off to WhatsApp or the form
   if ($('cz-preview')) {
     var CZ = { piece: 'tee', colour: 'Black', view: 'front', place: 'chest', text: 'YOUR TEXT' };
-    var CZ_PIECES = { tee: { name: 'Premium Logo Tee', gsm: '260 GSM', shape: 'tee' }, hood: { name: 'Heavyweight Logo Hoodie', gsm: '430 GSM', shape: 'hood' } };
+    var CZ_PIECES = { tee: { name: 'Premium Logo Tee', gsm: 'premium weight', shape: 'tee' }, hood: { name: 'Heavyweight Logo Hoodie', gsm: 'premium weight', shape: 'hood' } };
     var CZ_PLACES = { front: { chest: ['Centre chest', 100, 70, 13], left: ['Left chest', 122, 66, 8] }, back: { big: ['Oversized back print', 100, 106, 22], upper: ['Upper back', 100, 66, 11] } };
     var czDraw = function () {
       var g = CZ_PIECES[CZ.piece], places = CZ_PLACES[CZ.view];

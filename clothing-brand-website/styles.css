@@ -1512,3 +1512,5 @@ html, body { overflow-x: clip; }
 /* Footer brand line */
 footer.site .legal .foot-motto { display: block; margin-bottom: 6px; font-weight: 600; letter-spacing: .14em; }
 footer.site .wrap.legal { display: block; }
+/* Two stats now: share the width evenly */
+.stats-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important; }
