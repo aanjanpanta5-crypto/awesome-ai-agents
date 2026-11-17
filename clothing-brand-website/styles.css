@@ -1589,3 +1589,4 @@ footer.site .wrap.legal { display: block; }
 .rs-fig.rs-photo { aspect-ratio: 7/11; }
 .rs-fig.rs-photo picture { display: contents; }
 .rs-fig.rs-photo img { -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%); mask-image: linear-gradient(to bottom, #000 82%, transparent 100%); }
+.rs-single .rs-nav { display: none; }

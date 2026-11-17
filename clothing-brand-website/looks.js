@@ -10,16 +10,13 @@
   var ART = window.ACPANTA_ART;
 
   // A look: name, figure (what the drawn man wears), pieces = [product id, colour/design index]
+  // Only real photos are shown. To add a look: put the cut-out photo in images/ and add a line like
+  // { name: 'All black', photo: 'images/look-all-black.png', pieces: [['logo-hoodie', 0], ['logo-tee', 0]] },
   var LOOKS = [
-    { name: 'White logo tee', photo: 'images/look-white-logo-tee.png', pieces: [['logo-tee', 1]] },
-    { name: 'All black', fig: { top: 'hoodie', color: '#1d1d1f', print: 'logo', skin: '#c99272', hair: 'short' }, pieces: [['logo-hoodie', 0], ['logo-tee', 0]] },
-    { name: 'Light Up', fig: { top: 'boxy', color: '#18181a', print: 'back', skin: '#8d5a3b', hair: 'fade' }, pieces: [['boxy-hoodie', 0], ['logo-tee', 1]] },
-    { name: 'Off duty', fig: { top: 'zip', color: '#202022', print: 'logo', skin: '#e2b593', hair: 'textured' }, pieces: [['zip-hoodie', 0], ['printed-tee', 1]] },
-    { name: 'Clean white', fig: { top: 'sweat', color: '#efede8', print: 'none', skin: '#b07a55', hair: 'buzz' }, pieces: [['sweatshirt', 1], ['logo-tee', 0]] },
-    { name: 'Red mark', fig: { top: 'tee', color: '#1b1b1d', print: 'red', skin: '#6e4530', hair: 'short' }, pieces: [['printed-tee', 0], ['zip-hoodie', 0]] },
-    { name: "Don't Look Back", fig: { top: 'boxy', color: '#141416', print: 'none', skin: '#d8a984', hair: 'textured' }, pieces: [['boxy-hoodie', 1], ['logo-hoodie', 1]] }
+    { name: 'White logo tee', photo: 'images/look-white-logo-tee.png', pieces: [['logo-tee', 1]] }
   ].filter(function (l) { return l.pieces.every(function (x) { return byId[x[0]]; }); });
   var N = LOOKS.length; if (!N) return;
+  if (N < 2) root.classList.add('rs-single');
 
   function shade(hex, amt) {
     var n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
@@ -97,7 +94,7 @@
   function slot(v) {
     var l = L();
     if (v === 'exit' || v === 'hide') return { x: l[v].x, s: l[v].s, o: l[v].o, y: l[v].y, z: 1 };
-    return { x: l.x[v], s: l.s[v], o: l.o[v], y: l.y[v], z: 50 - v };
+    return { x: N < 2 ? 50 : l.x[v], s: l.s[v], o: l.o[v], y: l.y[v], z: 50 - v }; // a single look stands in the middle
   }
   function paint(el, v) {
     var st = slot(v);
