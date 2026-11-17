@@ -347,7 +347,16 @@
           offers: { '@type': 'Offer', url: url0, priceCurrency: 'GBP', price: P0.price.toFixed(2),
             availability: isSoldOut(P0) ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
             itemCondition: 'https://schema.org/NewCondition',
-            seller: { '@type': 'Organization', name: 'Acpanta' } }
+            seller: { '@type': 'Organization', name: 'Acpanta' },
+            shippingDetails: P0.digital ? undefined : { '@type': 'OfferShippingDetails',
+              shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'GBP' },
+              shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'GB' },
+              deliveryTime: { '@type': 'ShippingDeliveryTime',
+                handlingTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 2, unitCode: 'DAY' },
+                transitTime: { '@type': 'QuantitativeValue', minValue: 2, maxValue: 4, unitCode: 'DAY' } } },
+            hasMerchantReturnPolicy: { '@type': 'MerchantReturnPolicy', applicableCountry: 'GB',
+              returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow', merchantReturnDays: 14,
+              returnMethod: 'https://schema.org/ReturnByMail', returnFees: 'https://schema.org/ReturnShippingFees' } }
         });
         document.head.appendChild(ld);
         var bc = document.createElement('script'); bc.type = 'application/ld+json';
