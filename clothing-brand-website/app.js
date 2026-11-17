@@ -31,7 +31,7 @@
   // Product picture: the real photo when a variant has one, otherwise the drawing
   function artFor(p, i) {
     var c = p.colors[i] || p.colors[0];
-    if (c[2]) return '<img src="' + c[2] + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" loading="lazy" decoding="async">';
+    if (c[2]) return '<picture><source srcset="' + c[2].replace(/\.jpg$/, '.webp') + '" type="image/webp"><img src="' + c[2] + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" loading="lazy" decoding="async"></picture>';
     return art(p.shape, c[1], p.print);
   }
   // Sold out: stock 0 for the whole product, or a size listed in soldOut (e.g. soldOut: ['XL'])
@@ -442,7 +442,7 @@
   var zStage = $('zoom-stage'), zMedia = $('zoom-media');
   function zoomArt(p, i) {
     var c = p.colors[i];
-    if (c[2]) return '<img src="' + c[2].replace('.jpg', '-large.jpg') + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" draggable="false">';
+    if (c[2]) return '<picture><source srcset="' + c[2].replace('.jpg', '-large.webp') + '" type="image/webp"><img src="' + c[2].replace('.jpg', '-large.jpg') + '" alt="' + esc(c[3] || p.name + ', ' + c[0]) + '" draggable="false"></picture>';
     return art(p.shape, c[1], p.print);
   }
   function applyZoom() {
