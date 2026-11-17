@@ -11,6 +11,13 @@
 [functions]
   node_bundler = "esbuild"
 
+# acpanta.com opens straight on the shop; the brand home page stays at /index.html
+[[redirects]]
+  from = "/"
+  to = "/shop.html"
+  status = 200
+  force = true
+
 # Keep the checkout function's source out of the public site
 [[redirects]]
   from = "/netlify/*"

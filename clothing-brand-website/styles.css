@@ -1512,3 +1512,9 @@ html, body { overflow-x: clip; }
 /* Footer brand line */
 footer.site .legal .foot-motto { display: block; margin-bottom: 6px; font-weight: 600; letter-spacing: .14em; }
 footer.site .wrap.legal { display: block; }
+/* Two stats now: share the width evenly */
+.stats-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important; }
+
+/* Drop list sign-up at the end of the shop page */
+.shop-drop { margin-top: 36px; padding: 24px; border-radius: 12px; background: #0b0b0b !important; color: #f5f5f2; max-width: 560px; }
+.shop-drop .drop-form { margin: 0; }

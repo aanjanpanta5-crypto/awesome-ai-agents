@@ -217,8 +217,7 @@
   function fitBoxHTML(p) {
     if (p.digital) return '';
     var boxy = p.shape === 'boxy';
-    var gsm = (p.spec.match(/\d+\+? GSM/) || [])[0];
-    var pills = [gsm ? gsm + ' heavyweight' : 'Heavyweight'];
+    var pills = ['Substantial weight · Structured drape'];
     if ((p.details || []).some(function (d) { return /pre-shrunk/i.test(d); })) pills.push('Pre-shrunk');
     pills.push('Complimentary UK delivery');
     return '<div class="acp-fit-box"><div><strong>Fit note:</strong> ' + (boxy ?
@@ -400,7 +399,7 @@
   menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
   var item = function (href, label, note, low) { return '<li><a href="' + href + '">' + label + (note ? ' <small class="menu-note' + (low ? ' low' : '') + '">' + note + '</small>' : '') + '</a></li>'; };
   menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
-    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + '</ul>' +
+    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
     '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
     item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
     item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
@@ -771,7 +770,7 @@
   // Customisation previewer: garment, colour, view, placement and text, then hand off to WhatsApp or the form
   if ($('cz-preview')) {
     var CZ = { piece: 'tee', colour: 'Black', view: 'front', place: 'chest', text: 'YOUR TEXT' };
-    var CZ_PIECES = { tee: { name: 'Premium Logo Tee', gsm: '260 GSM', shape: 'tee' }, hood: { name: 'Heavyweight Logo Hoodie', gsm: '430 GSM', shape: 'hood' } };
+    var CZ_PIECES = { tee: { name: 'Premium Logo Tee', gsm: 'premium weight', shape: 'tee' }, hood: { name: 'Heavyweight Logo Hoodie', gsm: 'premium weight', shape: 'hood' } };
     var CZ_PLACES = { front: { chest: ['Centre chest', 100, 70, 13], left: ['Left chest', 122, 66, 8] }, back: { big: ['Oversized back print', 100, 106, 22], upper: ['Upper back', 100, 66, 11] } };
     var czDraw = function () {
       var g = CZ_PIECES[CZ.piece], places = CZ_PLACES[CZ.view];

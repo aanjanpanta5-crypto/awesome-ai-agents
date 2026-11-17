@@ -56,10 +56,24 @@
         </div>
       </form>
       <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
-      <div class="sort-row"><label class="sort-box mono" for="sort">Sort by <select id="sort"><option value="featured">Featured</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option><option value="weight">Heaviest fabric first</option></select></label></div>
+      <div class="sort-row"><label class="sort-box mono" for="sort">Sort by <select id="sort"><option value="featured">Featured</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option></select></label></div>
       <p class="result-note" id="result-note" aria-live="polite"></p>
       <div class="grid" id="grid"></div>
       <p class="shop-tip">Between sizes? Have a look at the <a href="size-guide.html">size guide</a> first.</p>
+      <div class="shop-drop" id="drop-list">
+        <form class="drop-form" name="drop-alerts" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="You’re on the list. Watch your inbox or WhatsApp before the next drop." action="shop.html#drop-list">
+          <input type="hidden" name="form-name" value="drop-alerts">
+          <p class="hp" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+          <p class="drop-title"><b>Join the list</b><span>Early access to Batch 02 and restocks. Unsubscribe any time.</span></p>
+          <div class="drop-row">
+            <label class="sr-only" for="drop-contact-shop">Email or WhatsApp number</label>
+            <input id="drop-contact-shop" name="contact" required maxlength="120" placeholder="Email or WhatsApp number" autocomplete="email">
+            <button class="btn btn-accent" type="submit">Join list</button>
+          </div>
+          <label class="drop-consent"><input type="checkbox" name="consent" value="yes" required> Yes, Acpanta can message me about new drops. I can unsubscribe any time.</label>
+          <p class="form-msg" role="status"></p>
+        </form>
+      </div>
     </div>
   </section>
 </main>
