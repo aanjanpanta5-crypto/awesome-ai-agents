@@ -217,7 +217,7 @@
   function fitBoxHTML(p) {
     if (p.digital) return '';
     var boxy = p.shape === 'boxy';
-    var pills = ['Premium weight · Perfect drape'];
+    var pills = ['Substantial weight · Structured drape'];
     if ((p.details || []).some(function (d) { return /pre-shrunk/i.test(d); })) pills.push('Pre-shrunk');
     pills.push('Complimentary UK delivery');
     return '<div class="acp-fit-box"><div><strong>Fit note:</strong> ' + (boxy ?
