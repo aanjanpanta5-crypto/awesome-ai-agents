@@ -13,7 +13,6 @@
   // Only real photos are shown. To add a look: put the cut-out photo in images/ and add a line like
   // { name: 'All black', photo: 'images/look-all-black.png', pieces: [['logo-hoodie', 0], ['logo-tee', 0]] },
   var LOOKS = [
-    { name: 'White logo tee', photo: 'images/look-white-logo-tee.png', pieces: [['logo-tee', 1]] },
     { name: 'Black logo tee', photo: 'images/look-black-logo-tee.png', pieces: [['logo-tee', 0]] }
   ].filter(function (l) { return l.pieces.every(function (x) { return byId[x[0]]; }); });
   var N = LOOKS.length; if (!N) return;
