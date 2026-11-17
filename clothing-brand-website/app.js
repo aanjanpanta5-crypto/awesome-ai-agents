@@ -532,7 +532,7 @@
     // Only keep bag lines that match a real product, colour and size (ignores anything tampered with)
     bag = JSON.parse(localStorage.getItem('acpanta-bag') || '[]').filter(function (l) {
       var p = l && byId[l.id];
-      return p && p.colors[l.color] && p.sizes.indexOf(l.size) !== -1 && l.qty === Math.floor(l.qty) && l.qty >= 1 && l.qty <= 20;
+      return p && Number.isInteger(l.color) && p.colors[l.color] && p.sizes.indexOf(l.size) !== -1 && l.qty === Math.floor(l.qty) && l.qty >= 1 && l.qty <= 20;
     });
   } catch (err) { bag = []; }
   function save() { try { localStorage.setItem('acpanta-bag', JSON.stringify(bag)); } catch (err) {} }
