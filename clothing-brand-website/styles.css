@@ -1508,3 +1508,7 @@ footer.site .wrap.foot-pay { display: flex; flex-wrap: wrap; justify-content: fl
 html, body { overflow-x: clip; }
 /* About tagline: its own line, wraps nicely on small screens */
 .page-head .tagline-tag { display: block; width: auto; min-width: 0; justify-self: center; margin-top: 10px; white-space: normal; overflow-wrap: break-word; text-align: center; line-height: 1.6; }
+
+/* Footer brand line */
+footer.site .legal .foot-motto { display: block; margin-bottom: 6px; font-weight: 600; letter-spacing: .14em; }
+footer.site .wrap.legal { display: block; }
