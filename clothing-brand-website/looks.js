@@ -11,6 +11,7 @@
 
   // A look: name, figure (what the drawn man wears), pieces = [product id, colour/design index]
   var LOOKS = [
+    { name: 'White logo tee', photo: 'images/look-white-logo-tee.png', pieces: [['logo-tee', 1]] },
     { name: 'All black', fig: { top: 'hoodie', color: '#1d1d1f', print: 'logo', skin: '#c99272', hair: 'short' }, pieces: [['logo-hoodie', 0], ['logo-tee', 0]] },
     { name: 'Light Up', fig: { top: 'boxy', color: '#18181a', print: 'back', skin: '#8d5a3b', hair: 'fade' }, pieces: [['boxy-hoodie', 0], ['logo-tee', 1]] },
     { name: 'Off duty', fig: { top: 'zip', color: '#202022', print: 'logo', skin: '#e2b593', hair: 'textured' }, pieces: [['zip-hoodie', 0], ['printed-tee', 1]] },
@@ -88,7 +89,8 @@
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'rs-fig';
     b.setAttribute('aria-label', 'Look ' + (i + 1) + ': ' + look.name);
-    b.innerHTML = look.photo ? '<img src="' + esc(look.photo) + '" alt="" draggable="false">' : man(look.fig, i);
+    if (look.photo) b.classList.add('rs-photo');
+    b.innerHTML = look.photo ? '<picture><source srcset="' + esc(look.photo.replace(/\.png$/, '.webp')) + '" type="image/webp"><img src="' + esc(look.photo) + '" alt="" draggable="false"></picture>' : man(look.fig, i);
     b.addEventListener('click', function () { if (!dragged) goTo(i); });
     track.appendChild(b); b._vis = null; return b;
   });
@@ -122,7 +124,7 @@
     var look = LOOKS[active];
     pill.classList.remove('rs-in'); void pill.offsetWidth;
     pill.innerHTML = '<b>' + pad(active + 1) + '</b>' + esc(look.name); pill.classList.add('rs-in');
-    countEl.textContent = look.pieces.length + ' pieces';
+    countEl.textContent = look.pieces.length + (look.pieces.length === 1 ? ' piece' : ' pieces');
     var total = 0;
     list.innerHTML = look.pieces.map(function (x, j) {
       var p = byId[x[0]], col = p.colors[x[1]] || p.colors[0]; total += p.price;

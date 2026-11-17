@@ -1585,3 +1585,7 @@ footer.site .wrap.legal { display: block; }
   .rs-card { flex: 0 0 64%; scroll-snap-align: start; }
 }
 @media (prefers-reduced-motion: reduce) { .rs { --rs-speed: .01s; } .rs-card, .rs-pill.rs-in { animation: none; } }
+/* Real photo looks: wider frame, bottom edge fades out softly */
+.rs-fig.rs-photo { aspect-ratio: 7/11; }
+.rs-fig.rs-photo picture { display: contents; }
+.rs-fig.rs-photo img { -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%); mask-image: linear-gradient(to bottom, #000 82%, transparent 100%); }
