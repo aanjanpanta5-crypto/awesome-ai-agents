@@ -12,8 +12,12 @@
   // A look: name, figure (what the drawn man wears), pieces = [product id, colour/design index]
   // Only real photos are shown. To add a look: put the cut-out photo in images/ and add a line like
   // { name: 'All black', photo: 'images/look-all-black.png', pieces: [['logo-hoodie', 0], ['logo-tee', 0]] },
+  // Custom leather jackets aren't on sale yet: shown with a waitlist link, never a price
+  var LEATHER = { name: 'Custom leather jacket', note: 'Coming soon · made to order', href: 'customisation.html#leather' };
   var LOOKS = [
-    { name: 'Black logo tee', photo: 'images/look-black-logo-tee.png', pieces: [['logo-tee', 0]] }
+    { name: 'Black logo tee', photo: 'images/look-black-logo-tee.png', pieces: [['logo-tee', 0]] },
+    { name: 'Tee under leather', photo: 'images/look-leather-1.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Quilted leather', photo: 'images/look-leather-2.png', pieces: [['logo-tee', 0]], soon: LEATHER }
   ].filter(function (l) { return l.pieces.every(function (x) { return byId[x[0]]; }); });
   var N = LOOKS.length; if (!N) return;
   if (N < 2) root.classList.add('rs-single');
@@ -121,15 +125,21 @@
     var look = LOOKS[active];
     pill.classList.remove('rs-in'); void pill.offsetWidth;
     pill.innerHTML = '<b>' + pad(active + 1) + '</b>' + esc(look.name); pill.classList.add('rs-in');
-    countEl.textContent = look.pieces.length + (look.pieces.length === 1 ? ' piece' : ' pieces');
+    var nPieces = look.pieces.length + (look.soon ? 1 : 0);
+    countEl.textContent = nPieces + (nPieces === 1 ? ' piece' : ' pieces');
     var total = 0;
+    // A piece that isn't on sale yet: no price, links to its waitlist
+    var soonCard = look.soon ? '<article class="rs-card rs-soon" style="--i:' + look.pieces.length + '"><div class="rs-media"><a class="rs-media-link" href="' + esc(look.soon.href) + '" aria-label="' + esc(look.soon.name) + ', coming soon">' +
+      '<span class="rs-soon-mark">Coming<br>soon</span></a></div>' +
+      '<h4 class="rs-card-name"><a href="' + esc(look.soon.href) + '">' + esc(look.soon.name) + '</a></h4><p class="rs-card-desc">' + esc(look.soon.note) + '</p>' +
+      '<p class="rs-card-price"><a href="' + esc(look.soon.href) + '">Join the waitlist →</a></p></article>' : '';
     list.innerHTML = look.pieces.map(function (x, j) {
       var p = byId[x[0]], col = p.colors[x[1]] || p.colors[0]; total += p.price;
       return '<article class="rs-card" style="--i:' + j + '"><div class="rs-media"><a class="rs-media-link" href="' + link(p) + '" aria-label="' + esc(p.name) + '">' + (ART ? ART(p, x[1]) : '') + '</a>' +
         '<a class="rs-add" href="' + link(p) + '" aria-label="Choose a size for the ' + esc(p.name) + '">+</a></div>' +
         '<h4 class="rs-card-name"><a href="' + link(p) + '">' + esc(p.name) + '</a></h4><p class="rs-card-desc">' + esc(col[0]) + ' · ' + esc(p.spec.split(' · ')[0]) + '</p>' +
         '<p class="rs-card-price">£' + p.price + '</p></article>';
-    }).join('');
+    }).join('') + soonCard;
     list.scrollTop = 0; list.scrollLeft = 0;
     cta.href = link(byId[look.pieces[0][0]]);
     cta.textContent = 'Shop the look · £' + total;
