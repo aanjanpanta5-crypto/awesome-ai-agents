@@ -766,7 +766,7 @@
       $('gsm-fabric').textContent = g.fabric || (g.gsm + (g.plus ? '+' : '') + ' GSM heavyweight cotton');
       var cta = $('gsm-cta');
       if (p) { cta.href = productLink(p); cta.textContent = 'Shop the ' + p.name + ' →'; cta.classList.remove('is-base'); }
-      else { cta.href = '#weights'; cta.textContent = 'Compare with our 260 GSM tee →'; cta.classList.add('is-base'); }
+      else { cta.href = '#weights'; cta.textContent = 'Compare with our tee →'; cta.classList.add('is-base'); }
     };
     gsmSlider.addEventListener('input', function () { showGsm(+gsmSlider.value); });
     gsmSteps.addEventListener('click', function (e) { var b = e.target.closest('[data-gi]'); if (b) showGsm(+b.dataset.gi); });

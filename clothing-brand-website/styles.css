@@ -1590,3 +1590,12 @@ footer.site .wrap.legal { display: block; }
 .rs-fig.rs-photo picture { display: contents; }
 .rs-fig.rs-photo img { -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%); mask-image: linear-gradient(to bottom, #000 82%, transparent 100%); }
 .rs-single .rs-nav { display: none; }
+
+/* Shop the look: a piece that's coming soon (no price) */
+.rs-soon .rs-media { display: grid; }
+.rs-soon-mark { font: 500 22px/1.05 'Cormorant Garamond', Georgia, serif; text-align: center; color: #fff; letter-spacing: .02em; }
+.rs-soon .rs-media { background: linear-gradient(135deg, #1a1a1c, #3a2a26); }
+.rs-soon .rs-card-price a { color: var(--rs-accent); text-decoration: none; }
+/* Customisation page: leather jackets waitlist */
+.leather-soon { padding: 48px 0; border-top: 1px solid var(--line); scroll-margin-top: 150px; }
+.leather-soon .waitlist-form { max-width: 560px; margin-top: 18px; }
