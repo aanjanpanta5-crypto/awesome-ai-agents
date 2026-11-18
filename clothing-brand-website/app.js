@@ -550,6 +550,18 @@
     if (w.clientHeight < 110) w.classList.add('is-hidden');
   }
   window.addEventListener('resize', fitEmblem);
+  // Complete the look: each piece's natural partner (tee with its hoodie, and so on)
+  var PAIRS = { 'logo-tee': 'logo-hoodie', 'printed-tee': 'zip-hoodie', 'logo-hoodie': 'logo-tee',
+    'zip-hoodie': 'printed-tee', 'boxy-hoodie': 'logo-tee', 'sweatshirt': 'logo-tee' };
+  // Partner of the most recently added piece that isn't already in the bag or sold out, in the same colour when it exists
+  function completeTheLook() {
+    for (var i = bag.length - 1; i >= 0; i--) {
+      var p = byId[PAIRS[bag[i].id]];
+      if (!p || isSoldOut(p) || bag.some(function (l) { return l.id === p.id; })) continue;
+      return { p: p, c: p.colors[bag[i].color] && byId[bag[i].id].variantLabel !== 'Design' ? bag[i].color : 0 };
+    }
+    return null;
+  }
   function renderBag() {
     setTimeout(fitEmblem, 0);
     if (!$('bag-extra') && $('lines')) { var bx = document.createElement('div'); bx.id = 'bag-extra'; $('lines').parentNode.insertBefore(bx, $('lines').nextSibling); }
@@ -567,10 +579,10 @@
     }).join('') : '<p class="empty">Your bag is empty. Pick a size on any piece and add it here.</p>';
     var extra = $('bag-extra');
     if (extra) {
-      var tee = byId['logo-tee'], hasTee = bag.some(function (l) { return l.id === 'logo-tee'; });
+      var look = completeTheLook();
       extra.innerHTML = '<p class="batch-note mono">First batch: just 185 pieces in total</p><p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
         (bag.some(function (l) { return byId[l.id] && !byId[l.id].digital; }) ? '<p class="eta-line">🗓️ ' + etaText() + '</p>' : '') +
-        (bag.length && tee && !hasTee && !isSoldOut(tee) ? '<a class="xsell" href="' + productLink(tee) + '"><span class="xsell-art">' + artFor(tee, 0) + '</span><span><b>Complete the look</b><span>' + esc(tee.name) + ' · 260 GSM · ' + money(tee.price) + '</span></span><span class="xsell-go">View →</span></a>' : '');
+        (look ? '<a class="xsell" href="' + productLink(look.p) + '"><span class="xsell-art">' + artFor(look.p, look.c) + '</span><span><b>Complete the look</b><span>' + esc(look.p.name) + ' · ' + esc(look.p.colors[look.c][0]) + ' · ' + money(look.p.price) + '</span></span><span class="xsell-go">View →</span></a>' : '');
     }
     $('subtotal').textContent = money(sub);
     $('shipping').textContent = sub === 0 ? '—' : 'Free';
