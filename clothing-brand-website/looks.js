@@ -15,9 +15,19 @@
   // Custom leather jackets aren't on sale yet: shown with a waitlist link, never a price
   var LEATHER = { name: 'Custom leather jacket', note: 'Coming soon · made to order', href: 'customisation.html#leather' };
   var LOOKS = [
-    { name: 'Black logo tee', photo: 'images/look-black-logo-tee.png', pieces: [['logo-tee', 0]] },
-    { name: 'Tee under leather', photo: 'images/look-leather-1.png', pieces: [['logo-tee', 0]], soon: LEATHER },
-    { name: 'Quilted leather', photo: 'images/look-leather-2.png', pieces: [['logo-tee', 0]], soon: LEATHER }
+    // Each man in 4 shots (a full, b mirrored, c close-up, d mirrored close-up), mixed so the same man never repeats in a row
+    { name: 'Black logo tee', photo: 'images/look-tee-a.png', pieces: [['logo-tee', 0]] },
+    { name: 'Tee under leather', photo: 'images/look-leather-1-a.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Quilted leather', photo: 'images/look-leather-2-a.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Black logo tee · close', photo: 'images/look-tee-c.png', pieces: [['logo-tee', 0]] },
+    { name: 'Tee under leather · close', photo: 'images/look-leather-1-c.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Quilted leather · close', photo: 'images/look-leather-2-c.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Black logo tee · turned', photo: 'images/look-tee-b.png', pieces: [['logo-tee', 0]] },
+    { name: 'Tee under leather · turned', photo: 'images/look-leather-1-b.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Quilted leather · turned', photo: 'images/look-leather-2-b.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Black logo tee · detail', photo: 'images/look-tee-d.png', pieces: [['logo-tee', 0]] },
+    { name: 'Tee under leather · detail', photo: 'images/look-leather-1-d.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Quilted leather · detail', photo: 'images/look-leather-2-d.png', pieces: [['logo-tee', 0]], soon: LEATHER }
   ].filter(function (l) { return l.pieces.every(function (x) { return byId[x[0]]; }); });
   var N = LOOKS.length; if (!N) return;
   if (N < 2) root.classList.add('rs-single');
