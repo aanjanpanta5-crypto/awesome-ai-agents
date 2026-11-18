@@ -6,7 +6,7 @@
   var SIZES = ['S', 'M', 'L', 'XL'];
   var BW = [['Black', '#1c1c1c'], ['White', '#f3f3f1']];
   var PRODUCTS = [
-    { id: 'logo-tee', name: 'Premium Logo Tee', cat: 'T-shirts', price: 22, shape: 'tee', print: 'logo', spec: 'Substantial weight · Structured drape · Acpanta logo', colors: BW, sizes: SIZES, stock: 100, badge: 'New' },
+    { id: 'logo-tee', name: 'Premium Logo Tee', cat: 'T-shirts', price: 22, shape: 'tee', print: 'logo', spec: 'Substantial weight · Structured drape · Acpanta logo', colors: [['Black', '#1c1c1c', 'images/logo-tee-black.jpg', 'Model wearing the black Acpanta Logo Tee'], ['White', '#f3f3f1']], sizes: SIZES, stock: 100, badge: 'New' },
     { id: 'printed-tee', name: 'Printed Tee', cat: 'T-shirts', price: 24, shape: 'tee', print: 'graphic', spec: 'Substantial weight · Printed front', colors: BW, sizes: SIZES, stock: 20 },
     { id: 'logo-hoodie', name: 'Heavyweight Logo Hoodie', cat: 'Hoodies', price: 42, shape: 'hood', print: 'logo', spec: 'Our heaviest weight · Dense, structured feel · Acpanta logo', colors: BW, sizes: SIZES, stock: 20 },
     { id: 'boxy-hoodie', name: 'Premium Boxy Hoodie', cat: 'Hoodies', price: 50, shape: 'boxy', spec: 'Dense heavyweight cotton · Boxy cut · Back print or plain', variantLabel: 'Design',
