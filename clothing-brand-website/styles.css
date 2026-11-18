@@ -1616,3 +1616,13 @@ footer.site .wrap.legal { display: block; }
   .stl-card { scroll-snap-align: start; }
 }
 .art .badge { width: max-content; white-space: nowrap; }
+
+/* Shop the look: keep all slider layers inside the section, so the sticky header always stays on top */
+.rs { isolation: isolate; }
+@media (max-width: 820px) {
+  .rs-stage { height: clamp(420px, 64vh, 520px); }
+  .rs-track { top: 84px; }
+}
+/* Touch screens pause animations to stop flashing; the slider's one-off fade-ins must still play,
+   or its product cards stay invisible */
+@media (pointer: coarse) { .rs-card, .rs-pill.rs-in { animation-play-state: running !important; } }
