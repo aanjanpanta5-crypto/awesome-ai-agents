@@ -61,11 +61,15 @@
       <p class="result-note" id="result-note" aria-live="polite"></p>
       <div class="grid" id="grid"></div>
       <p class="shop-tip">Between sizes? Have a look at the <a href="size-guide.html">size guide</a> first.</p>
+      <section class="shop-looks" aria-labelledby="stl-title">
+        <div class="stl-head"><h2 id="stl-title">Shop the look</h2><a href="looks.html">See all 12 looks →</a></div>
+        <div class="stl-row"><a class="stl-card" href="looks.html"><picture><source srcset="images/look-tee-a.webp" type="image/webp"><img src="images/look-tee-a.png" alt="Black logo tee" decoding="async"></picture><span>Black logo tee</span></a><a class="stl-card" href="looks.html"><picture><source srcset="images/look-leather-1-a.webp" type="image/webp"><img src="images/look-leather-1-a.png" alt="Tee under leather" decoding="async"></picture><span>Tee under leather</span></a><a class="stl-card" href="looks.html"><picture><source srcset="images/look-leather-2-a.webp" type="image/webp"><img src="images/look-leather-2-a.png" alt="Quilted leather" decoding="async"></picture><span>Quilted leather</span></a></div>
+      </section>
       <div class="shop-drop" id="drop-list">
-        <form class="drop-form" name="drop-alerts" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="You’re on the list. Watch your inbox or WhatsApp before the next drop." action="shop.html#drop-list">
+        <form class="drop-form" name="drop-alerts" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="You’re on the list. Use code WELCOME10 at checkout for 10% off your first order." action="shop.html#drop-list">
           <input type="hidden" name="form-name" value="drop-alerts">
           <p class="hp" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
-          <p class="drop-title"><b>Join the list</b><span>Early access to Batch 02 and restocks. Unsubscribe any time.</span></p>
+          <p class="drop-title"><b>Join the list · get 10% off your first order</b><span>Early access to Batch 02 and restocks. Unsubscribe any time.</span></p>
           <div class="drop-row">
             <label class="sr-only" for="drop-contact-shop">Email or WhatsApp number</label>
             <input id="drop-contact-shop" name="contact" required maxlength="120" placeholder="Email or WhatsApp number" autocomplete="email">
