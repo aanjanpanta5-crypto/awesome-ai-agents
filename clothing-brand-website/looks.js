@@ -92,7 +92,7 @@
   var mq = matchMedia('(max-width: 820px)');
   var LAYOUT = {
     desktop: { x: [80, 62, 46.5, 33.5, 22.5, 13.5], s: [1, .8, .66, .56, .48, .42], o: [1, 1, 1, .92, .7, .42], y: [0, 8, 14, 19, 23, 26], exit: { x: 106, s: 1.1, o: 0, y: 0 }, hide: { x: 6, s: .36, o: 0, y: 28 } },
-    mobile: { x: [72, 44, 24, 9], s: [1, .7, .53, .43], o: [1, 1, .75, .4], y: [0, 6, 10, 13], exit: { x: 112, s: 1.1, o: 0, y: 0 }, hide: { x: -2, s: .34, o: 0, y: 14 } }
+    mobile: { x: [64, 38, 20, 7], s: [1, .7, .53, .43], o: [1, 1, .75, .4], y: [0, 6, 10, 13], exit: { x: 112, s: 1.1, o: 0, y: 0 }, hide: { x: -4, s: .34, o: 0, y: 14 } }
   };
   var L = function () { return mq.matches ? LAYOUT.mobile : LAYOUT.desktop; };
 
