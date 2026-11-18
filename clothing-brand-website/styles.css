@@ -1626,3 +1626,18 @@ footer.site .wrap.legal { display: block; }
 /* Touch screens pause animations to stop flashing; the slider's one-off fade-ins must still play,
    or its product cards stay invisible */
 @media (pointer: coarse) { .rs-card, .rs-pill.rs-in { animation-play-state: running !important; } }
+
+/* ===== Shop the look: holographic touches (same foil as the rest of the site) ===== */
+.rs .rs-title { background: var(--holo-dark) !important; background-size: 300% 100% !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; -webkit-text-fill-color: transparent !important; animation: holo-shift 10s linear infinite !important; }
+.rs-pill { background: var(--foil); color: #141414; box-shadow: inset 0 0 0 1px rgba(255,255,255,.9), 0 4px 14px rgba(120,90,200,.18); }
+.rs-pill b { opacity: .6; }
+.rs-cta { position: relative; background: var(--foil); background-size: 300% 100%; color: #141414; font-weight: 600; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85), 2px 3px 0 #141414; animation: holo-shift 8s linear infinite; }
+.rs-cta:hover { background: var(--foil); background-size: 300% 100%; color: #141414; transform: translateY(-1px); }
+.rs-btn:hover { background: var(--foil); color: #141414; border-color: transparent; }
+.rs-bar i { background: var(--holo-dark); background-size: 300% 100%; animation: holo-shift 6s linear infinite; }
+.rs-card { box-shadow: 0 0 0 1.5px transparent, 0 10px 26px -14px rgba(0,0,0,.18); background: linear-gradient(#fff, #fff) padding-box, var(--holo-light) border-box; border: 1.5px solid transparent; }
+.rs-card-price { display: inline-block; padding: 2px 8px; border-radius: 4px; background: var(--foil); color: #141414; }
+.rs-soon .rs-card-price { background: none; padding: 0; }
+.rs-soon .rs-media { background: linear-gradient(135deg, #1a1a1c, #2a1f36), var(--holo-dark); }
+.rs-soon-mark { background: var(--holo-light); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: holo-shift 8s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .rs .rs-title, .rs-cta, .rs-bar i, .rs-soon-mark { animation: none !important; } }
