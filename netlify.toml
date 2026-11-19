@@ -33,6 +33,12 @@
   force = true
 
 # Security headers for every page
+# Photos are cached for a week on visitors' phones. When replacing a photo, give it a new file name.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
 [[headers]]
   for = "/*"
   [headers.values]

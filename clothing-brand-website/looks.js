@@ -101,7 +101,7 @@
     b.type = 'button'; b.className = 'rs-fig';
     b.setAttribute('aria-label', 'Look ' + (i + 1) + ': ' + look.name);
     if (look.photo) b.classList.add('rs-photo');
-    b.innerHTML = look.photo ? '<picture><source srcset="' + esc(look.photo.replace(/\.png$/, '.webp')) + '" type="image/webp"><img src="' + esc(look.photo) + '" alt="" draggable="false"></picture>' : man(look.fig, i);
+    b.innerHTML = look.photo ? '<picture><source srcset="' + esc(look.photo.replace(/\.png$/, '.webp')) + '" type="image/webp"><img src="' + esc(look.photo) + '" alt="" draggable="false"' + (i ? ' decoding="async"' : ' fetchpriority="high"') + '></picture>' : man(look.fig, i);
     b.addEventListener('click', function () { if (!dragged) goTo(i); });
     track.appendChild(b); b._vis = null; return b;
   });
