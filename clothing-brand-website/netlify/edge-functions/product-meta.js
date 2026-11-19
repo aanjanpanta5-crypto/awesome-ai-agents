@@ -48,6 +48,8 @@ export default async (request, context) => {
     html = setMeta(html, 'name', 'twitter:image', image);
     if (p.photo) html = html.replace(/<meta property="og:image:(width|height)" content="[^"]*">\n?/g, '');
     if (!html.includes('rel="canonical"')) html = html.replace('</head>', `<link rel="canonical" href="${esc(link)}">\n</head>`);
+    // Start loading the main photo straight away instead of waiting for app.js to draw the page
+    if (p.photo && !url.searchParams.get('c')) html = html.replace('</head>', `<link rel="preload" as="image" href="/${esc(p.photo.replace(/\.jpg$/, '.webp'))}" type="image/webp" fetchpriority="high">\n</head>`);
 
     const headers = new Headers(response.headers);
     headers.delete('content-length');
