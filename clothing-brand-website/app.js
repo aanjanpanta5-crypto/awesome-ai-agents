@@ -72,6 +72,7 @@
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   var PID = '';
   try { PID = new URLSearchParams(location.search).get('id') || ''; } catch (err) {}
+  var PAY_IN_3 = '<p class="pay-in-3">Or pay in 3 interest-free instalments with <b>Klarna</b> at checkout. Subject to approval.</p>';
   function productLink(p) { return 'product.html?id=' + encodeURIComponent(p.id); }
   // Saved items and recently viewed, kept only in this browser
   function readList(k) { try { var v = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(v) ? v : []; } catch (err) { return []; } }
@@ -103,12 +104,21 @@
     for (var i = 0; i < cats.length; i++) if (slug(cats[i]) === h) return cats[i];
     return 'All';
   }
+  var CAT_INTRO = {
+    'All': 'Heavy T-shirts, hoodies and sweatshirts, made in small batches and posted from London. Batch 01 is 185 pieces in total.',
+    'T-shirts': 'Heavyweight cotton T-shirts with a structured drape: the Premium Logo Tee with a small chest logo, and the Printed Tee with a large front print. Black or white, sizes S to XL.',
+    'Hoodies': 'Heavyweight hoodies: the Logo Hoodie, the full-zip Zip Hoodie and the Premium Boxy Hoodie with a large back print. Sizes S to XL.',
+    'Sweatshirts': 'A dense, heavyweight crew-neck sweatshirt with a soft, structured drape. Black or white, sizes S to XL.',
+    'Gift cards': 'Digital gift cards for £25, £50 or £100, emailed within 1 working day and valid for 12 months.'
+  };
   function syncFilters() {
     [].forEach.call(filters.children, function (x) { x.setAttribute('aria-pressed', x.dataset.cat === active); });
+    if ($('cat-intro')) $('cat-intro').textContent = CAT_INTRO[active] || CAT_INTRO.All;
   }
   if (filters) {
     active = fromHash();
     filters.innerHTML = cats.map(function (c) { return '<button class="chip" data-cat="' + c + '" aria-pressed="' + (c === active) + '">' + c + '</button>'; }).join('');
+    syncFilters();
     filters.addEventListener('click', function (e) {
       var b = e.target.closest('[data-cat]'); if (!b) return;
       active = b.dataset.cat; syncFilters(); renderGrid();
@@ -238,7 +248,7 @@
       '<nav class="crumbs mono" aria-label="Breadcrumb"><a href="shop.html">Shop</a> / <a href="shop.html#' + slug(p.cat) + '">' + esc(p.cat) + '</a></nav>' +
       (p.digital ? '<p class="batch-label mono">Digital gift card</p>' : '<p class="batch-label mono">Batch 01 · one of 185 pieces</p>') +
       '<h1>' + esc(p.name) + '</h1>' +
-      '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
+      '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' + (p.digital ? '' : PAY_IN_3) +
       '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + fitBoxHTML(p) + buyHTML(p) + saveBtn(p, 'save-btn') +
       (p.digital ? '' : '<details class="size-finder"><summary>📏 Find my size</summary><div class="sf-body"><label>Your chest, measured around the fullest part<span class="sf-row"><input type="number" inputmode="decimal" min="20" max="160" step="0.5" data-sf-chest placeholder="e.g. 100"><select data-sf-unit aria-label="Unit"><option value="cm">cm</option><option value="in">in</option></select></span></label><p class="sf-out" data-sf-out aria-live="polite">Enter your chest to see your size.</p></div></details>') +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +

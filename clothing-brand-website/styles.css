@@ -1691,3 +1691,14 @@ header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: acp-flip 7
 @media (prefers-reduced-motion: reduce) {
   header.site .logo-mark.logo-holo, footer.site .logo-mark, .bag-logo, .hero-seal { animation: none !important; }
 }
+
+/* ---------- Shop intro text, Pay in 3, offers ---------- */
+.cat-intro { max-width: 70ch; margin: 4px 0 18px; color: var(--muted); font-size: .95rem; line-height: 1.55; }
+.pay-in-3 { margin: 6px 0 0; font-size: .85rem; color: var(--muted); }
+.pay-in-3 b { color: var(--ink); }
+.offers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 18px; max-width: 760px; }
+.offer { padding: 18px 20px; border: 1px solid var(--line); border-radius: 12px; background: #fdfcfa; }
+.offer h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.offer p { margin: 0 0 10px; font-size: .92rem; line-height: 1.5; color: var(--muted); }
+.offer a { font-weight: 600; color: var(--ink); }
+.offer-terms { grid-column: 1 / -1; margin: 0; font-size: .75rem; }
