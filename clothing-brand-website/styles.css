@@ -1604,6 +1604,7 @@ footer.site .wrap.legal { display: block; }
 .stl-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
 .stl-head h2 { margin: 0; }
 .stl-head a { font-weight: 600; white-space: nowrap; }
+.stl-links { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .stl-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .stl-card { display: grid; text-decoration: none; color: var(--ink); background: radial-gradient(ellipse 80% 70% at 50% 40%, #fdfcfa, #eeede8); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .stl-card picture { display: block; aspect-ratio: 4/5; }
@@ -1642,3 +1643,40 @@ footer.site .wrap.legal { display: block; }
 .rs-soon .rs-media { background: linear-gradient(135deg, #1a1a1c, #2a1f36), var(--holo-dark); }
 .rs-soon-mark { background: var(--holo-light); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: holo-shift 8s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .rs .rs-title, .rs-cta, .rs-bar i, .rs-soon-mark { animation: none !important; } }
+
+/* ---------- Batch 01: the series (batch-01.html) ---------- */
+/* Transitions, not animations, so the touch-screen animation pause doesn't hide anything */
+.ep-page { background: #0b0b0b; color: #efebe3; }
+.ep-intro { position: fixed; inset: 0; z-index: 100; display: grid; place-content: center; text-align: center; gap: 6px; background: #050505; color: #efebe3; cursor: pointer; transition: opacity .7s ease; }
+.ep-intro-out { opacity: 0; pointer-events: none; }
+.ep-intro-brand { margin: 0; font: 600 .8rem/1 'Jost', sans-serif; letter-spacing: .5em; text-transform: uppercase; opacity: .7; }
+.ep-intro-title { margin: 0; font: 500 clamp(3.4rem, 14vw, 8rem)/1 'Cormorant Garamond', serif; }
+.ep-intro-skip { position: absolute; bottom: 28px; left: 0; right: 0; margin: 0; font-size: .7rem; opacity: .45; }
+.ep-hero { min-height: 72vh; display: grid; place-content: center; text-align: center; padding: 64px 20px; background: radial-gradient(ellipse 70% 60% at 50% 40%, #1d1a22, #0b0b0b); }
+.ep-kicker, .ep-num { margin: 0 0 10px; font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #a8a29a; }
+.ep-title { margin: 0; font: 500 clamp(3.6rem, 13vw, 8.5rem)/.95 'Cormorant Garamond', serif; color: #efebe3; }
+.ep-title em, .ep-name em, .ep-intro-title em { font-style: italic; }
+.ep-sub { max-width: 34ch; margin: 18px auto 0; font: 400 1.05rem/1.55 'Jost', sans-serif; color: #cfc9c0; }
+.ep-scroll { margin: 40px 0 0; font-size: .7rem; letter-spacing: .25em; color: #8d877e; }
+.ep-list { display: grid; gap: 0; }
+.ep { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: clamp(24px, 5vw, 72px); padding: clamp(48px, 9vw, 110px) clamp(16px, 6vw, 96px); border-top: 1px solid #1f1d1b; }
+.ep-flip .ep-photo { order: 2; }
+.ep-photo { display: block; border-radius: 6px; overflow: hidden; background: radial-gradient(ellipse 80% 70% at 50% 40%, #f4f2ec, #dedbd3); aspect-ratio: 4 / 5; max-height: 78vh; }
+.ep-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; display: block; }
+.ep-name { margin: 0; font: 500 clamp(2.4rem, 6vw, 4.4rem)/1 'Cormorant Garamond', serif; color: #efebe3; }
+.ep-piece { margin: 14px 0 0; font: 500 1.05rem/1.4 'Jost', sans-serif; color: #efebe3; }
+.ep-price { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 4px; background: var(--foil); color: #141414; font-weight: 600; }
+.ep-line { max-width: 40ch; margin: 10px 0 0; font: 400 .98rem/1.6 'Jost', sans-serif; color: #b9b3aa; }
+.ep-cta { display: inline-block; margin-top: 24px; padding: 12px 20px; border: 1px solid #efebe3; border-radius: 999px; color: #efebe3; text-decoration: none; font: 500 .95rem/1 'Jost', sans-serif; transition: background .2s, color .2s; }
+.ep-cta:hover, .ep-cta:focus-visible { background: #efebe3; color: #0b0b0b; }
+.ep-finale { padding: clamp(56px, 10vw, 120px) 20px; text-align: center; border-top: 1px solid #1f1d1b; }
+.ep-finale .ep-line { margin-left: auto; margin-right: auto; }
+.ep-finale .shop-drop { margin: 32px auto 0; text-align: left; border: 1px solid #262320; }
+.ep-reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+.ep-reveal.ep-in { opacity: 1; transform: none; }
+@media (max-width: 760px) {
+  .ep { grid-template-columns: 1fr; gap: 22px; }
+  .ep-flip .ep-photo { order: 0; }
+  .ep-photo { max-height: 70vh; }
+}
+@media (prefers-reduced-motion: reduce) { .ep-reveal { opacity: 1; transform: none; transition: none; } .ep-intro { display: none; } }

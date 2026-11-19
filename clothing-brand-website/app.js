@@ -329,6 +329,8 @@
   var pdpEl = $('pdp');
   if (pdpEl) {
     var P0 = byId[PID];
+    // ?c=1 opens a specific colour/design (used by the Batch 01 page)
+    if (P0) { var c0i = +new URLSearchParams(location.search).get('c'); if (Number.isInteger(c0i) && P0.colors[c0i]) P0.sel = c0i; }
     if (!P0) {
       pdpEl.innerHTML = '<div class="pdp-missing"><h1>We can\'t find that piece</h1><p>It may have sold out or moved. Have a look at everything we have.</p><p><a class="btn btn-accent" href="shop.html">Shop all</a></p></div>';
     } else {
@@ -400,7 +402,7 @@
   menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
   var item = function (href, label, note, low) { return '<li><a href="' + href + '">' + label + (note ? ' <small class="menu-note' + (low ? ' low' : '') + '">' + note + '</small>' : '') + '</a></li>'; };
   menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
-    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + item('looks.html', 'Shop the look', 'Batch 01 Men') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
+    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + item('looks.html', 'Shop the look', 'Batch 01 Men') + item('batch-01.html', 'Batch 01', 'The series') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
     '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
     item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
     item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
