@@ -1,0 +1,6 @@
+# How to report a security problem with acpanta.com (RFC 9116).
+# Update the Expires date before it passes (it should stay less than a year ahead).
+Contact: https://wa.me/447448795690
+Expires: 2027-11-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://acpanta.com/.well-known/security.txt
