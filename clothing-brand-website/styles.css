@@ -1681,3 +1681,13 @@ footer.site .wrap.legal { display: block; }
   .ep-photo { max-height: 70vh; }
 }
 @media (prefers-reduced-motion: reduce) { .ep-reveal { opacity: 1; transform: none; transition: none; } .ep-intro { display: none; } }
+
+/* ---------- Only the Acpanta logo flips (everywhere it appears) ---------- */
+@keyframes acp-flip { 0% { transform: perspective(500px) rotateY(0deg); } 45%, 100% { transform: perspective(500px) rotateY(360deg); } }
+@keyframes acp-seal-flip { 0% { transform: perspective(700px) rotateY(0deg) rotate(-8deg); } 45%, 100% { transform: perspective(700px) rotateY(360deg) rotate(-8deg); } }
+header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: acp-flip 7s ease-in-out infinite, shine360 6s linear infinite !important; animation-play-state: running !important; }
+.bag-logo { animation: acp-flip 7s ease-in-out infinite !important; animation-play-state: running !important; }
+.hero-seal { animation: acp-seal-flip 6s ease-in-out infinite !important; animation-play-state: running !important; }
+@media (prefers-reduced-motion: reduce) {
+  header.site .logo-mark.logo-holo, footer.site .logo-mark, .bag-logo, .hero-seal { animation: none !important; }
+}
