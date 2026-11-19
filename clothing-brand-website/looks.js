@@ -101,7 +101,9 @@
     b.type = 'button'; b.className = 'rs-fig';
     b.setAttribute('aria-label', 'Look ' + (i + 1) + ': ' + look.name);
     if (look.photo) b.classList.add('rs-photo');
-    b.innerHTML = look.photo ? '<picture><source srcset="' + esc(look.photo.replace(/\.png$/, '.webp')) + '" type="image/webp"><img src="' + esc(look.photo) + '" alt="" draggable="false"' + (i ? ' decoding="async"' : ' fetchpriority="high"') + '></picture>' : man(look.fig, i);
+    // Only the first 5 photos load at once; the rest load just before they slide into view (see paint)
+    var a = i < 5 ? '' : 'data-';
+    b.innerHTML = look.photo ? '<picture><source ' + a + 'srcset="' + esc(look.photo.replace(/\.png$/, '.webp')) + '" type="image/webp"><img ' + a + 'src="' + esc(look.photo) + '" alt="" draggable="false"' + (i ? ' decoding="async"' : ' fetchpriority="high"') + '></picture>' : man(look.fig, i);
     b.addEventListener('click', function () { if (!dragged) goTo(i); });
     track.appendChild(b); b._vis = null; return b;
   });
@@ -110,7 +112,13 @@
     if (v === 'exit' || v === 'hide') return { x: l[v].x, s: l[v].s, o: l[v].o, y: l[v].y, z: 1 };
     return { x: N < 2 ? 50 : l.x[v], s: l.s[v], o: l.o[v], y: l.y[v], z: 50 - v }; // a single look stands in the middle
   }
+  function load(el) {
+    var src = el.querySelector('source[data-srcset]'), img = el.querySelector('img[data-src]');
+    if (src) { src.srcset = src.dataset.srcset; src.removeAttribute('data-srcset'); }
+    if (img) { img.src = img.dataset.src; img.removeAttribute('data-src'); }
+  }
   function paint(el, v) {
+    if (typeof v === 'number') load(el);
     var st = slot(v);
     el.style.left = st.x + '%'; el.style.transform = 'translate(-50%,' + (-st.y) + 'px) scale(' + st.s + ')';
     el.style.opacity = st.o; el.style.zIndex = st.z;
@@ -130,6 +138,7 @@
     var jumps = plan.filter(function (p) { return p.jump; });
     if (jumps.length) instantly(jumps.map(function (p) { return p.el; }), function () { jumps.forEach(function (p) { paint(p.el, p.jump); }); });
     plan.forEach(function (p) { paint(p.el, p.target); });
+    load(figs[(active + k + 1) % N]); load(figs[(active - 1 + N) % N]); // the next ones in both directions
   }
   function renderPanel() {
     var look = LOOKS[active];
