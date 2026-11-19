@@ -999,15 +999,14 @@ header.site .search-btn:hover { border-color: var(--ink); }
   animation: foil-360 8s linear infinite !important; animation-delay: 0s !important;
 }
 .btn-outline, .hero .btn-ghost.btn-holo { animation: none !important; }
-.badge.holo { animation: foil-360 8s linear infinite, logo-roll 6s ease-in-out infinite !important; }
+.badge.holo { animation: foil-360 8s linear infinite !important; }
 
 /* ---------- Red where it needs attention ---------- */
 .badge:not(.holo) { background: #e0102e !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff; font-weight: 600;
-  padding: 6px 12px; border-radius: 3px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6); animation: logo-roll 6s ease-in-out infinite; }
+  padding: 6px 12px; border-radius: 3px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6); }
 .menu-tile small.low { color: #ff4d64; font-weight: 600; }
 #checkout-msg:not(:empty) { color: #e0102e; font-weight: 600; }
 .card select.need-size { outline: 2px solid #e0102e; outline-offset: 1px; }
-@media (pointer: coarse) { .badge:not(.holo) { animation-play-state: running !important; } }
 @media (prefers-reduced-motion: reduce) {
   .badge.holo, .badge:not(.holo) { animation: none !important; }
   .btn-accent, .add, .checkout, .chip[aria-pressed="true"], .card .price, .help-topics a, .craft-grid b,
@@ -1616,6 +1615,8 @@ footer.site .wrap.legal { display: block; }
   .stl-card { scroll-snap-align: start; }
 }
 .art .badge { width: max-content; white-space: nowrap; }
+/* Keep the badge clear of the share/save buttons on narrow cards */
+@media (max-width: 600px) { .card .art .badge { max-width: calc(100% - 64px); white-space: normal; line-height: 1.3; font-size: .58rem; letter-spacing: .04em; padding: 4px 8px; } }
 
 /* Shop the look: keep all slider layers inside the section, so the sticky header always stays on top */
 .rs { isolation: isolate; }
