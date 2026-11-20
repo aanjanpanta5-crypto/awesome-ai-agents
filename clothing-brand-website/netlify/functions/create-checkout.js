@@ -79,7 +79,7 @@ exports.handler = async (event) => {
   params.append('custom_fields[0][text][maximum_length]', '200');
   // Gift-card-only orders are emailed, so they skip the delivery address
   const physical = items.some((item) => !(byId[item.id] && byId[item.id].digital));
-  // £3.99 delivery, free when the clothing comes to £40 or more (same rule as the bag, from products.js)
+  // £3.99 delivery, free when the clothing comes to £35 or more (same rule as the bag, from products.js)
   const D = PRODUCTS.DELIVERY;
   const goods = items.reduce((a, item) => { const p = byId[item.id]; return a + (p && !p.digital ? p.price * Number(item.qty) : 0); }, 0);
   const shipPence = goods >= D.freeOver ? 0 : Math.round(D.fee * 100);
@@ -94,7 +94,7 @@ exports.handler = async (event) => {
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'business_day');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '4');
   }
-  params.append('custom_text[submit][message]', 'Free UK delivery over £40. 14 days to return. See acpanta.com/returns.html');
+  params.append('custom_text[submit][message]', 'Free UK delivery over £35. 14 days to return. See acpanta.com/returns.html');
 
   let res;
   try {
