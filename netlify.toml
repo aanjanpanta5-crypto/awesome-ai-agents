@@ -25,6 +25,25 @@
   status = 404
   force = true
 
+# Server code dependencies are for Netlify's build only, not for visitors
+[[redirects]]
+  from = "/package.json"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/package-lock.json"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/node_modules/*"
+  to = "/404"
+  status = 404
+  force = true
+
 # Keep the checkout function's source out of the public site
 [[redirects]]
   from = "/netlify/*"
