@@ -1693,3 +1693,14 @@ header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: acp-flip 7
 }
 .free-away { margin: 4px 0 0; font-size: .74rem; color: var(--muted); }
 .free-away:empty { display: none; }
+
+/* ---------- Thank-you page: order timeline ---------- */
+.legal-doc .order-steps { list-style: none; margin: 18px 0 8px; padding: 0; counter-reset: step; }
+.order-steps li { position: relative; padding: 0 0 22px 46px; counter-increment: step; }
+.order-steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--ink); background: var(--bg, #fff); font: 600 .85rem/1 'IBM Plex Mono', monospace; }
+.order-steps li::after { content: ""; position: absolute; left: 15px; top: 32px; bottom: 2px; width: 1.5px; background: var(--line); }
+.order-steps li:last-child::after { display: none; }
+.order-steps li.done::before { content: "✓"; background: #1e9a4e; border-color: #1e9a4e; color: #fff; }
+.order-steps b { display: block; font-size: 1.02rem; }
+.order-steps span { display: block; margin-top: 3px; color: var(--muted); font-size: .95rem; line-height: 1.5; }
+.order-steps-note { font-size: .78rem; color: var(--muted); }
