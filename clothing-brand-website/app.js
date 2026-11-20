@@ -1095,13 +1095,58 @@
     bar.hidden = false;
   }
   if (document.body.getAttribute('data-page') === 'contact') return;
-  var wa = document.createElement('a');
-  wa.className = 'acp-wa-float';
-  wa.href = 'https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I have a quick question about sizing.');
-  wa.target = '_blank'; wa.rel = 'noopener';
-  wa.setAttribute('aria-label', 'Not sure on size? Ask us on WhatsApp');
-  wa.innerHTML = '<span class="acp-wa-dot" aria-hidden="true"></span><svg class="acp-wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C7 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6L5.5 21l4-2.1c.8.2 1.6.3 2.5.3 5 0 9-3.6 9-8s-4-8-9-8z"/></svg><span class="acp-wa-text">Not sure on size? Ask us</span>';
-  document.body.appendChild(wa);
+  // Acpanta assistant (AI chat). Answers come from netlify/functions/chat.js; a person is always one tap away on WhatsApp.
+  var WA_LINK = 'https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I have a question.');
+  var launcher = document.createElement('button');
+  launcher.type = 'button'; launcher.className = 'acp-wa-float acp-chat-launch';
+  launcher.setAttribute('aria-label', 'Questions? Ask the Acpanta assistant'); launcher.setAttribute('aria-expanded', 'false');
+  launcher.innerHTML = '<span class="acp-wa-dot" aria-hidden="true"></span><svg class="acp-wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C7 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6L5.5 21l4-2.1c.8.2 1.6.3 2.5.3 5 0 9-3.6 9-8s-4-8-9-8z"/></svg><span class="acp-wa-text">Questions? Ask us</span>';
+  var panel = document.createElement('section');
+  panel.className = 'acp-chat'; panel.hidden = true;
+  panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Acpanta assistant');
+  panel.innerHTML = '<div class="acp-chat-head"><div><b>Acpanta assistant</b><span class="mono">AI · replies in seconds</span></div><button type="button" class="acp-chat-x" aria-label="Close chat">×</button></div>' +
+    '<div class="acp-chat-log" aria-live="polite"></div>' +
+    '<div class="acp-chat-chips"><button type="button">What size am I?</button><button type="button">How much is delivery?</button><button type="button">How do returns work?</button></div>' +
+    '<form class="acp-chat-form"><label class="sr-only" for="acp-chat-in">Your question</label><input id="acp-chat-in" maxlength="600" autocomplete="off" placeholder="Ask about sizes, delivery, returns…"><button type="submit" class="btn btn-accent">Send</button></form>' +
+    '<a class="acp-chat-human" href="' + WA_LINK + '" target="_blank" rel="noopener">Talk to a person on WhatsApp →</a>';
+  document.body.appendChild(launcher); document.body.appendChild(panel);
+  var log = panel.querySelector('.acp-chat-log'), form = panel.querySelector('form'), input = panel.querySelector('input');
+  var history = [], busy = false;
+  function bubble(text, who) {
+    var b = document.createElement('p'); b.className = 'acp-msg acp-msg-' + who;
+    b.textContent = text; // text only, never HTML
+    log.appendChild(b); log.scrollTop = log.scrollHeight; return b;
+  }
+  bubble('Hi! I’m the Acpanta assistant (AI). Ask me about sizes, delivery, returns or anything in the shop. For your order, message us on WhatsApp.', 'bot');
+  function toggle(open) {
+    panel.hidden = !open; launcher.setAttribute('aria-expanded', String(open)); launcher.hidden = open;
+    if (open) input.focus(); else launcher.focus();
+  }
+  launcher.addEventListener('click', function () { toggle(true); });
+  panel.querySelector('.acp-chat-x').addEventListener('click', function () { toggle(false); });
+  panel.addEventListener('keydown', function (e) { if (e.key === 'Escape') toggle(false); });
+  function ask(q) {
+    q = (q || '').trim().slice(0, 600);
+    if (!q || busy) return;
+    busy = true; input.value = '';
+    panel.querySelector('.acp-chat-chips').hidden = true;
+    bubble(q, 'me'); history.push({ role: 'user', content: q });
+    if (history.length > 11) history = history.slice(-11); // keep it short; must start with the shopper
+    var wait = bubble('Typing…', 'bot'); wait.classList.add('acp-typing');
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 25000);
+    fetch('/.netlify/functions/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history }), signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (d) {
+        var text = d.reply || d.error || 'Sorry, something went wrong. Message us on WhatsApp.';
+        wait.classList.remove('acp-typing'); wait.textContent = text;
+        if (d.reply) history.push({ role: 'assistant', content: d.reply }); else history.pop();
+      })
+      .catch(function () { wait.classList.remove('acp-typing'); wait.textContent = 'Sorry, that took too long. Try again, or message us on WhatsApp.'; history.pop(); })
+      .then(function () { clearTimeout(timer); busy = false; log.scrollTop = log.scrollHeight; input.focus(); });
+  }
+  form.addEventListener('submit', function (e) { e.preventDefault(); ask(input.value); });
+  panel.querySelector('.acp-chat-chips').addEventListener('click', function (e) { if (e.target.tagName === 'BUTTON') ask(e.target.textContent); });
 })();
 
 // Track your order page: opens Royal Mail tracking, or asks us on WhatsApp
