@@ -1691,3 +1691,5 @@ header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: acp-flip 7
 @media (prefers-reduced-motion: reduce) {
   header.site .logo-mark.logo-holo, footer.site .logo-mark, .bag-logo, .hero-seal { animation: none !important; }
 }
+.free-away { margin: 4px 0 0; font-size: .74rem; color: var(--muted); }
+.free-away:empty { display: none; }

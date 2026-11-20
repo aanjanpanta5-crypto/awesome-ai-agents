@@ -23,6 +23,8 @@
     { id: 'gift-card-100', name: 'Digital Gift Card £100', cat: 'Gift cards', price: 100, shape: 'gift', print: 'logo', digital: true, spec: 'Emailed within 1 working day · valid 12 months', colors: [['Black', '#1c1c1c']], sizes: ['Digital'] },
     { id: 'sweatshirt', name: 'Heavyweight Sweatshirt', cat: 'Sweatshirts', price: 15.99, shape: 'sweat', spec: 'Dense, substantial weight · Soft structured drape', colors: BW, sizes: SIZES, stock: 5 }
   ];
+  // UK delivery: £3.99, free when the clothing in the order comes to £40 or more (before discount codes)
+  PRODUCTS.DELIVERY = { fee: 3.99, freeOver: 40 };
   if (typeof module !== 'undefined' && module.exports) module.exports = PRODUCTS;
   else root.ACPANTA_PRODUCTS = PRODUCTS;
 })(this);
