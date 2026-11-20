@@ -15,7 +15,7 @@ const skipped = [];
 for (const p of PRODUCTS) {
   if (p.digital) continue;
   const productType = 'Clothing > ' + p.cat;
-  const description = [p.spec].concat(p.details || []).join('. ') + '. Free UK delivery, 14-day returns.';
+  const description = [p.spec].concat(p.details || []).join('. ') + '. Free UK delivery over £40, 14-day returns.';
   p.colors.forEach((c, ci) => {
     if (!c[2]) { skipped.push(`${p.name} (${c[0]})`); return; }
     const colour = p.variantLabel === 'Design' ? 'Black' : c[0];
@@ -41,7 +41,7 @@ for (const p of PRODUCTS) {
       <g:color>${esc(colour)}</g:color>
       <g:size>${esc(size)}</g:size>
       <g:size_system>UK</g:size_system>
-      <g:shipping><g:country>GB</g:country><g:service>Free UK delivery</g:service><g:price>0.00 GBP</g:price></g:shipping>
+      <g:shipping><g:country>GB</g:country><g:service>UK tracked delivery</g:service><g:price>${p.price >= PRODUCTS.DELIVERY.freeOver ? '0.00' : PRODUCTS.DELIVERY.fee.toFixed(2)} GBP</g:price></g:shipping>
     </item>`);
     }
   });

@@ -32,7 +32,7 @@ export default async (request, context) => {
     const title = p.name.includes('£') ? `${p.name} · Acpanta` : `${p.name} · ${price} · Acpanta`;
     const desc = p.digital
       ? `${p.name} from Acpanta. Emailed within 1 working day, valid for 12 months.`
-      : `${p.name} by Acpanta, London. ${p.spec}. ${price}, free UK delivery and 14-day returns.`;
+      : `${p.name} by Acpanta, London. ${p.spec}. ${price}, free UK delivery over £40 and 14-day returns.`;
     const image = p.photo ? `${site}/${p.photo.replace('.jpg', '-large.jpg')}` : `${site}/og-image.jpg`;
 
     let html = await response.text();

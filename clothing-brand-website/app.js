@@ -48,7 +48,9 @@
 
   var PRODUCTS = window.ACPANTA_PRODUCTS || [];
   var byId = {}; PRODUCTS.forEach(function (p) { byId[p.id] = p; p.sel = 0; });
-  var money = function (n) { return '£' + n.toFixed(0); };
+  var DELIVERY = PRODUCTS.DELIVERY || { fee: 3.99, freeOver: 40 };
+  var money = function (n) { return '£' + (n % 1 ? n.toFixed(2) : n); };
+  window.ACPANTA_MONEY = money;
   var $ = function (id) { return document.getElementById(id); };
 
   // Search: matches names, categories, fabrics, colours and everyday words
@@ -220,7 +222,7 @@
     var boxy = p.shape === 'boxy';
     var pills = ['Substantial weight · Structured drape'];
     if ((p.details || []).some(function (d) { return /pre-shrunk/i.test(d); })) pills.push('Pre-shrunk');
-    pills.push('Complimentary UK delivery');
+    pills.push('Free UK delivery over £40');
     return '<div class="acp-fit-box"><div><strong>Fit note:</strong> ' + (boxy ?
       'Boxy, wide cut. Take your normal size for a relaxed drape, or size down for a closer fit.' :
       'Unisex fit. Take your usual size, or use Find my size below.') + '</div>' +
@@ -250,7 +252,7 @@
       (p.digital ? '<ul class="pdp-perks mono"><li>Emailed, no delivery needed</li><li>Valid 12 months</li><li>Secure checkout by Stripe</li></ul>' :
       '<p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
       '<p class="eta-line">🗓️ ' + etaText() + '</p>' +
-      '<ul class="pdp-perks mono"><li>Complimentary UK delivery</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
+      '<ul class="pdp-perks mono"><li>Free UK delivery over £40</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
       (p.digital ? '' :
       '<div class="pdp-care"><h2 class="pdp-h">Care</h2><p class="care-icons" aria-label="Care: wash at 30 degrees inside out, do not tumble dry, do not iron the print"><span aria-hidden="true"><b class="ci">30°</b> Wash inside out</span><span aria-hidden="true"><b class="ci ci-x">⊠</b> No tumble dry</span><span aria-hidden="true"><b class="ci ci-x">✕</b> Don\'t iron the print</span></p><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>') +
       '</div></article>';
@@ -351,7 +353,7 @@
             itemCondition: 'https://schema.org/NewCondition',
             seller: { '@type': 'Organization', name: 'Acpanta' },
             shippingDetails: P0.digital ? undefined : { '@type': 'OfferShippingDetails',
-              shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'GBP' },
+              shippingRate: { '@type': 'MonetaryAmount', value: P0.price >= DELIVERY.freeOver ? 0 : DELIVERY.fee, currency: 'GBP' },
               shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'GB' },
               deliveryTime: { '@type': 'ShippingDeliveryTime',
                 handlingTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 2, unitCode: 'DAY' },
@@ -369,7 +371,7 @@
         document.head.appendChild(bc);
       } catch (err) {}
       var md = document.querySelector('meta[name="description"]');
-      if (md) md.setAttribute('content', P0.name + ' by Acpanta. ' + P0.spec + '. ' + money(P0.price) + ', free UK delivery and 14-day returns.');
+      if (md) md.setAttribute('content', P0.name + ' by Acpanta. ' + P0.spec + '. ' + money(P0.price) + ', free UK delivery over £40 and 14-day returns.');
       pdpEl.addEventListener('click', onCardClick);
       pdpEl.addEventListener('change', onCardChange);
     }
@@ -586,9 +588,15 @@
         (bag.some(function (l) { return byId[l.id] && !byId[l.id].digital; }) ? '<p class="eta-line">🗓️ ' + etaText() + '</p>' : '') +
         (look ? '<a class="xsell" href="' + productLink(look.p) + '"><span class="xsell-art">' + artFor(look.p, look.c) + '</span><span><b>Complete the look</b><span>' + esc(look.p.name) + ' · ' + esc(look.p.colors[look.c][0]) + ' · ' + money(look.p.price) + '</span></span><span class="xsell-go">View →</span></a>' : '');
     }
+    // Delivery: £3.99, free once the clothing (not gift cards) reaches £40
+    var goods = bag.reduce(function (a, l) { return a + (byId[l.id].digital ? 0 : l.qty * byId[l.id].price); }, 0);
+    var ship = goods === 0 ? 0 : goods >= DELIVERY.freeOver ? 0 : DELIVERY.fee;
     $('subtotal').textContent = money(sub);
-    $('shipping').textContent = sub === 0 ? '—' : 'Free';
-    $('total').textContent = money(sub);
+    $('shipping').textContent = sub === 0 ? '—' : goods === 0 ? 'Emailed' : ship ? money(ship) : 'Free';
+    $('total').textContent = money(Math.round((sub + ship) * 100) / 100);
+    var away = $('free-away');
+    if (!away) { away = document.createElement('p'); away.id = 'free-away'; away.className = 'free-away mono'; $('shipping').parentNode.insertAdjacentElement('afterend', away); }
+    away.textContent = ship ? 'Add ' + money(Math.round((DELIVERY.freeOver - goods) * 100) / 100) + ' more for free UK delivery' : '';
     $('checkout').disabled = !bag.length;
     $('checkout-msg').textContent = '';
   }

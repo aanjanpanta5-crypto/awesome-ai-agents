@@ -79,18 +79,22 @@ exports.handler = async (event) => {
   params.append('custom_fields[0][text][maximum_length]', '200');
   // Gift-card-only orders are emailed, so they skip the delivery address
   const physical = items.some((item) => !(byId[item.id] && byId[item.id].digital));
+  // £3.99 delivery, free when the clothing comes to £40 or more (same rule as the bag, from products.js)
+  const D = PRODUCTS.DELIVERY;
+  const goods = items.reduce((a, item) => { const p = byId[item.id]; return a + (p && !p.digital ? p.price * Number(item.qty) : 0); }, 0);
+  const shipPence = goods >= D.freeOver ? 0 : Math.round(D.fee * 100);
   if (physical) {
   params.append('shipping_address_collection[allowed_countries][0]', 'GB');
   params.append('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
-  params.append('shipping_options[0][shipping_rate_data][display_name]', 'Free UK delivery');
-  params.append('shipping_options[0][shipping_rate_data][fixed_amount][amount]', '0');
+  params.append('shipping_options[0][shipping_rate_data][display_name]', shipPence ? 'UK tracked delivery' : 'Free UK delivery');
+  params.append('shipping_options[0][shipping_rate_data][fixed_amount][amount]', String(shipPence));
   params.append('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'gbp');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][unit]', 'business_day');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '2');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'business_day');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '4');
   }
-  params.append('custom_text[submit][message]', 'Free UK delivery. 14 days to return. See acpanta.com/returns.html');
+  params.append('custom_text[submit][message]', 'Free UK delivery over £40. 14 days to return. See acpanta.com/returns.html');
 
   let res;
   try {
