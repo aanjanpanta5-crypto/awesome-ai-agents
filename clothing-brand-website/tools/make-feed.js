@@ -15,7 +15,7 @@ const skipped = [];
 for (const p of PRODUCTS) {
   if (p.digital) continue;
   const productType = 'Clothing > ' + p.cat;
-  const description = [p.spec].concat(p.details || []).join('. ') + '. Free UK delivery over £40, 14-day returns.';
+  const description = [p.spec].concat(p.details || []).join('. ') + '. Free UK delivery over £35, 14-day returns.';
   p.colors.forEach((c, ci) => {
     if (!c[2]) { skipped.push(`${p.name} (${c[0]})`); return; }
     const colour = p.variantLabel === 'Design' ? 'Black' : c[0];
