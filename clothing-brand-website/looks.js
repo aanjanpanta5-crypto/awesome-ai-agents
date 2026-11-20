@@ -8,6 +8,7 @@
   var PRODUCTS = window.ACPANTA_PRODUCTS || [];
   var byId = {}; PRODUCTS.forEach(function (p) { byId[p.id] = p; });
   var ART = window.ACPANTA_ART;
+  var money = window.ACPANTA_MONEY;
 
   // A look: name, figure (what the drawn man wears), pieces = [product id, colour/design index]
   // Only real photos are shown. To add a look: put the cut-out photo in images/ and add a line like
@@ -157,11 +158,11 @@
       return '<article class="rs-card" style="--i:' + j + '"><div class="rs-media"><a class="rs-media-link" href="' + link(p) + '" aria-label="' + esc(p.name) + '">' + (ART ? ART(p, x[1]) : '') + '</a>' +
         '<a class="rs-add" href="' + link(p) + '" aria-label="Choose a size for the ' + esc(p.name) + '">+</a></div>' +
         '<h4 class="rs-card-name"><a href="' + link(p) + '">' + esc(p.name) + '</a></h4><p class="rs-card-desc">' + esc(col[0]) + ' · ' + esc(p.spec.split(' · ')[0]) + '</p>' +
-        '<p class="rs-card-price">£' + p.price + '</p></article>';
+        '<p class="rs-card-price">' + money(p.price) + '</p></article>';
     }).join('') + soonCard;
     list.scrollTop = 0; list.scrollLeft = 0;
     cta.href = link(byId[look.pieces[0][0]]);
-    cta.textContent = 'Shop the look · £' + total;
+    cta.textContent = 'Shop the look · ' + money(total);
     curEl.textContent = pad(active + 1); totEl.textContent = pad(N);
     barEl.style.width = ((active + 1) / N * 100) + '%';
   }

@@ -48,7 +48,8 @@
 
   var PRODUCTS = window.ACPANTA_PRODUCTS || [];
   var byId = {}; PRODUCTS.forEach(function (p) { byId[p.id] = p; p.sel = 0; });
-  var money = function (n) { return '£' + n.toFixed(0); };
+  var money = function (n) { return '£' + (n % 1 ? n.toFixed(2) : n); };
+  window.ACPANTA_MONEY = money;
   var $ = function (id) { return document.getElementById(id); };
 
   // Search: matches names, categories, fabrics, colours and everyday words
