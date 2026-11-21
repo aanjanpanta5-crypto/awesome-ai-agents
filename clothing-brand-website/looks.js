@@ -28,7 +28,10 @@
     { name: 'Quilted leather · turned', photo: 'images/look-leather-2-b.png', pieces: [['logo-tee', 0]], soon: LEATHER },
     { name: 'Black logo tee · detail', photo: 'images/look-tee-d.png', pieces: [['logo-tee', 0]] },
     { name: 'Tee under leather · detail', photo: 'images/look-leather-1-d.png', pieces: [['logo-tee', 0]], soon: LEATHER },
-    { name: 'Quilted leather · detail', photo: 'images/look-leather-2-d.png', pieces: [['logo-tee', 0]], soon: LEATHER }
+    { name: 'Quilted leather · detail', photo: 'images/look-leather-2-d.png', pieces: [['logo-tee', 0]], soon: LEATHER },
+    { name: 'Pleasures hoodie', photo: 'images/pleasures-hoodie.jpg', pieces: [['pleasures-hoodie', 0]] },
+    { name: 'Dice hoodie', photo: 'images/dice-hoodie.jpg', pieces: [['dice-hoodie', 0]] },
+    { name: 'Take The Risk hoodie', photo: 'images/take-the-risk-hoodie.jpg', pieces: [['take-the-risk-hoodie', 0]] }
   ].filter(function (l) { return l.pieces.every(function (x) { return byId[x[0]]; }); });
   var N = LOOKS.length; if (!N) return;
   if (N < 2) root.classList.add('rs-single');
@@ -102,9 +105,10 @@
     b.type = 'button'; b.className = 'rs-fig';
     b.setAttribute('aria-label', 'Look ' + (i + 1) + ': ' + look.name);
     if (look.photo) b.classList.add('rs-photo');
+    if (/\.jpg$/.test(look.photo || '')) b.classList.add('rs-photo-card'); // product photos with a background, not cut-outs
     // Only the first 5 photos load at once; the rest load just before they slide into view (see paint)
     var a = i < 5 ? '' : 'data-';
-    b.innerHTML = look.photo ? '<picture><source ' + a + 'srcset="' + esc(look.photo.replace(/\.png$/, '.webp')) + '" type="image/webp"><img ' + a + 'src="' + esc(look.photo) + '" alt="" draggable="false"' + (i ? ' decoding="async"' : ' fetchpriority="high"') + '></picture>' : man(look.fig, i);
+    b.innerHTML = look.photo ? '<picture><source ' + a + 'srcset="' + esc(look.photo.replace(/\.(png|jpg)$/, '.webp')) + '" type="image/webp"><img ' + a + 'src="' + esc(look.photo) + '" alt="" draggable="false"' + (i ? ' decoding="async"' : ' fetchpriority="high"') + '></picture>' : man(look.fig, i);
     b.addEventListener('click', function () { if (!dragged) goTo(i); });
     track.appendChild(b); b._vis = null; return b;
   });

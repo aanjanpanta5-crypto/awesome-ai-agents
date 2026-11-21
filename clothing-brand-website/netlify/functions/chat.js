@@ -86,6 +86,8 @@ function cleanMessages(input) {
 }
 
 exports.handler = async (event) => {
+  // GET tells the website whether the assistant is switched on (the key is set), without revealing anything else
+  if (event.httpMethod === 'GET') return json(200, { ready: !!process.env.ANTHROPIC_API_KEY });
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed' });
   let body;
   try { body = JSON.parse(event.body || '{}'); } catch (err) { return json(400, { error: 'Bad request' }); }
