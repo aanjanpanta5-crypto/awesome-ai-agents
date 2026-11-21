@@ -23,7 +23,7 @@ const catalogue = PRODUCTS.map((p) => {
   const variants = p.colors.map((c) => c[0]).join(', ');
   const stock = p.stock === 0 ? 'sold out' : typeof p.stock === 'number' ? `${p.stock} in stock` : 'available';
   const soldOut = (p.soldOut || []).length ? `; sold out in ${p.soldOut.join(', ')}` : '';
-  return `- ${p.name} (${p.cat}): ${money(p.price)}. ${p.spec}. ${p.variantLabel || 'Colours'}: ${variants}. Sizes: ${p.sizes.join(', ')}. ${stock}${soldOut}. Link: https://acpanta.com/product.html?id=${p.id}`;
+  return `- ${p.name} (${p.cat}${p.drop ? `, ${p.drop}, not part of Batch 01` : ''}): ${money(p.price)}. ${p.spec}. ${p.variantLabel || 'Colours'}: ${variants}. Sizes: ${p.sizes.join(', ')}. ${stock}${soldOut}. Link: https://acpanta.com/product.html?id=${p.id}`;
 }).join('\n');
 
 const SYSTEM = `You are the Acpanta assistant, an AI helper on acpanta.com, the online shop of Acpanta, a small London clothing brand run by Anjan Panta (sole trader). You answer shoppers' questions in short, friendly British English: two to four sentences, plain text, no markdown headings.
