@@ -1759,3 +1759,13 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail-page .rail-art { margin-top: -34px; }
 .rail-page .rail-track { background-position: 0 28px, 0 35px; }
 .rail-foot { display: flex; gap: 10px; flex-wrap: wrap; }
+
+
+/* Rail backdrop: the concrete shop wall from Acpanta's store photo (images/brand/store.jpg) */
+.rail { position: relative; padding: 22px 16px 18px; border-radius: 14px; overflow: hidden; box-shadow: inset 0 -18px 30px rgba(0,0,0,.06);
+  background: #cfcfcd url(images/brand/concrete.jpg) center / cover;
+  background: #cfcfcd image-set(url(images/brand/concrete.webp) type("image/webp"), url(images/brand/concrete.jpg) type("image/jpeg")) center / cover; }
+.rail-tag { box-shadow: 0 4px 10px rgba(0,0,0,.12); }
+.rail-page { margin: 0 auto 8px; max-width: 1200px; }
+.rail-hero { display: block; max-width: 1200px; margin: 0 auto 18px; padding: 0 16px; }
+.rail-hero img { display: block; width: 100%; height: auto; aspect-ratio: 1376 / 768; object-fit: cover; border-radius: 14px; }
