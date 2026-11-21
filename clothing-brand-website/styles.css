@@ -1750,3 +1750,11 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail-tag b { display: block; font-weight: 600; }
 .rail-tag span { display: block; margin-top: 2px; font-family: 'IBM Plex Mono', monospace; }
 @media (prefers-reduced-motion: reduce) { .rail-item { transition: none; } .rail-item:hover, .rail-item:active { transform: none; } }
+/* The rail page: bigger hangers */
+.rail-page { padding-top: 8px; }
+.rail-page .rail-item { width: 210px; }
+.rail-page .rail-art { width: 210px; }
+.rail-page .rail-tag { max-width: 210px; font-size: .88rem; }
+.rail-page .rail-hanger { width: 120px; height: 46px; margin-top: -20px; }
+.rail-page .rail-track { background-position: 0 18px; padding-top: 28px; }
+.rail-foot { display: flex; gap: 10px; flex-wrap: wrap; }
