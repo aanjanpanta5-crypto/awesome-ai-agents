@@ -76,31 +76,18 @@
   try { PID = new URLSearchParams(location.search).get('id') || ''; } catch (err) {}
   function productLink(p) { return 'product.html?id=' + encodeURIComponent(p.id); }
 
-  // "On the rail": every piece hanging on a clothes rail (shop page). Each design with a photo gets its own hanger.
-  if ($('rail-track')) {
-    // Real-looking hanger: chrome hook over the rail, matte black shoulders stamped ACPANTA (gradients defined once below)
-    if (!$('acp-hanger-defs')) document.body.insertAdjacentHTML('beforeend', '<svg id="acp-hanger-defs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' +
-      '<linearGradient id="acpChrome" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a8a8a"/><stop offset=".35" stop-color="#f7f7f7"/><stop offset=".6" stop-color="#a3a3a3"/><stop offset="1" stop-color="#e2e2e2"/></linearGradient>' +
-      '<linearGradient id="acpMatte" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4a4a"/><stop offset=".45" stop-color="#1b1b1b"/><stop offset="1" stop-color="#050505"/></linearGradient></defs></svg>');
-    var HANGER = '<svg class="rail-hanger" viewBox="0 0 160 64" aria-hidden="true">' +
-      '<path d="M80 34V18C80 6 94 2 97 12C99 18 94 22 90 20" fill="none" stroke="url(#acpChrome)" stroke-width="3.4" stroke-linecap="round"/>' +
-      '<rect x="76.5" y="28" width="7" height="8" rx="2" fill="url(#acpChrome)"/>' +
-      '<path d="M8 58Q8 52 14 50Q48 38 80 33Q112 38 146 50Q152 52 152 58Q151 62 146 61Q112 47 80 44Q48 47 14 61Q9 62 8 58Z" fill="url(#acpMatte)"/>' +
-      '<path d="M16 51Q48 40 80 35Q112 40 144 51" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.1"/>' +
-      '<path d="M25 46.5l1.6 2.8M135 46.5l-1.6 2.8" stroke="#000" stroke-width="1.6" stroke-linecap="round"/>' +
-      '<text x="80" y="41.6" text-anchor="middle" font-size="4.6" letter-spacing="1.3" fill="#e0102e" font-weight="600" font-family="IBM Plex Mono, monospace">ACPANTA</text></svg>';
-    var hangers = [];
-    PRODUCTS.forEach(function (p) {
-      if (p.digital) return;
-      var photos = p.colors.map(function (c, i) { return c[2] ? i : -1; }).filter(function (i) { return i >= 0; });
-      (photos.length ? photos : [0]).forEach(function (i) { hangers.push({ p: p, c: i }); });
-    });
-    $('rail-track').innerHTML = hangers.map(function (h) {
-      var p = h.p, design = p.variantLabel === 'Design' ? ' · ' + p.colors[h.c][0] : '';
-      return '<a class="rail-item" href="' + productLink(p) + (h.c ? '&c=' + h.c : '') + '">' + HANGER +
-        '<span class="rail-art">' + artFor(p, h.c) + '</span>' +
-        '<span class="rail-tag"><b>' + esc(p.name + design) + '</b><span>' + (isSoldOut(p) ? 'Sold out' : money(p.price)) + '</span></span></a>';
-    }).join('');
+  // "On the rail": Acpanta's shop photo (images/brand/rail-shop.*). Each hanging piece is a tap target.
+  // x = centre of the garment across the photo, in % (photo is 1376 px wide). Keep in order with the photo.
+  if ($('rail-photo')) {
+    var SPOTS = [['logo-tee', 1, 232, 'Logo Tee'], ['boxy-hoodie', 1, 418, 'Don\u2019t Look Back'], ['boxy-hoodie', 0, 618, 'Light Up'], ['pleasures-hoodie', 0, 818, 'Pleasures'], ['dice-hoodie', 0, 1008, 'Dice'], ['take-the-risk-hoodie', 0, 1200, 'Take The Risk']];
+    $('rail-photo').innerHTML = '<picture><source srcset="images/brand/rail-shop.webp" type="image/webp"><img src="images/brand/rail-shop.jpg" width="1376" height="768" alt="Acpanta pieces hanging on a chrome rail in the shop" decoding="async"></picture>' +
+      SPOTS.map(function (sp) {
+        var p = byId[sp[0]]; if (!p) return '';
+        var label = p.variantLabel === 'Design' && p.colors.length > 1 ? p.name + ' · ' + p.colors[sp[1]][0] : p.name;
+        var price = isSoldOut(p) ? 'Sold out' : money(p.price);
+        return '<a class="rail-spot" style="left:' + (sp[2] / 1376 * 100).toFixed(2) + '%" href="' + productLink(p) + (sp[1] ? '&c=' + sp[1] : '') + '" aria-label="' + esc(label + ', ' + price) + '">' +
+          '<span class="rail-spot-tag" aria-hidden="true">' + esc(sp[3]) + '<span>' + price + '</span></span></a>';
+      }).join('');
   }
   // Saved items and recently viewed, kept only in this browser
   function readList(k) { try { var v = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(v) ? v : []; } catch (err) { return []; } }
@@ -265,7 +252,7 @@
       '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button></div></div>' +
       '<div class="pdp-info">' +
       '<nav class="crumbs mono" aria-label="Breadcrumb"><a href="shop.html">Shop</a> / <a href="shop.html#' + slug(p.cat) + '">' + esc(p.cat) + '</a></nav>' +
-      (p.digital ? '<p class="batch-label mono">Digital gift card</p>' : '<p class="batch-label mono">Batch 01 · one of 185 pieces</p>') +
+      (p.digital ? '<p class="batch-label mono">Digital gift card</p>' : p.drop ? '<p class="batch-label mono">' + esc(p.drop) + '</p>' : '<p class="batch-label mono">Batch 01 · one of 185 pieces</p>') +
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
       '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + fitBoxHTML(p) + buyHTML(p) + saveBtn(p, 'save-btn') +
@@ -1114,7 +1101,7 @@
   if (bar) {
     // Pieces left = the stock numbers in products.js, so keep those up to date as pieces sell
     var total = Number(bar.getAttribute('data-total')) || 185, left = 0;
-    PRODUCTS.forEach(function (p) { if (!p.digital && typeof p.stock === 'number') left += p.stock; });
+    PRODUCTS.forEach(function (p) { if (!p.digital && !p.drop && typeof p.stock === 'number') left += p.stock; }); // new drops aren't part of Batch 01
     left = Math.max(0, Math.min(total, left));
     bar.querySelector('[data-batch-count]').textContent = left + ' / ' + total + ' pieces left';
     bar.querySelector('[data-batch-fill]').style.width = Math.round(left / total * 100) + '%';
