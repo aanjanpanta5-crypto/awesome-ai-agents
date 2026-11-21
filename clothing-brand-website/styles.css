@@ -1753,3 +1753,8 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail-hint { font-size: .72rem; color: var(--muted); }
 .rail-page { max-width: 1200px; margin: 0 auto 8px; padding: 0 16px; }
 .rail-foot { display: flex; gap: 10px; flex-wrap: wrap; }
+/* The rail page buttons: brand red writing on the holographic foil */
+.rail-foot .btn, .rail-foot .btn:hover { color: #e0102e !important; -webkit-text-fill-color: #e0102e; }
+.rail-foot .btn { animation: holo-shift 8s linear infinite !important; background-size: 300% 100% !important; filter: none !important; }
+@media (pointer: coarse) { .rail-foot .btn { animation-play-state: running !important; } }
+@media (prefers-reduced-motion: reduce) { .rail-foot .btn { animation: none !important; } }
