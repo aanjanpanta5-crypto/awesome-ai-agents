@@ -1758,3 +1758,5 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail-foot .btn { animation: holo-shift 8s linear infinite !important; background-size: 300% 100% !important; filter: none !important; }
 @media (pointer: coarse) { .rail-foot .btn { animation-play-state: running !important; } }
 @media (prefers-reduced-motion: reduce) { .rail-foot .btn { animation: none !important; } }
+/* Shop the look: hoodie photos with their own wall background show as rounded photo cards */
+.rs-photo-card img { object-fit: cover !important; object-position: 50% 30% !important; border-radius: 14px; box-shadow: 0 14px 30px rgba(0,0,0,.18); -webkit-mask-image: none !important; mask-image: none !important; }

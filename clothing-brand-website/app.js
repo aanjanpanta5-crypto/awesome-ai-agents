@@ -59,7 +59,7 @@
     'Hoodies': 'hoodie hoodies hoody hood top',
     'Sweatshirts': 'sweatshirt sweatshirts jumper sweater crew top'
   };
-  var PRODUCT_WORDS = { 'zip-hoodie': 'zipper zipped zip up jacket', 'boxy-hoodie': 'oversized loose graphic print back skull cigarette plain blank cotton black', 'printed-tee': 'graphic print', 'logo-tee': 'basic plain', 'logo-hoodie': 'heavy thick' };
+  var PRODUCT_WORDS = { 'pleasures-hoodie': 'face hands graphic back print oversized boxy', 'dice-hoodie': 'dice graphic back print oversized boxy gamble', 'take-the-risk-hoodie': 'risk chance dice question graphic back print oversized boxy slogan', 'zip-hoodie': 'zipper zipped zip up jacket', 'boxy-hoodie': 'oversized loose graphic print back skull cigarette plain blank cotton black', 'printed-tee': 'graphic print', 'logo-tee': 'basic plain', 'logo-hoodie': 'heavy thick' };
   function norm(t) { return String(t).toLowerCase().replace(/\bt[\s-]+shirt/g, 'tshirt').replace(/[-‐–]/g, '').replace(/[^a-z0-9£ ]+/g, ' '); }
   PRODUCTS.forEach(function (p) {
     p.words = norm([p.name, p.cat, p.spec, p.badge || '', p.colors.map(function (c) { return c[0]; }).join(' '), CAT_WORDS[p.cat] || '', PRODUCT_WORDS[p.id] || ''].join(' ')).split(/\s+/).filter(Boolean);
@@ -578,7 +578,8 @@
   window.addEventListener('resize', fitEmblem);
   // Complete the look: each piece's natural partner (tee with its hoodie, and so on)
   var PAIRS = { 'logo-tee': 'logo-hoodie', 'printed-tee': 'zip-hoodie', 'logo-hoodie': 'logo-tee',
-    'zip-hoodie': 'printed-tee', 'boxy-hoodie': 'logo-tee', 'sweatshirt': 'logo-tee' };
+    'zip-hoodie': 'printed-tee', 'boxy-hoodie': 'logo-tee', 'sweatshirt': 'logo-tee',
+    'pleasures-hoodie': 'logo-tee', 'dice-hoodie': 'logo-tee', 'take-the-risk-hoodie': 'logo-tee' };
   // Partner of the most recently added piece that isn't already in the bag or sold out, in the same colour when it exists
   function completeTheLook() {
     for (var i = bag.length - 1; i >= 0; i--) {
@@ -1144,7 +1145,16 @@
     panel.hidden = !open; launcher.setAttribute('aria-expanded', String(open)); launcher.hidden = open;
     if (open) input.focus(); else launcher.focus();
   }
-  launcher.addEventListener('click', function () { toggle(true); });
+  // Until the AI key is added in Netlify, the bubble simply opens WhatsApp (checked once per visit)
+  var chatReady = null;
+  try { chatReady = JSON.parse(sessionStorage.getItem('acpanta-chat-ready')); } catch (err) {}
+  if (chatReady === null) fetch('/.netlify/functions/chat').then(function (r) { return r.json(); }).then(function (d) {
+    chatReady = !!d.ready; try { sessionStorage.setItem('acpanta-chat-ready', String(chatReady)); } catch (err) {}
+  }).catch(function () { chatReady = false; });
+  launcher.addEventListener('click', function () {
+    if (chatReady === false) { window.open(WA_LINK, '_blank', 'noopener'); return; }
+    toggle(true);
+  });
   panel.querySelector('.acp-chat-x').addEventListener('click', function () { toggle(false); });
   panel.addEventListener('keydown', function (e) { if (e.key === 'Escape') toggle(false); });
   function ask(q) {
