@@ -75,6 +75,23 @@
   var PID = '';
   try { PID = new URLSearchParams(location.search).get('id') || ''; } catch (err) {}
   function productLink(p) { return 'product.html?id=' + encodeURIComponent(p.id); }
+
+  // "On the rail": every piece hanging on a clothes rail (shop page). Each design with a photo gets its own hanger.
+  if ($('rail-track')) {
+    var HANGER = '<svg class="rail-hanger" viewBox="0 0 120 46" aria-hidden="true"><path d="M60 26c0-6 8-6 8-13a8 8 0 0 0-16 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M60 26L8 42h104z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></svg>';
+    var hangers = [];
+    PRODUCTS.forEach(function (p) {
+      if (p.digital) return;
+      var photos = p.colors.map(function (c, i) { return c[2] ? i : -1; }).filter(function (i) { return i >= 0; });
+      (photos.length ? photos : [0]).forEach(function (i) { hangers.push({ p: p, c: i }); });
+    });
+    $('rail-track').innerHTML = hangers.map(function (h) {
+      var p = h.p, design = p.variantLabel === 'Design' ? ' · ' + p.colors[h.c][0] : '';
+      return '<a class="rail-item" href="' + productLink(p) + (h.c ? '&c=' + h.c : '') + '">' + HANGER +
+        '<span class="rail-art">' + artFor(p, h.c) + '</span>' +
+        '<span class="rail-tag"><b>' + esc(p.name + design) + '</b><span>' + (isSoldOut(p) ? 'Sold out' : money(p.price)) + '</span></span></a>';
+    }).join('');
+  }
   // Saved items and recently viewed, kept only in this browser
   function readList(k) { try { var v = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(v) ? v : []; } catch (err) { return []; } }
   function writeList(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (err) {} }
