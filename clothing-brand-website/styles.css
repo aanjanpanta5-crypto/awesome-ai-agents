@@ -1737,8 +1737,6 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail { margin: 28px 0 8px; }
 .rail-hint { font-size: .72rem; color: var(--muted); }
 .rail-track { position: relative; display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 18px 6px 14px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
-/* the metal pole the hangers sit on, scrolling with them */
-.rail-track { background: linear-gradient(#5f5f5f, #fbfbfb 32%, #c4c4c4 55%, #6d6d6d) 0 24px / 100% 7px no-repeat local, linear-gradient(rgba(0,0,0,.16), transparent) 0 31px / 100% 7px no-repeat local; }
 .rail-item { flex: none; width: 150px; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--ink);
   transform-origin: 50% 0; transition: transform .5s cubic-bezier(.3, 1.6, .5, 1); }
 .rail-item:hover, .rail-item:focus-visible, .rail-item:active { transform: rotate(-4deg); }
@@ -1757,7 +1755,6 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail-page .rail-tag { max-width: 210px; font-size: .88rem; }
 .rail-page .rail-hanger { width: 210px; height: 84px; }
 .rail-page .rail-art { margin-top: -34px; }
-.rail-page .rail-track { background-position: 0 28px, 0 35px; }
 .rail-foot { display: flex; gap: 10px; flex-wrap: wrap; }
 
 
@@ -1770,3 +1767,20 @@ section.acp-chat { padding: 0; margin: 0; }
 /* Brand red on the rail: red swing tags */
 .rail-tag { background: #e0102e; border-color: #b50c25; color: #fff; }
 .rail-tag span { color: rgba(255,255,255,.92); }
+
+/* Real chrome rail fixed to the wall: the pole stays still while the hangers slide along it */
+.rail-wall { position: relative; }
+.rail-wall::before { content: ""; position: absolute; left: 10px; right: 10px; top: 20px; height: 12px; border-radius: 6px; pointer-events: none;
+  background: linear-gradient(#4e4e4e 0%, #bdbdbd 14%, #ffffff 30%, #d6d6d6 42%, #8c8c8c 64%, #6a6a6a 78%, #b3b3b3 90%, #5a5a5a 100%);
+  box-shadow: 0 7px 9px -2px rgba(0,0,0,.35), 0 14px 18px rgba(0,0,0,.12); }
+.rail-wall::after { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 36px; pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, #7a7a7a 0 1.6px, transparent 2.2px) 7px 4px / 12px 12px no-repeat,
+    radial-gradient(circle at 50% 50%, #7a7a7a 0 1.6px, transparent 2.2px) 7px 20px / 12px 12px no-repeat,
+    radial-gradient(circle at 50% 50%, #7a7a7a 0 1.6px, transparent 2.2px) right 7px top 4px / 12px 12px no-repeat,
+    radial-gradient(circle at 50% 50%, #7a7a7a 0 1.6px, transparent 2.2px) right 7px top 20px / 12px 12px no-repeat,
+    linear-gradient(90deg, #6d6d6d, #f2f2f2 35%, #c9c9c9 60%, #7c7c7c) 4px 0 / 18px 36px no-repeat,
+    linear-gradient(90deg, #6d6d6d, #f2f2f2 35%, #c9c9c9 60%, #7c7c7c) right 4px top 0 / 18px 36px no-repeat;
+  filter: drop-shadow(2px 4px 4px rgba(0,0,0,.3)); }
+.rail-page .rail-wall::before { top: 24px; height: 14px; border-radius: 7px; }
+.rail-page .rail-wall::after { top: 13px; }
