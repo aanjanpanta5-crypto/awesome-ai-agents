@@ -80,14 +80,22 @@
   // x = centre of the garment across the photo, in % (photo is 1376 px wide). Keep in order with the photo.
   if ($('rail-photo')) {
     var SPOTS = [['logo-tee', 1, 232, 'Logo Tee'], ['boxy-hoodie', 1, 418, 'Don\u2019t Look Back'], ['boxy-hoodie', 0, 618, 'Light Up'], ['pleasures-hoodie', 0, 818, 'Pleasures'], ['dice-hoodie', 0, 1008, 'Dice'], ['take-the-risk-hoodie', 0, 1200, 'Take The Risk']];
-    $('rail-photo').innerHTML = '<picture><source srcset="images/brand/rail-shop.webp" type="image/webp"><img src="images/brand/rail-shop.jpg" width="1376" height="768" alt="Acpanta pieces hanging on a chrome rail in the shop" decoding="async"></picture>' +
-      SPOTS.map(function (sp) {
-        var p = byId[sp[0]]; if (!p) return '';
-        var label = p.variantLabel === 'Design' && p.colors.length > 1 ? p.name + ' · ' + p.colors[sp[1]][0] : p.name;
-        var price = isSoldOut(p) ? 'Sold out' : money(p.price);
-        return '<a class="rail-spot" style="left:' + (sp[2] / 1376 * 100).toFixed(2) + '%" href="' + productLink(p) + (sp[1] ? '&c=' + sp[1] : '') + '" aria-label="' + esc(label + ', ' + price) + '">' +
-          '<span class="rail-spot-tag" aria-hidden="true">' + esc(sp[3]) + '<span>' + price + '</span></span></a>';
-      }).join('');
+    // Two copies side by side so the rail can glide round and round without a gap (the copy is hidden from screen readers)
+    var railHTML = function (copy) {
+      return '<div class="rail-photo"' + (copy ? ' aria-hidden="true"' : '') + '><picture><source srcset="images/brand/rail-shop.webp" type="image/webp"><img src="images/brand/rail-shop.jpg" width="1376" height="768" alt="' + (copy ? '' : 'Acpanta pieces hanging on a chrome rail in the shop') + '" decoding="async"></picture>' +
+        SPOTS.map(function (sp) {
+          var p = byId[sp[0]]; if (!p) return '';
+          var label = p.variantLabel === 'Design' && p.colors.length > 1 ? p.name + ' · ' + p.colors[sp[1]][0] : p.name;
+          var price = isSoldOut(p) ? 'Sold out' : money(p.price);
+          return '<a class="rail-spot" style="left:' + (sp[2] / 1376 * 100).toFixed(2) + '%" href="' + productLink(p) + (sp[1] ? '&c=' + sp[1] : '') + '"' + (copy ? ' tabindex="-1"' : '') + ' aria-label="' + esc(label + ', ' + price) + '">' +
+            '<span class="rail-spot-tag" aria-hidden="true">' + esc(sp[3]) + '<span>' + price + '</span></span></a>';
+        }).join('') + '</div>';
+    };
+    $('rail-photo').innerHTML = railHTML(false) + railHTML(true);
+    // Phones: a touch holds the rail still for a moment so the shopper can tap a piece
+    var railBox = $('rail-photo').parentNode, railTimer;
+    railBox.addEventListener('touchstart', function () { clearTimeout(railTimer); railBox.classList.add('is-held'); }, { passive: true });
+    railBox.addEventListener('touchend', function () { railTimer = setTimeout(function () { railBox.classList.remove('is-held'); }, 3000); }, { passive: true });
   }
   // Saved items and recently viewed, kept only in this browser
   function readList(k) { try { var v = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(v) ? v : []; } catch (err) { return []; } }

@@ -1735,9 +1735,15 @@ section.acp-chat { padding: 0; margin: 0; }
 
 /* ---------- "On the rail": Acpanta's shop photo, tap a piece to shop it ---------- */
 .rail { margin: 28px 0 8px; }
-.rail-scroll { overflow-x: auto; border-radius: 14px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
-.rail-photo { position: relative; min-width: 100%; }
-@media (max-width: 820px) { .rail-photo { min-width: 860px; } } /* phones: big enough to see, swipe along the rail */
+.rail-scroll { overflow: hidden; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
+/* The rail glides round and round; touching or hovering it stops it so a piece can be tapped */
+.rail-loop { display: flex; width: max-content; animation: rail-round 45s linear infinite; }
+.rail-scroll:hover .rail-loop, .rail-scroll:focus-within .rail-loop, .rail-scroll.is-held .rail-loop { animation-play-state: paused !important; }
+@media (pointer: coarse) { .rail-loop { animation-play-state: running !important; } .rail-scroll.is-held .rail-loop { animation-play-state: paused !important; } }
+@keyframes rail-round { to { transform: translateX(-50%); } }
+.rail-photo { position: relative; flex: none; width: min(1200px, calc(100vw - 32px)); }
+@media (max-width: 820px) { .rail-photo { width: 860px; } } /* phones: big enough to see */
+@media (prefers-reduced-motion: reduce) { .rail-scroll { overflow-x: auto; } .rail-loop { animation: none; } .rail-photo[aria-hidden] { display: none; } }
 .rail-photo img { display: block; width: 100%; height: auto; }
 .rail-spot { position: absolute; top: 26%; height: 46%; width: 13%; transform: translateX(-50%); border-radius: 10px; text-decoration: none; transition: background .2s ease, box-shadow .2s ease; }
 .rail-spot:hover, .rail-spot:focus-visible { background: rgba(255,255,255,.08); box-shadow: 0 0 0 2px rgba(224,16,46,.85); outline: none; }
