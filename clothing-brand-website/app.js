@@ -78,7 +78,17 @@
 
   // "On the rail": every piece hanging on a clothes rail (shop page). Each design with a photo gets its own hanger.
   if ($('rail-track')) {
-    var HANGER = '<svg class="rail-hanger" viewBox="0 0 120 46" aria-hidden="true"><path d="M60 26c0-6 8-6 8-13a8 8 0 0 0-16 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M60 26L8 42h104z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></svg>';
+    // Real-looking hanger: chrome hook over the rail, matte black shoulders stamped ACPANTA (gradients defined once below)
+    if (!$('acp-hanger-defs')) document.body.insertAdjacentHTML('beforeend', '<svg id="acp-hanger-defs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' +
+      '<linearGradient id="acpChrome" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a8a8a"/><stop offset=".35" stop-color="#f7f7f7"/><stop offset=".6" stop-color="#a3a3a3"/><stop offset="1" stop-color="#e2e2e2"/></linearGradient>' +
+      '<linearGradient id="acpMatte" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4a4a"/><stop offset=".45" stop-color="#1b1b1b"/><stop offset="1" stop-color="#050505"/></linearGradient></defs></svg>');
+    var HANGER = '<svg class="rail-hanger" viewBox="0 0 160 64" aria-hidden="true">' +
+      '<path d="M80 34V18C80 6 94 2 97 12C99 18 94 22 90 20" fill="none" stroke="url(#acpChrome)" stroke-width="3.4" stroke-linecap="round"/>' +
+      '<rect x="76.5" y="28" width="7" height="8" rx="2" fill="url(#acpChrome)"/>' +
+      '<path d="M8 58Q8 52 14 50Q48 38 80 33Q112 38 146 50Q152 52 152 58Q151 62 146 61Q112 47 80 44Q48 47 14 61Q9 62 8 58Z" fill="url(#acpMatte)"/>' +
+      '<path d="M16 51Q48 40 80 35Q112 40 144 51" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.1"/>' +
+      '<path d="M25 46.5l1.6 2.8M135 46.5l-1.6 2.8" stroke="#000" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<text x="80" y="41.6" text-anchor="middle" font-size="4.6" letter-spacing="1.3" fill="#b9b9b9" font-family="IBM Plex Mono, monospace">ACPANTA</text></svg>';
     var hangers = [];
     PRODUCTS.forEach(function (p) {
       if (p.digital) return;
