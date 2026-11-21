@@ -75,6 +75,23 @@
   var PID = '';
   try { PID = new URLSearchParams(location.search).get('id') || ''; } catch (err) {}
   function productLink(p) { return 'product.html?id=' + encodeURIComponent(p.id); }
+
+  // "On the rail": every piece hanging on a clothes rail (shop page). Each design with a photo gets its own hanger.
+  if ($('rail-track')) {
+    var HANGER = '<svg class="rail-hanger" viewBox="0 0 120 46" aria-hidden="true"><path d="M60 26c0-6 8-6 8-13a8 8 0 0 0-16 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M60 26L8 42h104z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></svg>';
+    var hangers = [];
+    PRODUCTS.forEach(function (p) {
+      if (p.digital) return;
+      var photos = p.colors.map(function (c, i) { return c[2] ? i : -1; }).filter(function (i) { return i >= 0; });
+      (photos.length ? photos : [0]).forEach(function (i) { hangers.push({ p: p, c: i }); });
+    });
+    $('rail-track').innerHTML = hangers.map(function (h) {
+      var p = h.p, design = p.variantLabel === 'Design' ? ' · ' + p.colors[h.c][0] : '';
+      return '<a class="rail-item" href="' + productLink(p) + (h.c ? '&c=' + h.c : '') + '">' + HANGER +
+        '<span class="rail-art">' + artFor(p, h.c) + '</span>' +
+        '<span class="rail-tag"><b>' + esc(p.name + design) + '</b><span>' + (isSoldOut(p) ? 'Sold out' : money(p.price)) + '</span></span></a>';
+    }).join('');
+  }
   // Saved items and recently viewed, kept only in this browser
   function readList(k) { try { var v = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(v) ? v : []; } catch (err) { return []; } }
   function writeList(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (err) {} }
@@ -404,7 +421,7 @@
   menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
   var item = function (href, label, note, low) { return '<li><a href="' + href + '">' + label + (note ? ' <small class="menu-note' + (low ? ' low' : '') + '">' + note + '</small>' : '') + '</a></li>'; };
   menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
-    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + item('looks.html', 'Shop the look', 'Batch 01 Men') + item('batch-01.html', 'Batch 01', 'The series') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
+    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + item('looks.html', 'Shop the look', 'Batch 01 Men') + item('rail.html', 'The rail', 'Every piece, hanging') + item('batch-01.html', 'Batch 01', 'The series') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
     '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
     item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
     item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
