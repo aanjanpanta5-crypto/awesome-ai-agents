@@ -1736,15 +1736,15 @@ section.acp-chat { padding: 0; margin: 0; }
 /* ---------- "On the rail": clothes rail display (shop page) ---------- */
 .rail { margin: 28px 0 8px; }
 .rail-hint { font-size: .72rem; color: var(--muted); }
-.rail-track { position: relative; display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 22px 6px 14px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.rail-track { position: relative; display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 18px 6px 14px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
 /* the metal pole the hangers sit on, scrolling with them */
-.rail-track { background: linear-gradient(#9a9a9a, #e9e9e9 35%, #7d7d7d) 0 14px / 100% 6px no-repeat local; }
+.rail-track { background: linear-gradient(#5f5f5f, #fbfbfb 32%, #c4c4c4 55%, #6d6d6d) 0 24px / 100% 7px no-repeat local, linear-gradient(rgba(0,0,0,.16), transparent) 0 31px / 100% 7px no-repeat local; }
 .rail-item { flex: none; width: 150px; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--ink);
   transform-origin: 50% 0; transition: transform .5s cubic-bezier(.3, 1.6, .5, 1); }
 .rail-item:hover, .rail-item:focus-visible, .rail-item:active { transform: rotate(-4deg); }
 .rail-item:nth-child(even):hover, .rail-item:nth-child(even):focus-visible, .rail-item:nth-child(even):active { transform: rotate(4deg); }
-.rail-hanger { width: 96px; height: 37px; margin-top: -16px; color: #3a3a3a; flex: none; }
-.rail-art { display: block; width: 150px; aspect-ratio: 4 / 5; margin-top: -6px; border-radius: 8px; overflow: hidden; background: radial-gradient(ellipse 80% 70% at 50% 40%, #fdfcfa, #eeede8); box-shadow: 0 8px 18px rgba(0,0,0,.12); }
+.rail-hanger { position: relative; z-index: 2; width: 150px; height: 60px; margin-top: 0; flex: none; filter: drop-shadow(0 3px 3px rgba(0,0,0,.25)); }
+.rail-art { display: block; width: 150px; aspect-ratio: 4 / 5; margin-top: -24px; border-radius: 8px; overflow: hidden; background: radial-gradient(ellipse 80% 70% at 50% 40%, #fdfcfa, #eeede8); box-shadow: 0 8px 18px rgba(0,0,0,.12); }
 .rail-art img, .rail-art svg { width: 100%; height: 100%; object-fit: cover; display: block; }
 .rail-tag { margin-top: 8px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 4px; background: #fdfcfa; text-align: center; font-size: .8rem; line-height: 1.3; max-width: 150px; }
 .rail-tag b { display: block; font-weight: 600; }
@@ -1755,6 +1755,20 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail-page .rail-item { width: 210px; }
 .rail-page .rail-art { width: 210px; }
 .rail-page .rail-tag { max-width: 210px; font-size: .88rem; }
-.rail-page .rail-hanger { width: 120px; height: 46px; margin-top: -20px; }
-.rail-page .rail-track { background-position: 0 18px; padding-top: 28px; }
+.rail-page .rail-hanger { width: 210px; height: 84px; }
+.rail-page .rail-art { margin-top: -34px; }
+.rail-page .rail-track { background-position: 0 28px, 0 35px; }
 .rail-foot { display: flex; gap: 10px; flex-wrap: wrap; }
+
+
+/* Rail backdrop: the concrete shop wall from Acpanta's store photo (images/brand/store.jpg) */
+.rail { position: relative; padding: 22px 16px 18px; border-radius: 14px; overflow: hidden; box-shadow: inset 0 -18px 30px rgba(0,0,0,.06);
+  background: #cfcfcd url(images/brand/concrete.jpg) center / cover;
+  background: #cfcfcd image-set(url(images/brand/concrete.webp) type("image/webp"), url(images/brand/concrete.jpg) type("image/jpeg")) center / cover; }
+.rail-tag { box-shadow: 0 4px 10px rgba(0,0,0,.12); }
+.rail-page { margin: 0 auto 8px; max-width: 1200px; }
+.rail-hero { display: block; max-width: 1200px; margin: 0 auto 18px; padding: 0 16px; }
+.rail-hero img { display: block; width: 100%; height: auto; aspect-ratio: 1376 / 768; object-fit: cover; border-radius: 14px; }
+/* Brand red on the rail: red swing tags */
+.rail-tag { background: #e0102e; border-color: #b50c25; color: #fff; }
+.rail-tag span { color: rgba(255,255,255,.92); }
