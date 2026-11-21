@@ -88,7 +88,7 @@
       '<path d="M8 58Q8 52 14 50Q48 38 80 33Q112 38 146 50Q152 52 152 58Q151 62 146 61Q112 47 80 44Q48 47 14 61Q9 62 8 58Z" fill="url(#acpMatte)"/>' +
       '<path d="M16 51Q48 40 80 35Q112 40 144 51" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.1"/>' +
       '<path d="M25 46.5l1.6 2.8M135 46.5l-1.6 2.8" stroke="#000" stroke-width="1.6" stroke-linecap="round"/>' +
-      '<text x="80" y="41.6" text-anchor="middle" font-size="4.6" letter-spacing="1.3" fill="#b9b9b9" font-family="IBM Plex Mono, monospace">ACPANTA</text></svg>';
+      '<text x="80" y="41.6" text-anchor="middle" font-size="4.6" letter-spacing="1.3" fill="#e0102e" font-weight="600" font-family="IBM Plex Mono, monospace">ACPANTA</text></svg>';
     var hangers = [];
     PRODUCTS.forEach(function (p) {
       if (p.digital) return;

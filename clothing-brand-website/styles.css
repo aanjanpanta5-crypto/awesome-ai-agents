@@ -1769,3 +1769,6 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail-page { margin: 0 auto 8px; max-width: 1200px; }
 .rail-hero { display: block; max-width: 1200px; margin: 0 auto 18px; padding: 0 16px; }
 .rail-hero img { display: block; width: 100%; height: auto; aspect-ratio: 1376 / 768; object-fit: cover; border-radius: 14px; }
+/* Brand red on the rail: red swing tags */
+.rail-tag { background: #e0102e; border-color: #b50c25; color: #fff; }
+.rail-tag span { color: rgba(255,255,255,.92); }
