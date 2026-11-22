@@ -234,8 +234,7 @@
     var c = p.colors[p.sel];
     return '<article class="card" data-id="' + p.id + '">' +
       '<div class="art' + (c[2] ? ' has-photo' : '') + '"><a class="art-link" href="' + productLink(p) + '" aria-label="View ' + esc(p.name) + '"></a>' + badgeHTML(p) + artFor(p, p.sel) +
-      '<button type="button" class="zoom-btn" data-zoom aria-label="Zoom in on ' + esc(p.name) + '">' + ZOOM_ICON + '</button>' +
-      '<button type="button" class="share-btn-icon" data-share aria-label="Share ' + esc(p.name) + ' with a friend">' + SHARE_ICON + '</button>' + saveBtn(p, 'save-btn-icon') + '</div>' +
+      saveBtn(p, 'save-btn-icon') + '</div>' +
       '<div class="card-top"><h3><a href="' + productLink(p) + '">' + p.name + '</a></h3><span class="price">' + money(p.price) + '</span></div>' +
       '<p class="spec mono">' + p.spec + '</p>' +
       (p.details ? '<details class="pdetails"><summary>Details</summary><ul>' + p.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></details>' : '') +
@@ -610,7 +609,7 @@
     var extra = $('bag-extra');
     if (extra) {
       var look = completeTheLook();
-      extra.innerHTML = '<p class="batch-note mono">First batch: just 185 pieces in total</p><p class="dispatch-line">' + ICON.box + 'Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
+      extra.innerHTML = '<p class="batch-note">Batch 01 · 185 pieces</p><p class="dispatch-line">' + ICON.box + 'Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
         (bag.some(function (l) { return byId[l.id] && !byId[l.id].digital; }) ? '<p class="eta-line">' + ICON.cal + etaText() + '</p>' : '') +
         (look ? '<a class="xsell" href="' + productLink(look.p) + '"><span class="xsell-art">' + artFor(look.p, look.c) + '</span><span><b>Complete the look</b><span>' + esc(look.p.name) + ' · ' + esc(look.p.colors[look.c][0]) + ' · ' + money(look.p.price) + '</span></span><span class="xsell-go">View →</span></a>' : '');
     }

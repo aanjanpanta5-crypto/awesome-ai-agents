@@ -1841,3 +1841,26 @@ html body *:not(#_) { font-style: normal !important; }
 .wa-help .ico { margin-right: 0; }
 /* Prices and counts line up */
 .price, .totals, .qty, .rs-card-price, .bag-count { font-variant-numeric: tabular-nums; }
+
+/* POLISH PASS 2 (Nov 2026) */
+/* 1. One easy-to-read font for text; the typewriter font stays for small tags only */
+:root { --mono: var(--body); }
+html body :is(.acp-batch-header, .join .acp-vip-eyebrow):not(#_) { font-family: var(--body) !important; }
+html body :is(.badge, .gsm-tag, .bag-count):not(#_) { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace !important; }
+.mono { font-size: .82rem; }
+.spec { font-size: .86rem; }
+@media (max-width: 520px) { .spec { font-size: .8rem; } }
+.price { font-weight: 600; }
+/* 2. One accent: black and red instead of WhatsApp green */
+html body .wa-help:not(#_) { border: 1.5px solid #141414; color: #141414; background: #ffffff; }
+html body .wa-help:not(#_):hover { background: #141414; color: #ffffff; }
+html body .acp-wa-dot:not(#_) { background: #e0102e; }
+html body .acp-wa-float:not(#_):focus-visible { outline-color: #e0102e; }
+@media (max-width: 820px) { html body .acp-wa-float:not(#_) { background: #141414; color: #ffffff; border: 1px solid rgba(255,255,255,.2); } }
+html body .acp-chat-human:not(#_) { color: #e0102e; text-decoration: underline; text-underline-offset: 3px; }
+/* 3. Shop photos: just the heart, in the top corner (share and zoom stay on the product page) */
+.card .save-btn-icon { top: 10px; }
+/* 4. One corner style: 8px on every box, button and field (round icon buttons stay round) */
+html body :is(input:not([type=checkbox]):not([type=radio]):not(.shop-search-box input), .shop-search-box, select, textarea, .chip, .btn, .add, .checkout, .search-btn, .search-form, .wa-help, .save-btn, .share-link, .size-finder, .qty button, .rs-cta, .notify-link):not(#_) { border-radius: 8px; }
+/* 6. Bag note: plain line, no dashed box */
+html body .batch-note:not(#_) { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 4px 0 10px; font-size: .82rem; color: var(--muted); }
