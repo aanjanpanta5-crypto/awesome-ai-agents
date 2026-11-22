@@ -1,5 +1,13 @@
 /* Acpanta storefront script: products, bag, filters, size guide, sign-up form. Shared by every page. */
 (function () {
+  // Small line icons (Lucide, ISC licence) instead of emoji
+  var svg = function (d) { return '<svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; };
+  var ICON = {
+    box: svg('<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/>'),
+    cal: svg('<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>'),
+    ruler: svg('<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>'),
+    chat: svg('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>')
+  };
   var SHAPES = {
     tee: '<path d="M60 40 L85 30 Q100 44 115 30 L140 40 L170 70 L150 90 L138 80 L138 172 L62 172 L62 80 L50 90 L30 70 Z"/><path d="M85 30 Q100 44 115 30" fill="none" class="st"/>',
     hood: '<path d="M60 44 L80 34 Q78 14 100 12 Q122 14 120 34 L140 44 L168 74 L172 160 L154 162 L140 90 L140 176 L60 176 L60 90 L46 162 L28 160 L32 74 Z"/><path d="M80 34 Q100 58 120 34" fill="none" class="st"/><rect x="78" y="128" width="44" height="26" fill="none" class="st"/>',
@@ -259,16 +267,16 @@
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
       '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + fitBoxHTML(p) + buyHTML(p) + saveBtn(p, 'save-btn') +
-      (p.digital ? '' : '<details class="size-finder"><summary>📏 Find my size</summary><div class="sf-body"><label>Your chest, measured around the fullest part<span class="sf-row"><input type="number" inputmode="decimal" min="20" max="160" step="0.5" data-sf-chest placeholder="e.g. 100"><select data-sf-unit aria-label="Unit"><option value="cm">cm</option><option value="in">in</option></select></span></label><p class="sf-out" data-sf-out aria-live="polite">Enter your chest to see your size.</p></div></details>') +
+      (p.digital ? '' : '<details class="size-finder"><summary>' + ICON.ruler + 'Find my size</summary><div class="sf-body"><label>Your chest, measured around the fullest part<span class="sf-row"><input type="number" inputmode="decimal" min="20" max="160" step="0.5" data-sf-chest placeholder="e.g. 100"><select data-sf-unit aria-label="Unit"><option value="cm">cm</option><option value="in">in</option></select></span></label><p class="sf-out" data-sf-out aria-live="polite">Enter your chest to see your size.</p></div></details>') +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
       '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
-      (p.digital ? '' : '<a class="wa-help" href="https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I\'m looking at the ' + p.name + ' and need sizing help.') + '" target="_blank" rel="noopener">💬 Need sizing help? Chat with us on WhatsApp</a>' +
+      (p.digital ? '' : '<a class="wa-help" href="https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I\'m looking at the ' + p.name + ' and need sizing help.') + '" target="_blank" rel="noopener">' + ICON.chat + 'Need sizing help? Chat with us on WhatsApp</a>' +
       '<p class="pdp-guide"><a href="size-guide.html">Size guide</a></p>') +
       '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
       (p.why ? '<p class="pdp-why">' + esc(p.why) + '</p>' : '') +
       (p.digital ? '<ul class="pdp-perks mono"><li>Emailed, no delivery needed</li><li>Valid 12 months</li><li>Secure checkout by Stripe</li></ul>' :
-      '<p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
-      '<p class="eta-line">🗓️ ' + etaText() + '</p>' +
+      '<p class="dispatch-line">' + ICON.box + 'Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
+      '<p class="eta-line">' + ICON.cal + etaText() + '</p>' +
       '<ul class="pdp-perks mono"><li>Free UK delivery over £35</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
       (p.digital ? '' :
       '<div class="pdp-care"><h2 class="pdp-h">Care</h2><p class="care-icons" aria-label="Care: wash at 30 degrees inside out, do not tumble dry, do not iron the print"><span aria-hidden="true"><b class="ci">30°</b> Wash inside out</span><span aria-hidden="true"><b class="ci ci-x">⊠</b> No tumble dry</span><span aria-hidden="true"><b class="ci ci-x">✕</b> Don\'t iron the print</span></p><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>') +
@@ -602,8 +610,8 @@
     var extra = $('bag-extra');
     if (extra) {
       var look = completeTheLook();
-      extra.innerHTML = '<p class="batch-note mono">First batch: just 185 pieces in total</p><p class="dispatch-line">📦 Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
-        (bag.some(function (l) { return byId[l.id] && !byId[l.id].digital; }) ? '<p class="eta-line">🗓️ ' + etaText() + '</p>' : '') +
+      extra.innerHTML = '<p class="batch-note mono">First batch: just 185 pieces in total</p><p class="dispatch-line">' + ICON.box + 'Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
+        (bag.some(function (l) { return byId[l.id] && !byId[l.id].digital; }) ? '<p class="eta-line">' + ICON.cal + etaText() + '</p>' : '') +
         (look ? '<a class="xsell" href="' + productLink(look.p) + '"><span class="xsell-art">' + artFor(look.p, look.c) + '</span><span><b>Complete the look</b><span>' + esc(look.p.name) + ' · ' + esc(look.p.colors[look.c][0]) + ' · ' + money(look.p.price) + '</span></span><span class="xsell-go">View →</span></a>' : '');
     }
     // Delivery: £3.99, free once the clothing (not gift cards) reaches £35
@@ -811,7 +819,7 @@
   // Customisation previewer: garment, colour, view, placement and text, then hand off to WhatsApp or the form
   if ($('cz-preview')) {
     var CZ = { piece: 'tee', colour: 'Black', view: 'front', place: 'chest', text: 'YOUR TEXT' };
-    var CZ_PIECES = { tee: { name: 'Premium Logo Tee', gsm: 'premium weight', shape: 'tee' }, hood: { name: 'Heavyweight Logo Hoodie', gsm: 'premium weight', shape: 'hood' } };
+    var CZ_PIECES = { tee: { name: 'Logo Tee', gsm: 'heavy weight', shape: 'tee' }, hood: { name: 'Heavyweight Logo Hoodie', gsm: 'heavy weight', shape: 'hood' } };
     var CZ_PLACES = { front: { chest: ['Centre chest', 100, 70, 13], left: ['Left chest', 122, 66, 8] }, back: { big: ['Oversized back print', 100, 106, 22], upper: ['Upper back', 100, 66, 11] } };
     var czDraw = function () {
       var g = CZ_PIECES[CZ.piece], places = CZ_PLACES[CZ.view];
@@ -966,7 +974,7 @@
         sf.querySelector('[data-sf-unit]').value = saved.unit === 'in' ? 'in' : 'cm';
         var ci = sf.querySelector('[data-sf-chest]'); ci.value = saved.v;
         ci.dispatchEvent(new Event('input', { bubbles: true }));
-        sf.querySelector('summary').textContent = '📏 Find my size · using your saved chest size';
+        sf.querySelector('summary').innerHTML = ICON.ruler + 'Find my size · using your saved chest size';
       }
     } catch (err) {}
     var RV = readList('acpanta-recent').filter(function (id) { return id !== PID && byId[id]; });
@@ -1135,7 +1143,7 @@
     b.textContent = text; // text only, never HTML
     log.appendChild(b); log.scrollTop = log.scrollHeight; return b;
   }
-  bubble('Hi! I’m the Acpanta assistant (AI). Ask me about sizes, delivery, returns or anything in the shop. For your order, message us on WhatsApp.', 'bot');
+  bubble('Hi, I’m the Acpanta assistant (AI). Ask me about sizes, delivery, returns or anything in the shop. For your order, message us on WhatsApp.', 'bot');
   function toggle(open) {
     panel.hidden = !open; launcher.setAttribute('aria-expanded', String(open)); launcher.hidden = open;
     if (open) input.focus(); else launcher.focus();
