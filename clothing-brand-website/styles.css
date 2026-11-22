@@ -1737,7 +1737,7 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail { margin: 28px 0 8px; }
 .rail-scroll { overflow: hidden; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
 /* The rail glides round and round; touching or hovering it stops it so a piece can be tapped */
-.rail-loop { display: flex; width: max-content; animation: rail-round 45s linear infinite; }
+.rail-loop { display: flex; width: max-content; animation: rail-round 20s linear infinite; }
 .rail-scroll:hover .rail-loop, .rail-scroll:focus-within .rail-loop, .rail-scroll.is-held .rail-loop { animation-play-state: paused !important; }
 @media (pointer: coarse) { .rail-loop { animation-play-state: running !important; } .rail-scroll.is-held .rail-loop { animation-play-state: paused !important; } }
 @keyframes rail-round { to { transform: translateX(-50%); } }
