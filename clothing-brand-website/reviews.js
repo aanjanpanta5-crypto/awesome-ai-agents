@@ -5,7 +5,7 @@
    or unverified reviews presented as genuine.
 
    Example (copy, then fill in from a real customer):
-   { name: 'Sam T.', product: 'Premium Boxy Hoodie', rating: 5, date: '2026-12-01',
+   { name: 'Sam T.', product: 'Boxy Hoodie', rating: 5, date: '2026-12-01',
      text: 'What the customer actually wrote.', verified: true }
 
    name:     first name and initial only (keeps customers' privacy)

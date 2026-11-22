@@ -1817,3 +1817,50 @@ header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: acp-flip 7
 /* The hoodie rail: pause on mouse hover only (phones keep a "sticky" hover after a touch, which froze it) */
 .rail-loop { animation-play-state: running !important; }
 @media (hover: hover) and (pointer: fine) { .rail-scroll:hover .rail-loop, .rail-scroll:focus-within .rail-loop { animation-play-state: paused !important; } }
+
+/* ======================================================================
+   POLISH PASS (Nov 2026, following the "unslop" design checklist).
+   Sentence case, weights up to 600, no italics, line icons, and nothing moves
+   except the colourful logo and the hoodie rail. The :not(#_) bits only raise
+   priority so these rules beat older ones above.
+   ====================================================================== */
+html body *:not(#_):not(#_), html body *:not(#_):not(#_)::before, html body *:not(#_):not(#_)::after { animation: none !important; }
+html body .rail-loop:not(#_):not(#_) { animation: rail-round 20s linear infinite !important; }
+html body header.site .logo-mark.logo-holo:not(#_):not(#_), html body footer.site .logo-mark:not(#_):not(#_) { animation: acp-flip 7s ease-in-out infinite, holo-shift 8s linear infinite !important; }
+@media (prefers-reduced-motion: reduce) { html body .rail-loop:not(#_):not(#_), html body header.site .logo-mark:not(#_):not(#_), html body footer.site .logo-mark:not(#_):not(#_) { animation: none !important; } }
+@media (hover: hover) and (pointer: fine) { html body .rail-scroll:hover .rail-loop:not(#_):not(#_), html body .rail-scroll:focus-within .rail-loop:not(#_):not(#_) { animation-play-state: paused !important; } }
+/* Sentence case and normal spacing for labels (the logo keeps its capitals) */
+html body *:not(#_):not(.logo):not(.logo *):not(.logo-mark *) { text-transform: none !important; }
+html body :is(.mono, th, footer.site h4, .crumbs, .view-link, .share-title, .batch-note, .batch-label, .care-spec, .gsm-tag, .gsm-meter-label, .menu-note, .menu-tile small, footer.site .soon, .rs-count, .ep-kicker, .ep-num, .ep-intro-brand, .notice .marquee span, .acp-batch-header, .acp-vip-eyebrow, footer.site .legal .foot-motto, .secure-tag b, .btn-accent, .add, .checkout, .bag-watermark span, .pdp-perks, .rs-cta):not(#_) { letter-spacing: 0 !important; }
+/* Weights up to 600 */
+html body :is(h1, h2, h3, h4, b, strong, .steps .n, .holo-seal, .stats-title, .craft-grid b, .menu-tile span, .btn-accent, .add, .checkout, .review-form h3, .notice .marquee span, .motto blockquote p, .gsm-main h3, .secure-tag b, .ep-price, .acp-stat, .stats-num):not(#_) { font-weight: 600 !important; }
+/* No italics */
+html body *:not(#_) { font-style: normal !important; }
+/* Line icons sit on the text line */
+.ico { display: inline-block; vertical-align: -3px; margin-right: 6px; flex: none; }
+.wa-help .ico { margin-right: 0; }
+/* Prices and counts line up */
+.price, .totals, .qty, .rs-card-price, .bag-count { font-variant-numeric: tabular-nums; }
+
+/* POLISH PASS 2 (Nov 2026) */
+/* 1. One easy-to-read font for text; the typewriter font stays for small tags only */
+:root { --mono: var(--body); }
+html body :is(.acp-batch-header, .join .acp-vip-eyebrow):not(#_) { font-family: var(--body) !important; }
+html body :is(.badge, .gsm-tag, .bag-count):not(#_) { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace !important; }
+.mono { font-size: .82rem; }
+.spec { font-size: .86rem; }
+@media (max-width: 520px) { .spec { font-size: .8rem; } }
+.price { font-weight: 600; }
+/* 2. One accent: black and red instead of WhatsApp green */
+html body .wa-help:not(#_) { border: 1.5px solid #141414; color: #141414; background: #ffffff; }
+html body .wa-help:not(#_):hover { background: #141414; color: #ffffff; }
+html body .acp-wa-dot:not(#_) { background: #e0102e; }
+html body .acp-wa-float:not(#_):focus-visible { outline-color: #e0102e; }
+@media (max-width: 820px) { html body .acp-wa-float:not(#_) { background: #141414; color: #ffffff; border: 1px solid rgba(255,255,255,.2); } }
+html body .acp-chat-human:not(#_) { color: #e0102e; text-decoration: underline; text-underline-offset: 3px; }
+/* 3. Shop photos: just the heart, in the top corner (share and zoom stay on the product page) */
+.card .save-btn-icon { top: 10px; }
+/* 4. One corner style: 8px on every box, button and field (round icon buttons stay round) */
+html body :is(input:not([type=checkbox]):not([type=radio]):not(.shop-search-box input), .shop-search-box, select, textarea, .chip, .btn, .add, .checkout, .search-btn, .search-form, .wa-help, .save-btn, .share-link, .size-finder, .qty button, .rs-cta, .notify-link):not(#_) { border-radius: 8px; }
+/* 6. Bag note: plain line, no dashed box */
+html body .batch-note:not(#_) { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 4px 0 10px; font-size: .82rem; color: var(--muted); }
