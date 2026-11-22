@@ -1738,8 +1738,6 @@ section.acp-chat { padding: 0; margin: 0; }
 .rail-scroll { overflow: hidden; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
 /* The rail glides round and round; touching or hovering it stops it so a piece can be tapped */
 .rail-loop { display: flex; width: max-content; animation: rail-round 20s linear infinite; }
-.rail-scroll:hover .rail-loop, .rail-scroll:focus-within .rail-loop, .rail-scroll.is-held .rail-loop { animation-play-state: paused !important; }
-@media (pointer: coarse) { .rail-loop { animation-play-state: running !important; } .rail-scroll.is-held .rail-loop { animation-play-state: paused !important; } }
 @keyframes rail-round { to { transform: translateX(-50%); } }
 .rail-photo { position: relative; flex: none; width: min(1200px, calc(100vw - 32px)); }
 @media (max-width: 820px) { .rail-photo { width: 860px; } } /* phones: big enough to see */
@@ -1778,11 +1776,7 @@ body { background: #faf9f6 !important; }
 *, *::before, *::after { animation: none !important; }
 /* ...except the hoodie rail, which keeps gliding (and pauses when touched) */
 .rail-loop { animation: rail-round 20s linear infinite !important; }
-.rail-scroll:hover .rail-loop, .rail-scroll:focus-within .rail-loop, .rail-scroll.is-held .rail-loop { animation-play-state: paused !important; }
 @media (prefers-reduced-motion: reduce) { .rail-loop { animation: none !important; } }
-/* Plain black logo */
-.logo-mark.logo-holo { background: #141414 !important; filter: none !important; }
-footer.site .logo-mark { background: #ffffff !important; border: 0 !important; box-shadow: none !important; }
 /* Still, single-line top banner */
 .notice { background: #141414 !important; color: #f4f2ee !important; border: 0 !important; text-align: center; }
 .notice .marquee { transform: none !important; display: block !important; width: auto !important; }
@@ -1791,7 +1785,6 @@ footer.site .logo-mark { background: #ffffff !important; border: 0 !important; b
 /* Header and nav: black text, red underline for the current page */
 header.site { background: rgba(250,249,246,.94) !important; }
 nav.main a { -webkit-text-fill-color: #141414 !important; color: #141414 !important; background: none !important; }
-header.site .logo span:not(.logo-mark), footer.site .logo span:not(.logo-mark) { -webkit-text-fill-color: currentColor !important; background: none !important; }
 /* Buttons: solid black, white text; red on hover */
 .btn-accent, .hero .btn-accent, .add, .checkout, .chip[aria-pressed="true"], .rs-cta, .rs-pill {
   background: #141414 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; box-shadow: none !important; border: 0 !important; }
@@ -1810,13 +1803,18 @@ header.site .logo span:not(.logo-mark), footer.site .logo span:not(.logo-mark) {
 .btn-holo span { background: none !important; -webkit-text-fill-color: currentColor !important; filter: none !important; }
 .btn-ghost.btn-holo { box-shadow: inset 0 0 0 1.5px #141414 !important; color: #141414 !important; }
 .hero-seal { background: #ffffff !important; box-shadow: 0 6px 18px rgba(0,0,0,.08) !important; border: 1px solid #e6e2da !important; }
-footer.site h4 { -webkit-text-fill-color: #9a968f !important; color: #9a968f !important; background: none !important; }
-footer.site li a, footer.site p { -webkit-text-fill-color: #f4f2ee !important; color: #f4f2ee !important; background: none !important; }
-footer.site .legal, footer.site .legal * { -webkit-text-fill-color: #9a968f !important; color: #9a968f !important; background: none !important; }
-footer.site::before, .join::before { background: #e0102e !important; }
 .btn-accent.btn-holo span { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
 .btn-ghost.btn-holo span { color: #141414 !important; -webkit-text-fill-color: #141414 !important; }
 .hero-seal::before, .hero-seal::after { display: none !important; }
 .hero-seal img { filter: none !important; }
-footer.site, footer.site * { text-shadow: none !important; filter: none !important; }
-footer.site .foot-motto { color: #e0102e !important; -webkit-text-fill-color: #e0102e !important; }
+
+/* Owner's choice: the logo and the footer keep their colourful holographic style */
+header.site .logo, footer.site {
+  --holo-dark: linear-gradient(100deg, #c2187a, #2b59d9, #7a2fd0, #0d8a70, #c2187a, #2b59d9, #c2187a);
+  --holo-light: linear-gradient(100deg, #ff4fb0, #5a8cff, #a66bff, #1fd1a0, #ff4fb0, #5a8cff, #ff4fb0); }
+header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: acp-flip 7s ease-in-out infinite, holo-shift 8s linear infinite !important; animation-play-state: running !important; }
+@media (prefers-reduced-motion: reduce) { header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: none !important; } }
+/* The hoodie rail: pause on mouse hover only (phones keep a "sticky" hover after a touch, which froze it) */
+.rail-loop { animation-play-state: running !important; }
+.rail-scroll.is-held .rail-loop { animation-play-state: paused !important; }
+@media (hover: hover) and (pointer: fine) { .rail-scroll:hover .rail-loop, .rail-scroll:focus-within .rail-loop { animation-play-state: paused !important; } }
