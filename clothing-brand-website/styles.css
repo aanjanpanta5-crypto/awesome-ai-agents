@@ -1833,7 +1833,7 @@ html body header.site .logo-mark.logo-holo:not(#_):not(#_), html body footer.sit
 html body *:not(#_):not(.logo):not(.logo *):not(.logo-mark *) { text-transform: none !important; }
 html body :is(.mono, th, footer.site h4, .crumbs, .view-link, .share-title, .batch-note, .batch-label, .care-spec, .gsm-tag, .gsm-meter-label, .menu-note, .menu-tile small, footer.site .soon, .rs-count, .ep-kicker, .ep-num, .ep-intro-brand, .notice .marquee span, .acp-batch-header, .acp-vip-eyebrow, footer.site .legal .foot-motto, .secure-tag b, .btn-accent, .add, .checkout, .bag-watermark span, .pdp-perks, .rs-cta):not(#_) { letter-spacing: 0 !important; }
 /* Weights up to 600 */
-html body :is(h1, h2, h3, h4, b, strong, .steps .n, .holo-seal, .stats-title, .craft-grid b, .menu-tile span, .btn-accent, .add, .checkout, .review-form h3, .notice .marquee span, .motto blockquote p, .gsm-main h3, .secure-tag b, .ep-price, .acp-stat, .stats-num):not(#_) { font-weight: 600 !important; }
+html body :is(h1, h2, h3, h4, b, strong, .stat-value, .stat-value *, .steps .n, .holo-seal, .stats-title, .craft-grid b, .menu-tile span, .btn-accent, .add, .checkout, .review-form h3, .notice .marquee span, .motto blockquote p, .gsm-main h3, .secure-tag b, .ep-price, .acp-stat, .stats-num):not(#_) { font-weight: 600 !important; }
 /* No italics */
 html body *:not(#_) { font-style: normal !important; }
 /* Line icons sit on the text line */
