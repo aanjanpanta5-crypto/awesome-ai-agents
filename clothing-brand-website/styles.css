@@ -1864,3 +1864,21 @@ html body .acp-chat-human:not(#_) { color: #e0102e; text-decoration: underline; 
 html body :is(input:not([type=checkbox]):not([type=radio]):not(.shop-search-box input), .shop-search-box, select, textarea, .chip, .btn, .add, .checkout, .search-btn, .search-form, .wa-help, .save-btn, .share-link, .size-finder, .qty button, .rs-cta, .notify-link):not(#_) { border-radius: 8px; }
 /* 6. Bag note: plain line, no dashed box */
 html body .batch-note:not(#_) { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 4px 0 10px; font-size: .82rem; color: var(--muted); }
+
+/* LUXURY FOOTER (Nov 2026): calm black and off-white, no rainbow or glow.
+   Only the header logo keeps its colour and flip. */
+html body footer.site:not(#_) { --holo-dark: linear-gradient(#f4f2ee, #f4f2ee); --holo-light: linear-gradient(#f4f2ee, #f4f2ee); background: #0b0b0b !important; color: #f4f2ee !important; }
+html body footer.site:not(#_) *, html body footer.site:not(#_) *::before, html body footer.site:not(#_) *::after { text-shadow: none !important; filter: none !important; animation: none !important; }
+html body footer.site:not(#_) :is(a, p, span, li, div, small, h4) { background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; -webkit-text-fill-color: currentColor !important; }
+html body footer.site:not(#_) a { color: #f4f2ee !important; text-decoration: none; }
+html body footer.site:not(#_) a:hover, html body footer.site:not(#_) a:focus-visible { color: #ffffff !important; text-decoration: underline; text-decoration-color: #e0102e; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+html body footer.site:not(#_) h4 { color: #9a968f !important; font-family: var(--body) !important; font-weight: 500 !important; font-size: .8rem !important; letter-spacing: 0 !important; margin-bottom: 14px; }
+html body footer.site:not(#_) ul { display: grid; gap: 12px; }
+html body footer.site:not(#_) .wrap > div > p { color: #bdb9b2 !important; opacity: 1 !important; font-weight: 400; }
+html body footer.site:not(#_) .soon { color: #9a968f !important; opacity: 1 !important; font-family: var(--body) !important; font-size: .7rem !important; }
+html body footer.site:not(#_) .logo, html body footer.site:not(#_) .logo span { color: #f4f2ee !important; }
+html body footer.site:not(#_) .logo::before, html body footer.site:not(#_) .logo::after { display: none !important; }
+html body footer.site:not(#_) .logo-mark { background: #ffffff !important; box-shadow: none !important; border: 1px solid rgba(255,255,255,.35) !important; transform: none !important; }
+html body footer.site:not(#_) .legal { color: #9a968f !important; border-top: 1px solid #222 !important; padding-top: 18px; }
+html body footer.site:not(#_) .legal .foot-motto { color: #f4f2ee !important; }
+html body footer.site .logo-mark:not(#_):not(#_):not(#_) { animation: none !important; }
