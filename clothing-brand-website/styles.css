@@ -1816,5 +1816,4 @@ header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: acp-flip 7
 @media (prefers-reduced-motion: reduce) { header.site .logo-mark.logo-holo, footer.site .logo-mark { animation: none !important; } }
 /* The hoodie rail: pause on mouse hover only (phones keep a "sticky" hover after a touch, which froze it) */
 .rail-loop { animation-play-state: running !important; }
-.rail-scroll.is-held .rail-loop { animation-play-state: paused !important; }
 @media (hover: hover) and (pointer: fine) { .rail-scroll:hover .rail-loop, .rail-scroll:focus-within .rail-loop { animation-play-state: paused !important; } }
