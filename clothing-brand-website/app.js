@@ -42,7 +42,6 @@
   function badgeFor(p) {
     if (isSoldOut(p)) return 'Sold out';
     if (typeof p.stock === 'number' && p.stock <= 5) return 'Only ' + p.stock + ' left';
-    if (typeof p.stock === 'number' && p.stock <= 20) return 'Limited \u00b7 ' + p.stock + ' pieces';
     return p.badge || '';
   }
 
