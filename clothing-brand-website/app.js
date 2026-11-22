@@ -91,10 +91,6 @@
         }).join('') + '</div>';
     };
     $('rail-photo').innerHTML = railHTML(false) + railHTML(true);
-    // Phones: a touch holds the rail still for a moment so the shopper can tap a piece
-    var railBox = $('rail-photo').parentNode, railTimer;
-    railBox.addEventListener('touchstart', function () { clearTimeout(railTimer); railBox.classList.add('is-held'); }, { passive: true });
-    railBox.addEventListener('touchend', function () { railTimer = setTimeout(function () { railBox.classList.remove('is-held'); }, 3000); }, { passive: true });
   }
   // Saved items and recently viewed, kept only in this browser
   function readList(k) { try { var v = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(v) ? v : []; } catch (err) { return []; } }
