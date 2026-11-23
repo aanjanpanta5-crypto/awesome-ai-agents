@@ -6,7 +6,8 @@
     box: svg('<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/>'),
     cal: svg('<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>'),
     ruler: svg('<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>'),
-    chat: svg('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>')
+    chat: svg('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>'),
+    person: svg('<circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M7.5 10.5 12 11.5l4.5-1M9.5 21l2.5-6 2.5 6"/>')
   };
   var SHAPES = {
     tee: '<path d="M60 40 L85 30 Q100 44 115 30 L140 40 L170 70 L150 90 L138 80 L138 172 L62 172 L62 80 L50 90 L30 70 Z"/><path d="M85 30 Q100 44 115 30" fill="none" class="st"/>',
@@ -266,7 +267,8 @@
       '<h1>' + esc(p.name) + '</h1>' +
       '<p class="pdp-price"><span class="price">' + money(p.price) + '</span></p>' +
       '<p class="spec mono">' + p.spec + '</p>' + (p.model ? '<p class="pdp-model mono">' + esc(p.model) + '</p>' : '') + fitBoxHTML(p) + buyHTML(p) + saveBtn(p, 'save-btn') +
-      (p.digital ? '' : '<details class="size-finder"><summary>' + ICON.ruler + 'Find my size</summary><div class="sf-body"><label>Your chest, measured around the fullest part<span class="sf-row"><input type="number" inputmode="decimal" min="20" max="160" step="0.5" data-sf-chest placeholder="e.g. 100"><select data-sf-unit aria-label="Unit"><option value="cm">cm</option><option value="in">in</option></select></span></label><p class="sf-out" data-sf-out aria-live="polite">Enter your chest to see your size.</p></div></details>') +
+      (p.digital ? '' : '<details class="size-finder"><summary>' + ICON.ruler + 'Find my size</summary><div class="sf-body"><label>Your chest, measured around the fullest part<span class="sf-row"><input type="number" inputmode="decimal" min="20" max="160" step="0.5" data-sf-chest placeholder="e.g. 100"><select data-sf-unit aria-label="Unit"><option value="cm">cm</option><option value="in">in</option></select></span></label><p class="sf-out" data-sf-out aria-live="polite">Enter your chest to see your size.</p></div></details>' +
+        '<button type="button" class="save-btn tryon-open" data-tryon>' + ICON.person + 'Try it on me</button>') +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
       '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
       (p.digital ? '' : '<a class="wa-help" href="https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I\'m looking at the ' + p.name + ' and need sizing help.') + '" target="_blank" rel="noopener">' + ICON.chat + 'Need sizing help? Chat with us on WhatsApp</a>' +
@@ -571,6 +573,14 @@
     save(); renderBag();
     toast('Added ' + p.name + ' (' + p.colors[color][0] + ', ' + size + ')');
   }
+  // Small window into the shop for tryon.js (Try it on me): real products, size chart and bag
+  window.ACPANTA_SHOP = {
+    product: function (id) { return byId[id]; },
+    fitChest: FIT_CHEST,
+    soldOut: function (id, size) { return sizeSoldOut(byId[id], size); },
+    add: function (id, color, size) { addToBag(byId[id], color, size); },
+    money: money
+  };
   // Bag emblem: only shown when there's room for the whole thing
   function fitEmblem() {
     var w = document.querySelector('.bag-watermark'); if (!w) return;
