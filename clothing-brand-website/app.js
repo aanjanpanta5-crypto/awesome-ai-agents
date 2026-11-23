@@ -462,10 +462,10 @@
   menu.className = 'menu-drawer'; menu.hidden = true; menu.setAttribute('aria-label', 'Menu');
   var item = function (href, label, note, low) { return '<li><a href="' + href + '">' + label + (note ? ' <small class="menu-note' + (low ? ' low' : '') + '">' + note + '</small>' : '') + '</a></li>'; };
   menu.innerHTML = '<div class="menu-head"><span class="mono">Menu</span><button type="button" class="x" id="close-menu" aria-label="Close menu">×</button></div>' +
-    '<ul class="menu-list">' + item('women.html', 'Women', 'Coming soon') + item('shop.html', 'Men') + item('looks.html', 'Shop the look', 'Batch 01 Men') + item('rail.html', 'The rail', 'Every piece, hanging') + item('batch-01.html', 'Batch 01', 'The series') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
+    '<ul class="menu-list">' + item('shop.html', 'Shop') + item('looks.html', 'Shop the look', 'Batch 01 Men') + item('rail.html', 'The rail', 'Every piece, hanging') + item('batch-01.html', 'Batch 01', 'The series') + item('index.html', 'The Acpanta world', 'Story & reviews') + '</ul>' +
     '<ul class="menu-list">' + item('shop.html', 'New in') + item('shop.html#t-shirts', 'T-shirts') + item('shop.html#hoodies', 'Hoodies') +
-    item('shop.html#sweatshirts', 'Sweatshirts', 'Only 5 left', true) + item('perfume.html', 'Limited perfume', 'Coming soon') +
-    item('bags.html', 'Bags and small leather goods', 'Coming soon') + item('customisation.html', 'Customisation') + '</ul>' +
+    item('shop.html#sweatshirts', 'Sweatshirts') + item('customisation.html', 'Customisation') + '</ul>' +
+    '<p class="menu-note-title mono">Coming soon</p><ul class="menu-list menu-list-small">' + item('women.html', 'Women') + item('perfume.html', 'Limited perfume') + item('bags.html', 'Bags and small leather goods') + '</ul>' +
     '<ul class="menu-list menu-list-small">' + item('shop.html#search', 'Search') + '<li><a href="saved.html">Saved items <span id="saved-count"></span></a></li>' + item('help.html', 'Help centre') + item('size-guide.html', 'Size guide') + item('care.html', 'Care guide') + item('returns.html', 'Delivery &amp; returns') + item('track.html', 'Track your order') +
     item('about.html', 'About us') + item('contact.html', 'Contact us') + '<li><a href="https://www.instagram.com/acpanta9" target="_blank" rel="noopener">Instagram @acpanta9</a></li></ul>';
   document.body.appendChild(mScrim); document.body.appendChild(menu);
@@ -760,7 +760,6 @@
   if ($('size-tables')) {
     $('size-tables').hidden = !MEASUREMENTS_READY;
     $('unit-switch').hidden = !MEASUREMENTS_READY;
-    $('size-pending').hidden = MEASUREMENTS_READY;
   }
   if ($('size-body-tee')) {
   function renderSizes(unit) {
