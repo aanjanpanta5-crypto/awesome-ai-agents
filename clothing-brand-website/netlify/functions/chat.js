@@ -52,7 +52,7 @@ Gift cards: not sold at the moment.
 Size guide (https://acpanta.com/size-guide.html):
 ${SIZE_GUIDE}
 Batch 01 is a limited first batch of 185 pieces. Custom leather jackets are coming soon (waitlist on https://acpanta.com/customisation.html#leather); they can't be ordered yet.
-Complaints: by email or WhatsApp; Anjan replies within 2 working days. Prices include VAT.
+Complaints: by email or WhatsApp; Anjan replies within 2 working days. Acpanta is not VAT registered, so no VAT is added to prices.
 Payment: card, Apple Pay and Google Pay through Stripe checkout.
 Contact: WhatsApp ${WHATSAPP} (+44 7448 795690, replies every day 9am-9pm UK time) or email aanjan.panta5@gmail.com.`;
 
