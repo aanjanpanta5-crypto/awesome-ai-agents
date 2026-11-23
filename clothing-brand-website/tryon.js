@@ -35,8 +35,35 @@
 
   /* ---------- the piece itself: its real photo, or the shop drawing if it has no photo yet ---------- */
   function picture() {
+    var col = prod.colors[prod.sel] || prod.colors[0], spin = col[4];
+    if (spin && spin[1] > 1) return spinHTML(spin, col);
     var html = window.ACPANTA_ART ? window.ACPANTA_ART(prod, prod.sel || 0) : '';
     return html.replace('loading="lazy"', 'loading="eager"');
+  }
+  // 360 view: drag, swipe or use the slider / arrow keys to turn the piece. Frames are real photos taken all the way round.
+  function spinHTML(spin, col) {
+    var n = spin[1], first = spin[0] + '01.webp';
+    return '<div class="to-spin" data-spin="' + esc(spin[0]) + '" data-n="' + n + '">' +
+      '<img src="' + esc(first) + '" alt="' + esc(prod.name + ', ' + col[0] + '. Turn it with the slider') + '" draggable="false">' +
+      '<span class="to-spin-hint">Drag to turn</span>' +
+      '<input type="range" class="to-spin-range" min="0" max="' + (n - 1) + '" value="0" aria-label="Turn the ' + esc(prod.name) + '"></div>';
+  }
+  function initSpin() {
+    var box = body.querySelector('.to-spin'); if (!box) return;
+    var n = +box.dataset.n, base = box.dataset.spin, img = box.querySelector('img'), range = box.querySelector('input'), hint = box.querySelector('.to-spin-hint');
+    var cur = 0, startX = 0, startF = 0, down = false;
+    for (var i = 2; i <= n; i++) { var pre = new Image(); pre.src = base + (i < 10 ? '0' : '') + i + '.webp'; } // preload every angle
+    function show(f) {
+      f = ((Math.round(f) % n) + n) % n;
+      if (f === cur) return; cur = f;
+      img.src = base + (f + 1 < 10 ? '0' : '') + (f + 1) + '.webp'; range.value = f;
+      if (hint) { hint.remove(); hint = null; }
+    }
+    box.addEventListener('pointerdown', function (e) { if (e.target === range) return; down = true; startX = e.clientX; startF = cur; box.setPointerCapture(e.pointerId); });
+    box.addEventListener('pointermove', function (e) { if (down) show(startF - (e.clientX - startX) / (box.clientWidth / n * 1.2)); });
+    var up = function () { down = false; };
+    box.addEventListener('pointerup', up); box.addEventListener('pointercancel', up);
+    range.addEventListener('input', function () { show(+range.value); });
   }
 
   /* ---------- size, from Acpanta's own guide ---------- */
@@ -110,6 +137,7 @@
         }).join('') + '</div></div>' +
         '<p class="to-basis">' + (c.exact ? 'Based on your ' + c.cm + ' cm chest and our size guide.' : 'An estimate from your height and weight. Add your chest measurement for an exact match.') + (r.note ? ' ' + r.note : '') + '</p>' +
         '<button type="button" class="btn btn-accent to-main" data-act="add"' + (SHOP.soldOut(prod.id, sel) ? ' disabled' : '') + '>Add to bag · size ' + sel + '</button>';
+      initSpin();
     }
   }
 
