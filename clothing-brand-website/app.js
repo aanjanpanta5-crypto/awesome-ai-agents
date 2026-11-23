@@ -1183,7 +1183,7 @@
   panel.querySelector('.acp-chat-chips').addEventListener('click', function (e) { if (e.target.tagName === 'BUTTON') ask(e.target.textContent); });
 })();
 
-// Track your order page: opens Royal Mail tracking, or asks us on WhatsApp
+// Track your order page: opens Royal Mail or Evri tracking (picked from the number's format), or asks us on WhatsApp
 (function () {
   var form = document.getElementById('track-form');
   if (!form) return;
@@ -1192,8 +1192,11 @@
     e.preventDefault();
     var n = input.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
     if (n.length < 8) { msg.textContent = 'Please enter the tracking number from your posting email.'; input.focus(); return; }
-    msg.textContent = 'Opening Royal Mail tracking for ' + n + '…';
-    window.open('https://www.royalmail.com/track-your-item#/tracking-results/' + encodeURIComponent(n), '_blank', 'noopener');
+    // Royal Mail numbers look like AB123456789GB; anything else is an Evri number
+    var rm = /^[A-Z]{2}\d{9}[A-Z]{2}$/.test(n);
+    msg.textContent = 'Opening ' + (rm ? 'Royal Mail' : 'Evri') + ' tracking for ' + n + '…';
+    window.open(rm ? 'https://www.royalmail.com/track-your-item#/tracking-results/' + encodeURIComponent(n)
+      : 'https://www.evri.com/track/parcel/' + encodeURIComponent(n), '_blank', 'noopener');
   });
   var ask = document.getElementById('track-order'), wa = document.getElementById('track-wa');
   function setWa() {
