@@ -46,7 +46,7 @@
     return art(p.shape, c[1], p.print);
   }
   window.ACPANTA_ART = artFor; // used by the Shop the look slider (looks.js)
-  // Sold out: stock 0 for the whole product, or a size listed in soldOut (e.g. soldOut: ['XL'])
+  // Sold out: stock 0 for the whole product, or a size listed in soldOut (e.g. soldOut: ['L'])
   function isSoldOut(p) { return typeof p.stock === 'number' && p.stock <= 0; }
   function sizeLeft(p, s) { return p.sizeStock && typeof p.sizeStock[s] === 'number' ? p.sizeStock[s] : null; }
   function sizeSoldOut(p, s) { return isSoldOut(p) || (p.soldOut || []).indexOf(s) !== -1 || sizeLeft(p, s) === 0; }
@@ -156,13 +156,13 @@
   // While false, no numbers are shown anywhere; customers are asked to message you instead.
   var MEASUREMENTS_READY = true;
   var SIZE_TABLES = {
-    'size-body-tee': [['S', 53, 71, 22], ['M', 56, 73, 23], ['L', 59, 75, 24], ['XL', 62, 77, 25]],
-    'size-body-hood': [['S', 58, 70, 60], ['M', 61, 72, 61], ['L', 64, 74, 62], ['XL', 67, 76, 63]]
+    'size-body-tee': [['S', 53, 71, 22], ['M', 56, 73, 23], ['L', 59, 75, 24]],
+    'size-body-hood': [['S', 58, 70, 60], ['M', 61, 72, 61], ['L', 64, 74, 62]]
   };
   // Rough body chest each size suits, worked out from the garment's flat chest width.
   // Tees sit closer; hoodies and sweatshirts are cut roomier.
   // Body chest each size fits (cm), from Acpanta's own size guide
-  var FIT_CHEST = { S: [91, 96], M: [99, 104], L: [107, 112], XL: [114, 119] };
+  var FIT_CHEST = { S: [91, 96], M: [99, 104], L: [107, 112] };
   function fitRange(tableId, row) { return FIT_CHEST[row[0]]; }
 
   // Text shown on a product card and in the bag once a size is picked
@@ -1028,7 +1028,7 @@
 
   // Find my size: compares body chest with each size's "fits chest" range
   function sizeAdvice(p, chestCm) {
-    var boxy = p.cat !== 'T-shirts', order = ['S', 'M', 'L', 'XL'], pick = null, between = null;
+    var boxy = p.cat !== 'T-shirts', order = ['S', 'M', 'L'], pick = null, between = null;
     for (var i = 0; i < order.length; i++) {
       var r = FIT_CHEST[order[i]];
       if (chestCm >= r[0] && chestCm <= r[1]) { pick = order[i]; break; }
@@ -1037,7 +1037,7 @@
     if (pick) return '<b>We recommend ' + pick + '.</b> ' + (boxy ? 'That gives the relaxed, boxy fit. Size down for a closer, standard fit.' : 'True to size, with a clean everyday drape.');
     if (between) return '<b>You\'re between ' + between[0] + ' and ' + between[1] + '.</b> Pick ' + between[0] + ' for a closer fit or ' + between[1] + (boxy ? ' for the full boxy look.' : ' for a relaxed fit.');
     if (chestCm < FIT_CHEST.S[0]) return '<b>S is our smallest size</b> and will fit you loosely. <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a> if you\'re unsure.';
-    return '<b>XL is our largest size</b> and may be snug on you. <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a> and we\'ll help.';
+    return '<b>L is our largest size</b> and may be snug on you. <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Ask us on WhatsApp</a> and we\'ll help.';
   }
   document.addEventListener('input', function (e) {
     var box = e.target.closest && e.target.closest('.size-finder'); if (!box) return;
@@ -1049,7 +1049,7 @@
     out.innerHTML = sizeAdvice(p, cm);
     // Remember it on this device, and pick the recommended size if none is chosen yet
     try { localStorage.setItem('acpanta-chest', JSON.stringify({ v: v, unit: unit })); } catch (err) {}
-    var rec = /We recommend (S|M|L|XL)\./.exec(out.textContent), sel = el.querySelector('select[id^="size-"]');
+    var rec = /We recommend (S|M|L)\./.exec(out.textContent), sel = el.querySelector('select[id^="size-"]');
     if (rec && sel && !sel.value) {
       var opt = sel.querySelector('option[value="' + rec[1] + '"]');
       if (opt && !opt.disabled) { sel.value = rec[1]; sel.dispatchEvent(new Event('change', { bubbles: true })); }
