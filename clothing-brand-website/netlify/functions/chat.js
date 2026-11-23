@@ -15,9 +15,9 @@ const money = (n) => `£${n % 1 ? n.toFixed(2) : n}`;
 const D = PRODUCTS.DELIVERY;
 
 // Size guide: flat garment measurements in cm. Keep in sync with SIZE_TABLES / FIT_CHEST in app.js.
-const SIZE_GUIDE = `T-shirts (chest across / length / sleeve): S 53/71/22, M 56/73/23, L 59/75/24, XL 62/77/25.
-Hoodies and sweatshirts (chest across / length / sleeve): S 58/70/60, M 61/72/61, L 64/74/62, XL 67/76/63.
-Body chest each size fits: S 91-96 cm, M 99-104 cm, L 107-112 cm, XL 114-119 cm.`;
+const SIZE_GUIDE = `T-shirts (chest across / length / sleeve): S 53/71/22, M 56/73/23, L 59/75/24.
+Hoodies and sweatshirts (chest across / length / sleeve): S 58/70/60, M 61/72/61, L 64/74/62.
+Body chest each size fits: S 91-96 cm, M 99-104 cm, L 107-112 cm. L is the largest size; there is no XL.`;
 
 const catalogue = PRODUCTS.map((p) => {
   const variants = p.colors.map((c) => c[0]).join(', ');

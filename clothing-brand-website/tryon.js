@@ -9,7 +9,7 @@
   var SHOP = window.ACPANTA_SHOP;
   if (!SHOP) return;
 
-  var SIZES = ['S', 'M', 'L', 'XL'];
+  var SIZES = ['S', 'M', 'L'];
   var KEY = 'acpanta-tryon';
   var profile = { figure: null, height: 175, weight: 72, chest: '', shape: null, fit: null };
   try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && typeof s === 'object') Object.keys(profile).forEach(function (k) { if (k in s) profile[k] = s[k]; }); } catch (e) {}
@@ -82,7 +82,7 @@
     SIZES.forEach(function (sz) { var mid = (F[sz][0] + F[sz][1]) / 2, d = Math.abs(mid - ch); if (d < diff) { diff = d; best = sz; } });
     var note = '';
     if (ch < F.S[0] - 3) note = 'S is our smallest size and will be loose on you.';
-    else if (ch > F.XL[1] + 3) note = 'XL is our largest size and may be snug. Message us on WhatsApp and we\'ll help.';
+    else if (ch > F.L[1] + 3) note = 'L is our largest size and may be snug. Message us on WhatsApp and we\'ll help.';
     else if (boxy && profile.fit === 'fitted') note = 'Our hoodies and sweatshirts are cut boxy, so this size sits closer than the full boxy look.';
     return { size: best, note: note };
   }
