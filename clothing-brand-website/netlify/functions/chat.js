@@ -54,7 +54,7 @@ ${SIZE_GUIDE}
 Batch 01 is a limited first batch of 185 pieces. Custom leather jackets are coming soon (waitlist on https://acpanta.com/customisation.html#leather); they can't be ordered yet.
 Complaints: by email or WhatsApp; Anjan replies within 2 working days. Prices include VAT.
 Payment: card, Apple Pay and Google Pay through Stripe checkout.
-Contact: WhatsApp ${WHATSAPP} (+44 7448 795690) or email aanjan.panta5@gmail.com.`;
+Contact: WhatsApp ${WHATSAPP} (+44 7448 795690, replies every day 9am-9pm UK time) or email aanjan.panta5@gmail.com.`;
 
 // Best-effort limit per warm function instance: 20 messages per 10 minutes per IP
 const hits = new Map();
