@@ -1882,3 +1882,5 @@ html body footer.site:not(#_) .logo-mark { background: #ffffff !important; box-s
 html body footer.site:not(#_) .legal { color: #9a968f !important; border-top: 1px solid #222 !important; padding-top: 18px; }
 html body footer.site:not(#_) .legal .foot-motto { color: #f4f2ee !important; }
 html body footer.site .logo-mark:not(#_):not(#_):not(#_) { animation: none !important; }
+/* Bigger tap area for product names and "View details" on phones, without moving the layout */
+.card h3 a, .card .view-link { display: inline-block; padding-block: 11px; margin-block: -11px; }
