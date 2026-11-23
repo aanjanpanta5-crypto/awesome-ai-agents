@@ -7,6 +7,8 @@
     cal: svg('<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>'),
     ruler: svg('<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>'),
     chat: svg('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>'),
+    bell: svg('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'),
+    image: svg('<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>'),
     person: svg('<circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M7.5 10.5 12 11.5l4.5-1M9.5 21l2.5-6 2.5 6"/>')
   };
   var SHAPES = {
@@ -56,6 +58,10 @@
 
   var PRODUCTS = window.ACPANTA_PRODUCTS || [];
   var byId = {}; PRODUCTS.forEach(function (p) { byId[p.id] = p; p.sel = 0; });
+  // Complete the look: each piece's natural partner (tee with its hoodie, and so on)
+  var PAIRS = { 'logo-tee': 'logo-hoodie', 'printed-tee': 'zip-hoodie', 'logo-hoodie': 'logo-tee',
+    'zip-hoodie': 'printed-tee', 'boxy-hoodie': 'logo-tee', 'sweatshirt': 'logo-tee',
+    'pleasures-hoodie': 'logo-tee', 'dice-hoodie': 'logo-tee', 'take-the-risk-hoodie': 'logo-tee' };
   var DELIVERY = PRODUCTS.DELIVERY || { fee: 3.99, freeOver: 35 };
   var money = function (n) { return '£' + (n % 1 ? n.toFixed(2) : n); };
   window.ACPANTA_MONEY = money;
@@ -174,8 +180,11 @@
     var info = el.querySelector('[data-size-info]'), sel = el.querySelector('select');
     if (!info || !sel) return;
     var t = sel.value ? sizeText(byId[el.dataset.id], sel.value) : '';
-    info.innerHTML = t || (MEASUREMENTS_READY ? 'Pick a size to see its measurements' :
-      'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>');
+    var left = sel.value ? sizeLeft(byId[el.dataset.id], sel.value) : null;
+    // Low stock: only from real per-size counts (sizeStock in products.js), never made up
+    var low = left !== null && left > 0 && left <= 3 ? '<span class="low-size">Only ' + left + ' left in ' + sel.value + '</span><br>' : '';
+    info.innerHTML = low + (t || (MEASUREMENTS_READY ? 'Pick a size to see its measurements' :
+      'Need exact measurements? <a href="https://wa.me/447448795690" target="_blank" rel="noopener">Message us on WhatsApp</a>'));
     info.classList.toggle('is-set', !!t);
   }
   // Sharing: phone share menu where available, otherwise WhatsApp / Facebook / X / email / copy link
@@ -231,6 +240,28 @@
         encodeURIComponent('Hi Acpanta, please tell me when the ' + p.name + ' is back' + (isSoldOut(p) ? '' : ' in ' + p.soldOut.join('/')) + '.') +
         '" target="_blank" rel="noopener">' + (isSoldOut(p) ? 'Sold out. Tell me when it\'s back' : (p.soldOut.join(', ') + ' sold out. Tell me when it\'s back')) + '</a>' : '');
   }
+  // Back-in-stock email (product page): only for sizes that are really sold out
+  function restockHTML(p) {
+    if (p.digital) return '';
+    var gone = p.sizes.filter(function (s) { return sizeSoldOut(p, s); });
+    if (!gone.length) return '';
+    return '<details class="restock"' + (isSoldOut(p) ? ' open' : '') + '><summary>' + ICON.bell + 'Email me when it\'s back</summary>' +
+      '<form class="restock-form" name="restock" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-nf-ajax data-ok="Done. We\'ll email you once when it\'s back.">' +
+      '<input type="hidden" name="form-name" value="restock"><input type="hidden" name="product" value="' + esc(p.name + ' · ' + p.colors[p.sel][0]) + '">' +
+      '<p hidden><label>Leave this empty <input name="bot-field"></label></p>' +
+      '<label>Size<select name="size" required>' + (gone.length > 1 ? '<option value="">Choose a size</option>' : '') + gone.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select></label>' +
+      '<label>Email<input type="email" name="email" required autocomplete="email" placeholder="you@example.com"></label>' +
+      '<label class="consent"><input type="checkbox" name="consent" value="yes" required> Email me once when this is back. Nothing else.</label>' +
+      '<button class="btn btn-accent" type="submit">Notify me</button><p class="form-msg" role="status"></p></form></details>';
+  }
+  // Pairs well with (product page): the natural partner piece, if it isn't sold out
+  function pairHTML(p) {
+    var q = byId[PAIRS[p.id]];
+    if (!q || isSoldOut(q)) return '';
+    var ci = q.colors[p.sel] && p.variantLabel !== 'Design' ? p.sel : 0;
+    return '<a class="pair-card" href="' + productLink(q) + (ci ? '&c=' + ci : '') + '"><span class="pair-art">' + artFor(q, ci) + '</span>' +
+      '<span><span class="mono pair-kicker">Pairs well with</span><b>' + esc(q.name) + '</b><span>' + esc(q.colors[ci][0]) + ' · ' + money(q.price) + '</span></span><span aria-hidden="true">→</span></a>';
+  }
   function card(p) {
     var c = p.colors[p.sel];
     return '<article class="card" data-id="' + p.id + '">' +
@@ -270,9 +301,10 @@
       (p.digital ? '' : '<details class="size-finder"><summary>' + ICON.ruler + 'Find my size</summary><div class="sf-body"><label>Your chest, measured around the fullest part<span class="sf-row"><input type="number" inputmode="decimal" min="20" max="160" step="0.5" data-sf-chest placeholder="e.g. 100"><select data-sf-unit aria-label="Unit"><option value="cm">cm</option><option value="in">in</option></select></span></label><p class="sf-out" data-sf-out aria-live="polite">Enter your chest to see your size.</p></div></details>' +
         '<button type="button" class="save-btn tryon-open" data-tryon>' + ICON.person + 'Try it on me</button>') +
       '<div class="share-box"><p class="mono share-title">Share with a friend</p>' +
-      '<div class="share-links">' + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
+      '<div class="share-links">' + (p.digital ? '' : '<button type="button" class="share-link" data-story>' + ICON.image + ' Story image</button>') + (navigator.share ? '<button type="button" class="share-link share-native" data-share>' + SHARE_ICON + ' Share</button>' : '') + shareLinksHTML(p) + '</div></div>' +
       (p.digital ? '' : '<a class="wa-help" href="https://wa.me/447448795690?text=' + encodeURIComponent('Hi Acpanta, I\'m looking at the ' + p.name + ' and need sizing help.') + '" target="_blank" rel="noopener">' + ICON.chat + 'Need sizing help? Chat with us on WhatsApp</a>' +
       '<p class="pdp-guide"><a href="size-guide.html">Size guide</a></p>') +
+      restockHTML(p) + pairHTML(p) +
       '<h2 class="pdp-h">Details</h2><ul class="pdp-list">' + details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' +
       (p.why ? '<p class="pdp-why">' + esc(p.why) + '</p>' : '') +
       (p.digital ? '<ul class="pdp-perks mono"><li>Emailed, no delivery needed</li><li>Valid 12 months</li><li>Secure checkout by Stripe</li></ul>' :
@@ -573,6 +605,60 @@
     save(); renderBag();
     toast('Added ' + p.name + ' (' + p.colors[color][0] + ', ' + size + ')');
   }
+  // Story image (product page): a 1080 x 1920 picture of the piece for an Instagram or WhatsApp story
+  function loadImg(src) {
+    return new Promise(function (ok, bad) { var im = new Image(); im.onload = function () { ok(im); }; im.onerror = bad; im.src = src; });
+  }
+  function storyImage(p) {
+    var c = p.colors[p.sel] || p.colors[0], W = 1080, H = 1920;
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var x = cv.getContext('2d');
+    // A drawing's logo is a separate file, which a picture can't load from inside itself, so put it in directly
+    var drawn = function () {
+      var svg = art(p.shape, c[1], p.print).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" ').replace(/var\(--ink\)/g, '#141414');
+      var files = (svg.match(/href="[^"]+\.svg"/g) || []).map(function (h) { return h.slice(6, -1); }).filter(function (f, i, all) { return all.indexOf(f) === i; });
+      return Promise.all(files.map(function (f) { return fetch(f).then(function (r) { return r.text(); }); })).then(function (texts) {
+        files.forEach(function (f, i) { svg = svg.split('href="' + f + '"').join('href="data:image/svg+xml;charset=utf-8,' + encodeURIComponent(texts[i]).replace(/'/g, '%27') + '"'); });
+        return loadImg('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg));
+      });
+    };
+    var pic = c[2] ? loadImg(c[2].replace(/\.jpg$/, '-large.jpg')).catch(function () { return loadImg(c[2]); }) : drawn();
+    var fonts = document.fonts && document.fonts.load ? Promise.all([document.fonts.load('600 110px "Big Shoulders Display"'), document.fonts.load('400 46px "Work Sans"')]).catch(function () {}) : Promise.resolve();
+    return Promise.all([pic, loadImg('logo.svg').catch(function () { return null; }), fonts]).then(function (r) {
+      var im = r[0], logo = r[1];
+      x.fillStyle = '#faf9f6'; x.fillRect(0, 0, W, H);
+      if (logo) { var lw = 240, lh = lw * logo.height / logo.width; x.drawImage(logo, (W - lw) / 2, 110, lw, lh); }
+      // the picture, cropped to fill a rounded box
+      var bx = 90, by = 300, bw = 900, bh = 1120, sc = Math.max(bw / im.width, bh / im.height);
+      x.save(); x.beginPath();
+      if (x.roundRect) x.roundRect(bx, by, bw, bh, 24); else x.rect(bx, by, bw, bh);
+      x.clip(); x.fillStyle = c[2] ? '#efece6' : '#f4f2ee'; x.fillRect(bx, by, bw, bh);
+      if (c[2]) x.drawImage(im, bx + (bw - im.width * sc) / 2, by + (bh - im.height * sc) * 0.35, im.width * sc, im.height * sc);
+      else x.drawImage(im, bx + 60, by + 170, 780, 780);
+      x.restore();
+      x.textAlign = 'center'; x.fillStyle = '#141414';
+      x.font = '600 110px "Big Shoulders Display", "Arial Narrow", sans-serif'; x.fillText(p.name, W / 2, 1580);
+      x.font = '400 46px "Work Sans", system-ui, sans-serif'; x.fillStyle = '#4a463f';
+      x.fillText(c[0] + ' · ' + money(p.price) + ' · ' + p.spec.split(' · ')[0], W / 2, 1660);
+      x.fillStyle = '#e0102e'; x.font = '600 46px "Work Sans", system-ui, sans-serif'; x.fillText('acpanta.com', W / 2, 1790);
+      return new Promise(function (ok) { cv.toBlob(function (b) { ok(b); }, 'image/png'); });
+    });
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-story]'); if (!b) return;
+    var el = b.closest('[data-id]'), p = el && byId[el.dataset.id]; if (!p) return;
+    b.disabled = true;
+    storyImage(p).then(function (blob) {
+      var name = 'acpanta-' + p.id + '.png', file = window.File ? new File([blob], name, { type: 'image/png' }) : null;
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        return navigator.share({ files: [file], title: p.name }).catch(function () {});
+      }
+      var r = new FileReader();
+      r.onload = function () { var a = document.createElement('a'); a.href = r.result; a.download = name; document.body.appendChild(a); a.click(); a.remove(); toast('Saved. Add it to your story from your photos'); };
+      r.readAsDataURL(blob);
+    }).catch(function () { toast('Sorry, that image couldn’t be made. Please try again'); })
+      .then(function () { b.disabled = false; });
+  });
   // Small window into the shop for tryon.js (Try it on me): real products, size chart and bag
   window.ACPANTA_SHOP = {
     product: function (id) { return byId[id]; },
@@ -588,10 +674,6 @@
     if (w.clientHeight < 110) w.classList.add('is-hidden');
   }
   window.addEventListener('resize', fitEmblem);
-  // Complete the look: each piece's natural partner (tee with its hoodie, and so on)
-  var PAIRS = { 'logo-tee': 'logo-hoodie', 'printed-tee': 'zip-hoodie', 'logo-hoodie': 'logo-tee',
-    'zip-hoodie': 'printed-tee', 'boxy-hoodie': 'logo-tee', 'sweatshirt': 'logo-tee',
-    'pleasures-hoodie': 'logo-tee', 'dice-hoodie': 'logo-tee', 'take-the-risk-hoodie': 'logo-tee' };
   // Partner of the most recently added piece that isn't already in the bag or sold out, in the same colour when it exists
   function completeTheLook() {
     for (var i = bag.length - 1; i >= 0; i--) {
@@ -756,8 +838,9 @@
   }
 
   // Other forms (drop alerts, custom inquiries): send to Netlify Forms and show a message
-  [].forEach.call(document.querySelectorAll('form[data-nf-ajax]'), function (form) {
-    form.addEventListener('submit', function (e) {
+  document.addEventListener('submit', function (e) {
+    var form = e.target.closest && e.target.closest('form[data-nf-ajax]'); if (!form) return;
+    (function () {
       e.preventDefault();
       var msg = form.querySelector('.form-msg'), btn = form.querySelector('button[type=submit]');
       msg.className = 'form-msg';
@@ -773,7 +856,7 @@
           msg.innerHTML = 'Sorry, that didn’t send. Please try again, or message us on <a href="https://wa.me/447448795690" target="_blank" rel="noopener">WhatsApp</a>.';
         })
         .then(function () { btn.disabled = false; });
-    });
+    })();
   });
 
   // Interactive weight guide (home page): compare a typical 150 GSM tee with Acpanta fabrics

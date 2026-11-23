@@ -90,6 +90,8 @@
 </aside>
 <div class="toast" id="toast" hidden role="status"></div>
 
+<!-- Lets Netlify find the back-in-stock form, which app.js draws on the page -->
+<form name="restock" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="product"><input name="size"><input name="email"><input name="consent"><input name="bot-field"></form>
 <script src="products.js"></script>
 <script src="app.js"></script>
 <script src="tryon.js"></script>

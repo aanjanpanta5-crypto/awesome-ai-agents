@@ -1941,3 +1941,23 @@ html body .to-top h2:not(#_) { margin: 0; text-align: center; font: 600 1.05rem/
 .to-opt.rec small { color: #e0102e; }
 .to-opt[aria-pressed="true"] { box-shadow: inset 0 0 0 1px #141414; background: #f4f2ee; }
 .to-opt:disabled { opacity: .45; cursor: default; }
+
+/* Product page extras: back-in-stock email, Pairs well with, low stock per size */
+.low-size { color: #e0102e; font-weight: 600; }
+.restock { margin-top: 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.restock summary { cursor: pointer; padding: 12px 14px; font-weight: 600; list-style: none; display: flex; align-items: center; }
+.restock summary::-webkit-details-marker { display: none; }
+.restock-form { display: grid; gap: 12px; padding: 0 14px 14px; }
+.restock-form label { display: grid; gap: 6px; font-size: .9rem; font-weight: 500; }
+.restock-form input[type=email], .restock-form select { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); background: #fff; font: inherit; }
+.restock-form .consent { display: flex; gap: 8px; align-items: flex-start; font-weight: 400; color: var(--muted); }
+.restock-form .consent input { margin-top: 3px; }
+.pair-card { display: grid; grid-template-columns: 72px 1fr auto; gap: 14px; align-items: center; margin: 18px 0 4px; padding: 10px 14px 10px 10px;
+  border: 1px solid var(--line); border-radius: 8px; background: #fff; color: inherit; text-decoration: none; }
+.pair-card:hover { border-color: #141414; }
+.pair-art { width: 72px; height: 88px; border-radius: 6px; overflow: hidden; background: #efece6; display: grid; place-items: center; }
+.pair-art img, .pair-art picture { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pair-art svg { width: 64px; height: 64px; }
+.pair-card b { display: block; font-weight: 600; }
+.pair-card span > span:last-child { color: var(--muted); font-size: .88rem; font-variant-numeric: tabular-nums; }
+html body .pair-kicker:not(#_) { display: block; font-size: .78rem; color: var(--muted); margin-bottom: 2px; }
