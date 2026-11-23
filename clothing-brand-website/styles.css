@@ -1961,3 +1961,7 @@ html body .to-top h2:not(#_) { margin: 0; text-align: center; font: 600 1.05rem/
 .pair-card b { display: block; font-weight: 600; }
 .pair-card span > span:last-child { color: var(--muted); font-size: .88rem; font-variant-numeric: tabular-nums; }
 html body .pair-kicker:not(#_) { display: block; font-size: .78rem; color: var(--muted); margin-bottom: 2px; }
+/* Try it on me: the piece's own photo */
+.to-stage { padding: 0; overflow: hidden; aspect-ratio: 4 / 5; align-items: center; }
+.to-stage picture, .to-stage img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block; }
+.to-stage > svg { width: 80%; height: auto; }

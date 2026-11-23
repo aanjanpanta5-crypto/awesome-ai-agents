@@ -1,6 +1,6 @@
 /* Acpanta "Try it on me": a quick size helper on the product page.
-   Four questions (figure, height and weight, build, fit), then a simple drawn avatar wearing the
-   piece in its chosen colour, and a size from Acpanta's own size guide (FIT_CHEST in app.js).
+   Four questions (sizes usually bought, height and weight, build, fit), then the piece's own photo
+   (or the shop drawing) and a size from Acpanta's own size guide (FIT_CHEST in app.js).
    If the shopper gives their chest measurement, that decides the size, exactly like Find my size.
    Without it, height and weight give an estimate, and the sheet says so plainly.
    Answers stay in this browser only (localStorage), never sent anywhere. */
@@ -33,34 +33,10 @@
   document.body.appendChild(scrim); document.body.appendChild(sheet);
   var body = sheet.querySelector('.to-body'), back = sheet.querySelector('[data-act="back"]');
 
-  /* ---------- drawn avatar (a guide, not a photo) ---------- */
-  function avatar(p, piece, sizeStep, width) {
-    var bmi = p.weight / Math.pow(p.height / 100, 2);
-    var k = clamp((bmi - 15) / 9, 0.78, 1.45);
-    if (p.shape === 'slim') k *= 0.92; if (p.shape === 'broad') k *= 1.08;
-    var f = p.figure === 'women';
-    var sh = (f ? 17 : 20) * k, wa = (f ? 11 : 15) * k, hp = (f ? 17 : 15) * k;
-    var sc = 0.86 + (p.height - 150) / 300, y = function (v) { return 18 + (v - 18) * sc; };
-    var Y = { sh: y(34), wa: y(78), hip: y(92), foot: y(186) }, cx = 50, skin = '#d7b9a0', legs = '#3a3a3a', arm = Y.hip - Y.sh;
-    var o = '<ellipse cx="50" cy="' + (Y.foot + 2) + '" rx="26" ry="4" fill="#0000001a"/>' +
-      '<ellipse cx="50" cy="' + y(14) + '" rx="9" ry="11" fill="' + skin + '"/>' +
-      '<rect x="46" y="' + y(23) + '" width="8" height="' + (Y.sh - y(23)) + '" fill="' + skin + '"/>' +
-      '<path d="M' + (cx - sh) + ' ' + Y.sh + 'Q50 ' + (Y.sh - 6) + ' ' + (cx + sh) + ' ' + Y.sh + 'L' + (cx + wa) + ' ' + Y.wa + 'L' + (cx + hp) + ' ' + Y.hip + 'L' + (cx - hp) + ' ' + Y.hip + 'L' + (cx - wa) + ' ' + Y.wa + 'Z" fill="' + skin + '"/>' +
-      '<path d="M' + (cx - sh) + ' ' + Y.sh + 'l' + (-6 * k) + ' ' + (arm + 6) + 'l5 1l' + (5 * k) + ' ' + (-(arm - 4)) + 'Z M' + (cx + sh) + ' ' + Y.sh + 'l' + (6 * k) + ' ' + (arm + 6) + 'l-5 1l' + (-5 * k) + ' ' + (-(arm - 4)) + 'Z" fill="' + skin + '"/>' +
-      '<path d="M' + (cx - hp) + ' ' + Y.hip + 'L' + (cx - hp * 0.75) + ' ' + Y.foot + 'L47 ' + Y.foot + 'L49 ' + (Y.hip + 8) + 'L51 ' + (Y.hip + 8) + 'L53 ' + Y.foot + 'L' + (cx + hp * 0.75) + ' ' + Y.foot + 'L' + (cx + hp) + ' ' + Y.hip + 'Z" fill="' + legs + '"/>';
-    if (piece) {
-      var col = piece.color, e = 1 + sizeStep * 0.07, boxy = piece.shape !== 'tee';
-      var s2 = sh * e + 1.5 + (boxy ? 2 : 0), w2 = wa * e + 2 + (boxy ? 3 : 0), h2 = hp * e + 1.5 + (boxy ? 2 : 0);
-      var len = Y.hip + 6 + sizeStep * 3 + (boxy ? 2 : 0);
-      var sl = piece.shape === 'tee' ? 20 + sizeStep * 2 : arm + 6 + sizeStep * 2;
-      var line = col.toLowerCase() === '#f3f3f1' ? '#00000030' : '#ffffff30';
-      o += '<path d="M' + (cx - s2) + ' ' + (Y.sh - 1) + 'l' + (-7 * k * e) + ' ' + sl + 'l7 1l' + (5 * k) + ' ' + (-(sl - 4)) + 'Z M' + (cx + s2) + ' ' + (Y.sh - 1) + 'l' + (7 * k * e) + ' ' + sl + 'l-7 1l' + (-5 * k) + ' ' + (-(sl - 4)) + 'Z" fill="' + col + '" stroke="' + line + '" stroke-width=".6"/>' +
-        '<path d="M' + (cx - s2) + ' ' + (Y.sh - 1) + 'Q50 ' + (Y.sh - 7) + ' ' + (cx + s2) + ' ' + (Y.sh - 1) + 'L' + (cx + w2) + ' ' + Y.wa + 'L' + (cx + h2) + ' ' + len + 'L' + (cx - h2) + ' ' + len + 'L' + (cx - w2) + ' ' + Y.wa + 'Z" fill="' + col + '" stroke="' + line + '" stroke-width=".6"/>';
-      if (piece.shape !== 'tee') o += '<path d="M' + (cx - 9) + ' ' + (Y.sh - 2) + 'Q50 ' + (Y.sh - 14) + ' ' + (cx + 9) + ' ' + (Y.sh - 2) + '" fill="none" stroke="' + line + '" stroke-width="1.2"/>';
-      if (piece.shape === 'zip') o += '<path d="M50 ' + (Y.sh - 3) + 'V' + len + '" stroke="' + line + '" stroke-width="1"/>';
-      if (piece.shape === 'hood' || piece.shape === 'boxy' || piece.shape === 'zip') o += '<path d="M' + (cx - 12) + ' ' + (Y.wa + 4) + 'H' + (cx + 12) + 'V' + (Y.wa + 16) + 'H' + (cx - 12) + 'Z" fill="none" stroke="' + line + '" stroke-width=".8"/>';
-    }
-    return '<svg width="' + width + '" viewBox="0 0 100 ' + (Y.foot + 8) + '" role="img" aria-label="A simple drawing of a figure your height and build' + (piece ? ', wearing the ' + esc(prod.name) : '') + '">' + o + '</svg>';
+  /* ---------- the piece itself: its real photo, or the shop drawing if it has no photo yet ---------- */
+  function picture() {
+    var html = window.ACPANTA_ART ? window.ACPANTA_ART(prod, prod.sel || 0) : '';
+    return html.replace('loading="lazy"', 'loading="eager"');
   }
 
   /* ---------- size, from Acpanta's own guide ---------- */
@@ -108,10 +84,10 @@
   function render() {
     back.style.visibility = step === 0 ? 'hidden' : 'visible';
     if (step === 0) {
-      body.innerHTML = steps() + '<p class="to-q">Which figure should the avatar have?</p>' +
-        choices('figure', [['men', 'Men\'s figure'], ['women', 'Women\'s figure']]) + '<p class="to-help">Our pieces are unisex. This only changes the drawing and the estimate.</p>' + next(!!profile.figure);
+      body.innerHTML = steps() + '<p class="to-q">Which sizes do you usually buy?</p>' +
+        choices('figure', [['men', 'Menswear'], ['women', 'Womenswear']]) + '<p class="to-help">Our pieces are unisex. This only fine-tunes the size estimate.</p>' + next(!!profile.figure);
     } else if (step === 1) {
-      body.innerHTML = steps() + '<p class="to-q">Your height and weight</p><div class="to-fig">' + avatar(profile, null, 0, 64) + '</div>' +
+      body.innerHTML = steps() + '<p class="to-q">Your height and weight</p>' +
         '<label class="to-field"><span class="to-fh">Height <output data-out="height">' + profile.height + ' cm</output></span><input type="range" min="140" max="210" value="' + profile.height + '" data-in="height"></label>' +
         '<label class="to-field"><span class="to-fh">Weight <output data-out="weight">' + profile.weight + ' kg</output></span><input type="range" min="40" max="150" value="' + profile.weight + '" data-in="weight"></label>' +
         '<label class="to-field to-chest"><span class="to-fh">Chest, if you know it <small>optional, most accurate</small></span><span class="to-chest-row"><input type="number" inputmode="decimal" min="60" max="160" step="1" placeholder="e.g. 100" value="' + esc(profile.chest) + '" data-in="chest"><span>cm</span></span></label>' +
@@ -124,9 +100,8 @@
         choices('fit', [['fitted', 'Closer', 'Nearer the body'], ['regular', 'Regular', 'True to size'], ['relaxed', 'Relaxed', 'Room to move']]) + next(!!profile.fit);
     } else {
       var r = recommend(), sel = picked || r.size, c = chestUsed(), col = prod.colors[prod.sel] || prod.colors[0];
-      var piece = { color: col[1], shape: prod.shape };
       body.innerHTML = '<div class="to-rh"><button type="button" class="to-link" data-act="edit">Change my answers</button><span>' + profile.height + ' cm · ' + profile.weight + ' kg</span></div>' +
-        '<div class="to-res"><div class="to-stage">' + avatar(profile, piece, SIZES.indexOf(sel) - SIZES.indexOf(r.size), 150) + '</div><div>' +
+        '<div class="to-res"><div class="to-stage' + (col[2] ? ' has-photo' : '') + '">' + picture() + '</div><div>' +
         '<p class="to-piece"><b>' + esc(prod.name) + '</b><span>' + esc(col[0]) + ' · ' + SHOP.money(prod.price) + '</span></p>' +
         '<p class="to-rt">Recommended size: ' + r.size + '</p>' +
         SIZES.map(function (sz) {
@@ -134,7 +109,6 @@
           return '<button type="button" class="to-opt' + (sz === r.size ? ' rec' : '') + '" aria-pressed="' + (sz === sel) + '" data-size="' + sz + '"' + (out ? ' disabled' : '') + '><span>' + sz + '</span><small>' + (out ? 'Sold out' : fitLabel(sz, r.size)) + '</small></button>';
         }).join('') + '</div></div>' +
         '<p class="to-basis">' + (c.exact ? 'Based on your ' + c.cm + ' cm chest and our size guide.' : 'An estimate from your height and weight. Add your chest measurement for an exact match.') + (r.note ? ' ' + r.note : '') + '</p>' +
-        '<p class="to-help">The drawing is a guide to fit, not a photo.</p>' +
         '<button type="button" class="btn btn-accent to-main" data-act="add"' + (SHOP.soldOut(prod.id, sel) ? ' disabled' : '') + '>Add to bag · size ' + sel + '</button>';
     }
   }
@@ -187,7 +161,6 @@
     profile[key] = key === 'chest' ? e.target.value : +e.target.value;
     if (key !== 'chest') {
       sheet.querySelector('[data-out="' + key + '"]').textContent = profile[key] + (key === 'height' ? ' cm' : ' kg');
-      sheet.querySelector('.to-fig').innerHTML = avatar(profile, null, 0, 64);
     }
     save();
   });
