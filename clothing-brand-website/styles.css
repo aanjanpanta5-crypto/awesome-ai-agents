@@ -1912,3 +1912,9 @@ html body .pair-kicker:not(#_) { display: block; font-size: .78rem; color: var(-
 /* Share button (phones): black with white text, like Add to bag. It was white text on near-white. */
 html body .share-link.share-native:not(#_) { background: #141414; color: #ffffff; -webkit-text-fill-color: #ffffff; border-color: #141414; }
 html body .share-link.share-native:not(#_) svg { stroke: currentColor; }
+/* Our story: closing line and signature */
+.story-close { font-weight: 600; margin-top: 8px; }
+.story-sign { color: var(--muted); }
+/* Our story is a black page: its small labels must be light (the clean-look rule had made them dark on black) */
+html body[data-page="about"] main :is(.mono, .page-head .mono, .mill .mono):not(#_):not(#_) { color: #c9c9c9 !important; -webkit-text-fill-color: #c9c9c9 !important; }
+html body[data-page="about"] main .mill .mono[style]:not(#_) { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
