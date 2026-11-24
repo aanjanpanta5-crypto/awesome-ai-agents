@@ -308,7 +308,7 @@
       (p.digital ? '<ul class="pdp-perks mono"><li>Emailed, no delivery needed</li><li>Valid 12 months</li><li>Secure checkout by Stripe</li></ul>' :
       '<p class="dispatch-line">' + ICON.box + 'Packed by hand in London · dispatched in 1–2 working days · tracked</p>' +
       '<p class="eta-line">' + ICON.cal + etaText() + '</p>' +
-      '<ul class="pdp-perks mono"><li>Free UK delivery over £35</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
+      '<ul class="pdp-perks mono"><li>Delivery ' + money(DELIVERY.fee) + ', free over ' + money(DELIVERY.freeOver) + '</li><li>14-day returns</li><li>Secure checkout by Stripe</li></ul>') +
       (p.digital ? '' :
       '<div class="pdp-care"><h2 class="pdp-h">Care</h2><p class="care-icons" aria-label="Care: wash at 30 degrees inside out, do not tumble dry, do not iron the print"><span aria-hidden="true"><b class="ci">30°</b> Wash inside out</span><span aria-hidden="true"><b class="ci ci-x">⊠</b> No tumble dry</span><span aria-hidden="true"><b class="ci ci-x">✕</b> Don\'t iron the print</span></p><ul><li>Wash cold, inside out, at 30°C max</li><li>Do not tumble dry</li><li>Hang dry only, to keep the fabric weight and fit</li></ul><p>Always check the care label. <a href="care.html?id=' + p.id + '">Full care guide for this piece</a></p></div>') +
       '</div></article>';
@@ -847,6 +847,33 @@
         .then(function () { btn.disabled = false; });
     })();
   });
+
+  // Help centre: type to filter the questions
+  if ($('faq-q')) {
+    var wrap = document.querySelector('.help-wrap');
+    $('faq-q').addEventListener('input', function () {
+      // Ordinary words are ignored, and a few everyday words also find their help-centre cousin (arrive -> delivery)
+      var STOP = /^(a|an|the|it|is|are|do|does|can|i|my|me|we|you|to|of|for|when|will|how|what|where|why|if|on|in|be|get|and|or)$/;
+      var SAME = { arrive: ['delivery'], arrives: ['delivery'], arrival: ['delivery'], ship: ['delivery'], shipping: ['delivery'], post: ['delivery'], parcel: ['delivery'], long: ['days'], wait: ['days'], time: ['days'], refund: ['return'], refunds: ['return'], exchange: ['return', 'size'], cancel: ['return'], fit: ['size'], washing: ['care', 'wash'], pay: ['payment', 'card'], track: ['tracking'] };
+      var raw = this.value.trim().toLowerCase().split(/[^a-z0-9£]+/).filter(Boolean);
+      var words = raw.filter(function (w) { return !STOP.test(w); });
+      if (!words.length) words = raw;
+      var alts = words.map(function (w) { return [w].concat(SAME[w] || []); });
+      var shown = 0, group = null, groupShown = 0;
+      var finish = function () { if (group) group.hidden = words.length > 0 && groupShown === 0; };
+      [].forEach.call(wrap.children, function (el) {
+        if (el.tagName === 'H2') { finish(); group = el; groupShown = 0; return; }
+        if (!el.classList.contains('faq')) return;
+        var text = el.textContent.toLowerCase(), ok = alts.every(function (opts) { return opts.some(function (w) { return text.indexOf(w) !== -1; }); });
+        el.hidden = !ok; if (ok) { shown++; groupShown++; }
+        el.open = ok && words.length > 0 && shown <= 3;
+      });
+      finish();
+      if (!words.length) [].forEach.call(wrap.querySelectorAll('.faq'), function (f) { f.open = false; });
+      $('faq-empty').hidden = !(words.length && !shown);
+      var topics = wrap.querySelector('.help-topics'); if (topics) topics.hidden = words.length > 0;
+    });
+  }
 
   // Interactive weight guide (home page): compare a typical 150 GSM tee with Acpanta fabrics
   if ($('gsm-slider')) {
