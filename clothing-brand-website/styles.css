@@ -1918,3 +1918,10 @@ html body .share-link.share-native:not(#_) svg { stroke: currentColor; }
 /* Our story is a black page: its small labels must be light (the clean-look rule had made them dark on black) */
 html body[data-page="about"] main :is(.mono, .page-head .mono, .mill .mono):not(#_):not(#_) { color: #c9c9c9 !important; -webkit-text-fill-color: #c9c9c9 !important; }
 html body[data-page="about"] main .mill .mono[style]:not(#_) { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+/* Women page mood board (concept images, clearly labelled) */
+.mood { margin: 28px 0 34px; }
+.mood-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 14px 0; }
+@media (min-width: 720px) { .mood-grid { grid-template-columns: repeat(4, 1fr); } }
+.mood-grid figure { margin: 0; border-radius: 8px; overflow: hidden; background: #efece6; aspect-ratio: 6 / 7; }
+.mood-grid img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; display: block; }
+.mood-note { color: var(--muted); font-size: .88rem; max-width: 62ch; }
