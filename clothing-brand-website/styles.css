@@ -1925,3 +1925,8 @@ html body[data-page="about"] main .mill .mono[style]:not(#_) { color: #ffffff !i
 .mood-grid figure { margin: 0; border-radius: 8px; overflow: hidden; background: #efece6; aspect-ratio: 6 / 7; }
 .mood-grid img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; display: block; }
 .mood-note { color: var(--muted); font-size: .88rem; max-width: 62ch; }
+/* Help centre search */
+.faq-search { margin: 0 0 18px; }
+.faq-search input { width: 100%; min-height: 48px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font: inherit; }
+.faq-search input:focus { outline: 2px solid #141414; outline-offset: 1px; }
+.faq-empty { margin: 10px 0 0; color: var(--muted); }
