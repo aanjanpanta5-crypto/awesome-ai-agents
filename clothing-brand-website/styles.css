@@ -1934,3 +1934,14 @@ html body[data-page="about"] main .mill .mono[style]:not(#_) { color: #ffffff !i
 html body .ep-price:not(#_):not(#_) { color: #f4f2ee !important; -webkit-text-fill-color: #f4f2ee !important; background: none !important; padding-left: 0 !important; margin-left: 10px; }
 /* Looks page: slightly darker grey for small captions, for easier reading */
 html body :is(.rs-sub, .rs-count, .rs-card-desc):not(#_) { color: #5d5951 !important; }
+/* Top banner: one fixed-height line, so the page never jumps when the fonts or script finish loading */
+html body .notice:not(#_) { box-sizing: border-box; height: 39px; overflow: hidden; white-space: nowrap; }
+html body .notice:not(#_) .marquee, html body .notice:not(#_) .marquee span { white-space: nowrap; }
+/* Menu links stay on one line while fonts load, so the header keeps one steady height */
+html body nav.main:not(#_) { flex-wrap: nowrap; }
+html body nav.main:not(#_) a { white-space: nowrap; flex: none; }
+/* Phones 340px and wider: the logo may squeeze while fonts load, instead of pushing the buttons onto a new row (that row made the page jump) */
+@media (min-width: 340px) and (max-width: 760px) {
+  html body header.site .wrap > .logo:not(#_) { flex: 1 1 0; min-width: 0; overflow: hidden; }
+  html body header.site .wrap > .header-actions:not(#_), html body header.site .wrap > .bag-btn:not(#_) { flex: none; }
+}

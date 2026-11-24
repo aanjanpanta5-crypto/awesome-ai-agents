@@ -20,7 +20,7 @@ const money = (n) => `£${n % 1 ? n.toFixed(2) : n}`;
 const staticCard = (p) => {
   const photo = (p.colors.find((c) => c[2]) || [])[2];
   const link = `product.html?id=${encodeURIComponent(p.id)}`;
-  return `<article class="card static-card"><a href="${link}">${photo ? `<img src="${esc(photo)}" alt="${esc(p.name)}" width="400" height="500" loading="lazy">` : ''}</a>` +
+  return `<article class="card static-card"><a href="${link}">${photo ? `<picture><source srcset="${esc(photo.replace(/\.jpg$/, '.webp'))}" type="image/webp"><img src="${esc(photo)}" alt="${esc(p.name)}" width="400" height="500" loading="lazy"></picture>` : ''}</a>` +
     `<div class="card-top"><h3><a href="${link}">${esc(p.name)}</a></h3><span class="price">${money(p.price)}</span></div><p class="spec">${esc(p.spec)}</p></article>`;
 };
 for (const file of ['shop.html', 'index.html']) {
