@@ -1930,3 +1930,7 @@ html body[data-page="about"] main .mill .mono[style]:not(#_) { color: #ffffff !i
 .faq-search input { width: 100%; min-height: 48px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font: inherit; }
 .faq-search input:focus { outline: 2px solid #141414; outline-offset: 1px; }
 .faq-empty { margin: 10px 0 0; color: var(--muted); }
+/* Batch 01 episode prices sit on black, so they need light text (the clean-look rule had made them dark) */
+html body .ep-price:not(#_):not(#_) { color: #f4f2ee !important; -webkit-text-fill-color: #f4f2ee !important; background: none !important; padding-left: 0 !important; margin-left: 10px; }
+/* Looks page: slightly darker grey for small captions, for easier reading */
+html body :is(.rs-sub, .rs-count, .rs-card-desc):not(#_) { color: #5d5951 !important; }
