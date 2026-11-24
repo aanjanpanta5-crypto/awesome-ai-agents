@@ -90,9 +90,10 @@ exports.handler = async (event) => {
   params.append('shipping_options[0][shipping_rate_data][fixed_amount][amount]', String(shipPence));
   params.append('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'gbp');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][unit]', 'business_day');
-  params.append('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '2');
+  // Same as the product pages: posted within 1-2 working days, then 2-4 working days in transit = 3 to 6 working days
+  params.append('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '3');
   params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'business_day');
-  params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '4');
+  params.append('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '6');
   }
   params.append('custom_text[submit][message]', 'Free UK delivery over £35. 14 days to return. See acpanta.com/returns.html');
 
