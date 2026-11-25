@@ -107,5 +107,5 @@ test('security headers are set for every page', () => {
 
 test('private build and code files are hidden from visitors', () => {
   const toml = fs.readFileSync(path.join(__dirname, '..', '..', 'netlify.toml'), 'utf8');
-  for (const p of ['/tools/*', '/package.json', '/package-lock.json', '/node_modules/*', '/netlify/*']) assert.ok(toml.includes(`from = "${p}"`), p);
+  for (const p of ['/tools/*', '/tests/*', '/package.json', '/package-lock.json', '/node_modules/*', '/netlify/*']) assert.ok(toml.includes(`from = "${p}"`), p);
 });

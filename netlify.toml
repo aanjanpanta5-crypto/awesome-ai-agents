@@ -25,6 +25,13 @@
   status = 404
   force = true
 
+# Test files are for the owner and developers only, not for visitors
+[[redirects]]
+  from = "/tests/*"
+  to = "/404"
+  status = 404
+  force = true
+
 # Server code dependencies are for Netlify's build only, not for visitors
 [[redirects]]
   from = "/package.json"
