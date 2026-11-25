@@ -4,6 +4,8 @@
 const PRODUCTS = require('../../products.js');
 
 const byId = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
+// Only real product ids count. Names like "constructor" or "__proto__" must not find anything.
+const find = (id) => (typeof id === 'string' && Object.prototype.hasOwnProperty.call(byId, id) ? byId[id] : undefined);
 const MAX_LINES = 50;
 const MAX_QTY = 20;
 
@@ -34,7 +36,7 @@ exports.handler = async (event) => {
   // Count each product across all bag lines, so splitting it into several lines can't get past the stock limit
   const totals = {};
   for (const item of items) {
-    const p = byId[item && item.id];
+    const p = find(item && item.id);
     if (p) totals[p.id] = (totals[p.id] || 0) + (Number(item.qty) || 0);
   }
   for (const id of Object.keys(totals)) {
@@ -47,7 +49,7 @@ exports.handler = async (event) => {
   const params = new URLSearchParams();
   let i = 0;
   for (const item of items) {
-    const p = byId[item && item.id];
+    const p = find(item && item.id);
     // Colour must be a real index into the product's colour list (never a property name like "constructor")
     const color = p && Number.isInteger(item.color) && item.color >= 0 && item.color < p.colors.length ? p.colors[item.color] : null;
     const qty = Number(item && item.qty);
@@ -78,10 +80,10 @@ exports.handler = async (event) => {
   params.append('custom_fields[0][optional]', 'true');
   params.append('custom_fields[0][text][maximum_length]', '200');
   // Gift-card-only orders are emailed, so they skip the delivery address
-  const physical = items.some((item) => !(byId[item.id] && byId[item.id].digital));
+  const physical = items.some((item) => !(find(item.id) && find(item.id).digital));
   // £3.99 delivery, free when the clothing comes to £35 or more (same rule as the bag, from products.js)
   const D = PRODUCTS.DELIVERY;
-  const goods = items.reduce((a, item) => { const p = byId[item.id]; return a + (p && !p.digital ? p.price * Number(item.qty) : 0); }, 0);
+  const goods = items.reduce((a, item) => { const p = find(item.id); return a + (p && !p.digital ? p.price * Number(item.qty) : 0); }, 0);
   const shipPence = goods >= D.freeOver ? 0 : Math.round(D.fee * 100);
   if (physical) {
   params.append('shipping_address_collection[allowed_countries][0]', 'GB');
