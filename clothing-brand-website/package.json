@@ -4,5 +4,8 @@
   "description": "Server code dependencies for the Acpanta Netlify functions (the site itself has no build step).",
   "dependencies": {
     "@anthropic-ai/sdk": "^1.12.0"
+  },
+  "scripts": {
+    "test": "node --test tests/security.test.js"
   }
 }
