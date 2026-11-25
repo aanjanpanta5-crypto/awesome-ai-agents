@@ -109,3 +109,13 @@ test('private build and code files are hidden from visitors', () => {
   const toml = fs.readFileSync(path.join(__dirname, '..', '..', 'netlify.toml'), 'utf8');
   for (const p of ['/tools/*', '/tests/*', '/package.json', '/package-lock.json', '/node_modules/*', '/netlify/*']) assert.ok(toml.includes(`from = "${p}"`), p);
 });
+
+test('home pages carry valid brand data with no street address or personal email', () => {
+  for (const f of ['shop.html', 'index.html']) {
+    const html = fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+    const text = JSON.stringify(blocks);
+    assert.ok(text.includes('"Organization"') && text.includes('instagram.com/acpanta9'), f);
+    assert.ok(!/Rangland|SE18|@gmail\.com/.test(text), `${f}: private details must not be in the brand data`);
+  }
+});
