@@ -90,6 +90,12 @@ exports.handler = async (event) => {
   // GET tells the website whether the assistant is switched on (the key is set), without revealing anything else
   if (event.httpMethod === 'GET') return json(200, { ready: !!process.env.ANTHROPIC_API_KEY });
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed' });
+  // Only our own website may use the assistant (browsers always send Origin on a POST). This stops
+  // other sites and casual scripts using it as a free AI on our bill; the spend limit in the AI account is the hard stop.
+  const origin = (event.headers && (event.headers.origin || event.headers.Origin)) || '';
+  if (!/^https:\/\/(www\.)?acpanta\.com$/.test(origin) && !/^https:\/\/[a-z0-9-]+--[a-z0-9-]+\.netlify\.app$/.test(origin)) {
+    return json(403, { error: 'Not available here.' });
+  }
   let body;
   try { body = JSON.parse(event.body || '{}'); } catch (err) { return json(400, { error: 'Bad request' }); }
   const messages = cleanMessages(body.messages);
@@ -103,8 +109,8 @@ exports.handler = async (event) => {
   try {
     const client = exports._client || new Anthropic({ timeout: 20000, maxRetries: 1 });
     const response = await client.beta.messages.create({
-      model: 'claude-opus-5-5',
-      max_tokens: 1024,
+      model: process.env.CHAT_MODEL || 'claude-opus-5-5', // set CHAT_MODEL in Netlify to use a cheaper model
+      max_tokens: 400, // answers are two to four sentences
       output_config: { effort: 'low' },
       betas: ['server-side-fallback-2026-07-01'],
       fallbacks: 'default', // if a reply is declined, Anthropic retries it on a fallback model

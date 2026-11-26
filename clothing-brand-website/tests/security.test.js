@@ -14,7 +14,8 @@ global.fetch = async (url, opts) => {
   sent = { url, params: new URLSearchParams(opts.body) };
   return { ok: true, json: async () => ({ url: 'https://checkout.stripe.com/test' }) };
 };
-const call = (items) => handler({ httpMethod: 'POST', headers: { host: 'acpanta.test' }, body: JSON.stringify({ items }) });
+let visitor = 0; // every call is a different pretend visitor, so the spam limit is not triggered by the tests themselves
+const call = (items) => handler({ httpMethod: 'POST', headers: { host: 'acpanta.test', 'x-nf-client-connection-ip': 'test-' + visitor++ }, body: JSON.stringify({ items }) });
 const ok = { id: 'logo-tee', color: 0, size: 'M', qty: 1 };
 
 test('only POST is accepted', async () => {
@@ -118,4 +119,29 @@ test('home pages carry valid brand data with no street address or personal email
     assert.ok(text.includes('"Organization"') && text.includes('instagram.com/acpanta9'), f);
     assert.ok(!/Rangland|SE18|@gmail\.com/.test(text), `${f}: private details must not be in the brand data`);
   }
+});
+
+test('checkout limits one visitor to 30 starts per 10 minutes', async () => {
+  require('../netlify/functions/create-checkout.js')._resetLimits();
+  const from = (ip) => handler({ httpMethod: 'POST', headers: { host: 'x', 'x-nf-client-connection-ip': ip }, body: JSON.stringify({ items: [ok] }) });
+  let last;
+  for (let i = 0; i < 30; i++) last = await from('203.0.113.7');
+  assert.equal(last.statusCode, 200, 'the first 30 go through');
+  assert.equal((await from('203.0.113.7')).statusCode, 429, 'the 31st is slowed');
+  assert.equal((await from('203.0.113.8')).statusCode, 200, 'other visitors are not affected');
+  require('../netlify/functions/create-checkout.js')._resetLimits();
+});
+
+test('the chat assistant only answers our own website, and is off without a key', async () => {
+  delete process.env.ANTHROPIC_API_KEY;
+  const chat = require('../netlify/functions/chat.js').handler;
+  const post = (origin, body) => chat({ httpMethod: 'POST', headers: origin ? { origin, 'x-nf-client-connection-ip': '198.51.100.' + Math.floor(Math.random() * 200) } : { 'x-nf-client-connection-ip': '198.51.100.9' }, body: JSON.stringify(body) });
+  const good = { messages: [{ role: 'user', content: 'How much is delivery?' }] };
+  assert.equal((await post(null, good)).statusCode, 403, 'no Origin (a script) is refused');
+  assert.equal((await post('https://evil.example', good)).statusCode, 403, 'another website is refused');
+  assert.equal((await post('https://acpanta.com.evil.example', good)).statusCode, 403, 'look-alike address is refused');
+  assert.equal((await post('https://acpanta.com', { messages: [] })).statusCode, 400, 'bad message list');
+  assert.equal((await post('https://acpanta.com', good)).statusCode, 503, 'no key set, so it is off');
+  const g = await chat({ httpMethod: 'GET', headers: {} });
+  assert.deepEqual(JSON.parse(g.body), { ready: false });
 });

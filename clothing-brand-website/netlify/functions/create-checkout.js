@@ -15,8 +15,23 @@ const json = (statusCode, body) => ({
   body: JSON.stringify(body),
 });
 
+// Best-effort limit per warm function instance: 30 checkout starts per 10 minutes per visitor.
+// A real customer never gets near this; it stops a script flooding checkout.
+const hits = new Map();
+function limited(ip) {
+  const now = Date.now();
+  const recent = (hits.get(ip) || []).filter((t) => now - t < 10 * 60 * 1000);
+  recent.push(now);
+  hits.set(ip, recent);
+  if (hits.size > 5000) hits.clear(); // keep memory small
+  return recent.length > 30;
+}
+exports._resetLimits = () => hits.clear(); // for tests
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return json(405, { error: 'Use POST.' });
+  const ip = (event.headers && (event.headers['x-nf-client-connection-ip'] || event.headers['x-forwarded-for'])) || 'unknown';
+  if (limited(ip)) return json(429, { error: 'Too many checkout attempts. Please wait a few minutes and try again, or message us on WhatsApp.' });
 
   // The owner's Netlify variable may be named STRIPE_SECRET_KEY or Anjan
   // Checked in order: stripe (current key), then older names
