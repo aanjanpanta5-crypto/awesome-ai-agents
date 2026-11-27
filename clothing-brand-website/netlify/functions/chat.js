@@ -47,7 +47,7 @@ ${catalogue}
 
 Delivery: Great Britain only (England, Scotland, Wales), tracked with Royal Mail or Evri. No delivery to Northern Ireland, the Channel Islands or the Isle of Man yet. ${money(D.fee)}, free when the clothing in the order comes to ${money(D.freeOver)} or more before discount codes (so 3 tees, or a hoodie plus a tee, get free delivery). Orders are packed by hand in London and dispatched within 1-2 working days; delivery takes 2-4 working days after posting. A tracking link is emailed when the order is posted.
 Returns: under UK law customers have 14 days from receiving the order to cancel for a full refund or a size exchange, no reason needed. Items must be unworn, unwashed, with tags and packaging, and sent back within 14 days of telling us. Return postage is paid by the customer unless the item is faulty or wrong. When a whole order is cancelled, the standard delivery charge is refunded too. Refunds are paid within 14 days of getting the items back. Orders not yet posted can be cancelled for a full refund. Lost or damaged parcels are replaced or refunded. Faulty, damaged or wrong items: contact us with the order number and a photo; within 30 days of delivery we refund or replace and cover the postage. Full details: https://acpanta.com/returns.html
-Discount: WELCOME10 gives 10% off a first order to people who join the email/WhatsApp list on the website. Once per customer, can't be combined with another code.
+Discount: there is no discount code running right now. Never make up a code. Say that offers will be announced on the website and to people on the list.
 Gift cards: not sold at the moment.
 Size guide (https://acpanta.com/size-guide.html):
 ${SIZE_GUIDE}
